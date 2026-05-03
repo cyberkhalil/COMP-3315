@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>COMP-3315 | Computer Networking</title>
+    <!-- External Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* additional small responsive tweaks to ensure mobile/desktop friendly */
+        @media (max-width: 780px) {
+            .instructor-panel {
+                gap: 16px;
+                padding: 14px 18px;
+                border-radius: 32px;
+            }
+            .container {
+                padding: 0 16px;
+            }
+            .course-header h1 {
+                font-size: clamp(1.8rem, 6vw, 2.8rem);
+            }
+        }
+        @media (max-width: 480px) {
+            .instructor-item span {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="container">
+    <div class="course-header">
+        <div class="course-badge"><i class="fas fa-network-wired"></i> COMP‑3315 | Bachelor of Cybersecurity Engineering</div>
+        <h1>Computer Networking</h1>
+        <div class="course-sub">James Kurose & Keith Ross • 9th Edition </div>
+        <div class="instructor-panel">
+            <div class="instructor-item"><i class="fas fa-chalkboard-user"></i> <span>Mahmoud Khalil</span></div>
+            <div class="instructor-item"><i class="fas fa-envelope"></i> <span>mkhalil@ucas.edu.ps</span></div>
+            <div class="instructor-item"><i class="fas fa-book"></i> <span>Course code: COMP‑3315</span></div>
+            <div class="instructor-item"><i class="fas fa-calendar-alt"></i> <span>3 Credits | 14 weeks</span></div>
+        </div>
+    </div>
+
+    <div class="weeks-container">
+        <!-- CHAPTER 1 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">📡 Ch 1</span>
+                <span class="chapter-title-main">Computer Networks and the Internet</span>
+                <a href="lecture1.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 1</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§1.1‑1.7 | edge, core, delay, layers, security, history</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Describe Internet: nuts‑and‑bolts vs service view</li><li>Differentiate packet switching vs circuit switching</li><li>Compute delay, loss, throughput in networks</li><li>Explain protocol layers (TCP/IP, OSI) & encapsulation</li><li>Identify basic network attacks (DoS, sniffing)</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-microchip"></i> Book Sections</h4><ul><li>1.1 What is the Internet? • 1.2 Network edge</li><li>1.3 Network core • 1.4 Delay, loss, throughput</li><li>1.5 Protocol layers, service models</li><li>1.6 Networks under attack • 1.7 History</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>Wireshark Lab:</strong> “Getting Started” – capture HTTP traffic, explore headers, packet details.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 2 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">🌐 Ch 2</span>
+                <span class="chapter-title-main">Application Layer</span>
+                <a href="Lecture2.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 2</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§2.1‑2.7 | Web, email, DNS, P2P, socket API</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Architect client‑server vs P2P applications</li><li>Analyze HTTP (persistent/non‑persistent), cookies, caching</li><li>Understand SMTP, POP3, IMAP for email</li><li>Implement a basic UDP/TCP socket program</li><li>Explain DNS hierarchy & resource records</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-code"></i> Book Sections</h4><ul><li>2.1 Principles of app layer protocols</li><li>2.2 Web and HTTP (HTTP/1.1, HTTP/2, HTTP/3 intro)</li><li>2.3 FTP • 2.4 Email (SMTP, POP3)</li><li>2.5 DNS • 2.6 P2P (BitTorrent)</li><li>2.7 Socket programming with TCP/UDP</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>Socket Programming:</strong> Build a UDP ping client and a multi‑threaded HTTP server (Python). Analyze HTTP requests with Wireshark.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 3 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">🚚 Ch 3</span>
+                <span class="chapter-title-main">Transport Layer</span>
+                <a href="Lecture3.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 3</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§3.1‑3.6 | UDP, TCP, flow & congestion control</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Compare reliable vs unreliable transport</li><li>Understand multiplexing/demultiplexing</li><li>Explain principles of reliable data transfer (rdt)</li><li>Analyze TCP segment structure, flow control, and AIMD</li><li>Differentiate between Tahoe, Reno, CUBIC</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-chart-line"></i> Book Sections</h4><ul><li>3.1 Transport‑layer services</li><li>3.2 Multiplexing/demultiplexing</li><li>3.3 Connectionless UDP</li><li>3.4 Principles of reliable data transfer</li><li>3.5 TCP (segment, RTT, flow control)</li><li>3.6 Congestion control (AIMD, fairness)</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>Wireshark TCP Lab:</strong> Trace three‑way handshake, sequence/ACK numbers, window scaling, and observe congestion window evolution.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 4 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">📦 Ch 4</span>
+                <span class="chapter-title-main">The Network Layer: Data Plane</span>
+                <a href="Lecture4.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 4</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§4.1‑4.4 | IP, addressing, forwarding, SDN data plane</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Differentiate forwarding vs routing</li><li>Understand IPv4 datagram format, fragmentation</li><li>Perform subnet calculations (CIDR, subnet masks)</li><li>Explain NAT and IPv6 transition methods</li><li>Describe router components and generalized forwarding (SDN)</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-microchip"></i> Book Sections</h4><ul><li>4.1 Overview of network layer</li><li>4.2 Router components & switching fabrics</li><li>4.3 IP: IPv4, DHCP, NAT, IPv6</li><li>4.4 Generalized Forwarding (SDN match+action)</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>IP & Routing Lab:</strong> Configure static routes with Cisco Packet Tracer, analyze IP fragmentation, and capture ICMP packets with Wireshark.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 5 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">🕹️ Ch 5</span>
+                <span class="chapter-title-main">The Network Layer: Control Plane</span>
+                <a href="Lecture5.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 5</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§5.1‑5.6 | routing algorithms, OSPF, BGP, SDN, ICMP</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Compare Link‑State (Dijkstra) vs Distance‑Vector (Bellman‑Ford)</li><li>Configure OSPF intra‑domain routing</li><li>Explain BGP inter‑domain routing (eBGP/iBGP)</li><li>Describe SDN control plane (OpenFlow, controllers)</li><li>Use ICMP, traceroute, and SNMP</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-globe"></i> Book Sections</h4><ul><li>5.1 Introduction • 5.2 Routing algorithms (LS, DV)</li><li>5.3 Intra‑AS routing (OSPF)</li><li>5.4 Routing among ISPs (BGP)</li><li>5.5 SDN control plane</li><li>5.6 ICMP, SNMP, NETCONF/YANG</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>Routing Simulation:</strong> Build OSPF network in FRRouting or Packet Tracer; use traceroute to observe path changes; analyze BGP advertisements.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 6 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">🔗 Ch 6</span>
+                <span class="chapter-title-main">The Link Layer and LANs</span>
+                <a href="Lecture6.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 6</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§6.1‑6.6 | error detection, multiple access, Ethernet, switches, VLANs</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Understand error detection (CRC, checksum)</li><li>Compare multiple access protocols (CSMA/CD, slotted Aloha)</li><li>Analyze Ethernet frame & switch self‑learning</li><li>Configure VLANs and explain ARP protocol</li><li>Describe link virtualization (MPLS) and data center networks</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-ethernet"></i> Book Sections</h4><ul><li>6.1 Link‑layer services</li><li>6.2 Error detection/correction</li><li>6.3 Multiple access protocols</li><li>6.4 Switched LANs (ARP, Ethernet, switches, VLANs)</li><li>6.5 Link virtualization (MPLS)</li><li>6.6 Data center networking</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>Ethernet & VLAN Lab:</strong> Build switched LAN with VLAN segmentation; capture ARP broadcasts and observe spanning‑tree (STP) with Wireshark.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 7 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">📡 Ch 7</span>
+                <span class="chapter-title-main">Wireless and Mobile Networks</span>
+                <a href="Lecture7.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 7</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§7.1‑7.5 | WiFi, cellular, mobility principles</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Characterize wireless links (SNR, hidden terminal)</li><li>Explain 802.11 MAC (CSMA/CA) and frame structure</li><li>Describe cellular generations (4G LTE, 5G NR)</li><li>Understand mobility: indirect/direct routing, Mobile IP</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-wifi"></i> Book Sections</h4><ul><li>7.1 Introduction • 7.2 Wireless links characteristics</li><li>7.3 WiFi: 802.11 (association, CSMA/CA)</li><li>7.4 Cellular networks (4G/5G, core network)</li><li>7.5 Mobility management (home network, care‑of‑address)</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>WiFi Analysis:</strong> Capture 802.11 beacon frames and probe requests using Wireshark in monitor mode; examine authentication/association.</div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 8 -->
+        <div class="week-card">
+            <div class="week-header-bar">
+                <span class="chapter-number">🔐 Ch 8</span>
+                <span class="chapter-title-main">Security in Computer Networks</span>
+                <a href="Lecture8.html" class="lecture-btn"><i class="fas fa-play-circle"></i> Lecture 8</a>
+            </div>
+            <div class="week-body">
+                <div class="week-meta"><span class="chapter-topic">§8.1‑8.9 | crypto, SSL/TLS, IPsec, wireless security, firewalls</span></div>
+                <div class="content-grid">
+                    <div class="info-box"><h4><i class="fas fa-bullseye"></i> Learning Outcomes</h4><ul><li>Understand symmetric/asymmetric encryption & message integrity</li><li>Explain SSL/TLS handshake and record protocol</li><li>Configure IPsec VPN (ESP/AH) basics</li><li>Differentiate firewalls (stateless/stateful) and IDS/IPS</li><li>Describe 802.11i (WPA2) and operational security</li></ul></div>
+                    <div class="info-box"><h4><i class="fas fa-shield-haltered"></i> Book Sections</h4><ul><li>8.1 What is network security? • 8.2 Principles of cryptography</li><li>8.3 Message integrity (MAC, digital signatures)</li><li>8.4 End‑point authentication</li><li>8.5 Securing email (PGP) • 8.6 Securing TCP (SSL/TLS)</li><li>8.7 Network‑layer security (IPsec, VPN)</li><li>8.8 Securing wireless LANs (WPA2, 802.11i)</li><li>8.9 Operational security (firewalls, IDS/IPS)</li></ul></div>
+                </div>
+                <div class="practical-lab"><i class="fas fa-laptop-code"></i> <strong>Security Lab:</strong> Inspect TLS handshake with Wireshark, decode X.509 certificates; configure a simple IPsec tunnel between two hosts.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assessment & grading block -->
+    <div class="assessment-block">
+        <h2><i class="fas fa-chart-simple"></i> Assessment & Grading</h2>
+        <p class="section-desc">Based on Kurose & Ross labs, programming assignments, and theoretical exams</p>
+        <div class="assess-grid">
+            <div class="assess-card"><h3>30%</h3><p>Midterm Exam</p><small>Chapters 1‑4 + case studies</small></div>
+            <div class="assess-card"><h3>40%</h3><p>Final Exam</p><small>All 8 chapters (comprehensive)</small></div>
+            <div class="assess-card"><h3>20%</h3><p>Labs & Wireshark Projects</p><small>7 labs + socket programming</small></div>
+            <div class="assess-card"><h3>10%</h3><p>Quizzes & Participation</p><small>Weekly online quizzes</small></div>
+        </div>
+    </div>
+
+    <!-- Textbook section -->
+    <div class="textbook-section">
+        <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+            <div><i class="fas fa-book-open" style="font-size: 2.8rem; color: var(--primary);"></i></div>
+            <div>
+                <h3 style="font-size: 1.3rem;">📘 Required Textbook (9th Edition)</h3>
+                <p style="margin: 6px 0;">Kurose, J. F., & Ross, K. W. (2021). <strong>Computer Networking: A Top‑Down Approach</strong> (9th ed.). Pearson.</p>
+                <p style="font-size: 0.9rem;"><i class="fas fa-check-circle"></i> Companion: Wireshark Labs (official), Programming Assignments, Video Notes.</p>
+                <p style="font-size: 0.9rem;"><i class="fas fa-globe"></i> Additional: RFCs, Cisco Packet Tracer, Mininet, GNS3.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p><i class="fas fa-university"></i> University College of Applied Sciences – Cybersecurity Engineering Dept. | Course code: COMP‑3315</p>
+        <p>Based on <strong>Kurose & Ross, 9th Edition</strong> – exact chapter mapping | Instructor: <strong>Mahmoud Khalil</strong></p>
+        <p>© 2026 Mahmoud Khalil – All Rights Reserved</p>
+    </footer>
+</div>
+
+<script src="scripts.js" defer></script>
+</body>
+</html>
