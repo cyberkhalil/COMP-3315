@@ -6,70 +6,53 @@
     <title>COMP-3315 | Chapter 1: Computer Networks and the Internet – Full Lecture</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Dark blue theme – clean, academic, minimal visual effects */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0f1c;  /* dark blue background */
-            color: #e2e8f0;
-            line-height: 1.6;
-            font-size: 1rem;
-            padding: 2rem 1rem;
-        }
-        .container {
+        /* تخصيصات إضافية خاصة بالمحاضرة فقط */
+        .lecture-container-special {
             max-width: 1200px;
             margin: 0 auto;
             background: rgba(18, 25, 45, 0.92);
             backdrop-filter: blur(2px);
             border-radius: 1.2rem;
             padding: 2rem;
-            border: 1px solid #2d3a5e;
+            border: 1px solid var(--border-light);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #90cdf4;
-            border-left: 4px solid #3b82f6;
-            padding-left: 1rem;
-        }
-        h2 {
-            font-size: 1.7rem;
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            text-decoration: none;
             font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+        }
+        .home-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        /* تعديل طفيف للعناوين داخل المحاضرة لتتناسب مع الخلفية */
+        .lecture-container-special h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
             margin: 1.8rem 0 1rem 0;
             color: #7dd3fc;
             border-bottom: 2px solid #2d3a5e;
             padding-bottom: 0.3rem;
         }
-        h3 {
+        .lecture-container-special h3 {
             font-size: 1.3rem;
             font-weight: 600;
             margin: 1.2rem 0 0.6rem 0;
             color: #b9e6ff;
         }
-        p {
-            margin-bottom: 0.8rem;
-        }
-        ul, ol {
-            margin: 0.6rem 0 0.8rem 1.8rem;
-        }
-        li {
-            margin-bottom: 0.35rem;
-        }
-        .info-note, .homework-box {
-            background: rgba(15, 25, 45, 0.7);
-            padding: 1rem 1.2rem;
-            border-left: 4px solid #3b82f6;
-            margin: 1.2rem 0;
-            border-radius: 0.5rem;
-        }
-        .code-block, pre {
+        /* تحسين عرض pre داخل المحاضرة */
+        .lecture-container-special pre {
             background: #0b1120;
             color: #e2e8f0;
             padding: 1rem;
@@ -79,6 +62,13 @@
             overflow-x: auto;
             margin: 1rem 0;
             border: 1px solid #2d3a5e;
+        }
+        .info-note {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1.2rem;
+            border-left: 4px solid var(--primary);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
         }
         .two-cols {
             display: flex;
@@ -92,7 +82,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 1rem;
             border-radius: 0.75rem;
-            border: 1px solid #2d3a5e;
+            border: 1px solid var(--border-light);
         }
         .access-grid {
             display: grid;
@@ -104,74 +94,169 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 0.8rem;
             border-radius: 0.5rem;
-            border-left: 3px solid #3b82f6;
+            border-left: 3px solid var(--primary);
         }
-        .formula {
-            font-family: monospace;
-            background: #1e293b;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.3rem;
-            font-size: 1rem;
-        }
-        hr {
-            border: none;
-            border-top: 1px solid #2d3a5e;
-            margin: 1.5rem 0;
-        }
-        footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            border-top: 1px solid #2d3a5e;
-            padding-top: 1.5rem;
-        }
-        .quick-nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1.5rem 0;
-            background: rgba(15, 23, 42, 0.8);
-            padding: 0.7rem;
-            border-radius: 2rem;
-            justify-content: center;
-        }
-        .quick-nav a {
-            background: #1e293b;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            color: #cbd5e1;
-            text-decoration: none;
-            border: 1px solid #334155;
-            transition: 0.1s;
-        }
-        .quick-nav a:hover {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-        a {
-            color: #90cdf4;
+        .homework-box {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1.2rem;
+            border-left: 4px solid var(--success);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
         }
         @media (max-width: 700px) {
-            body { padding: 1rem; }
-            .container { padding: 1rem; }
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.4rem; }
+            .lecture-container-special { padding: 1rem; }
         }
+		.lecture-container-special {
+			max-width: 1200px;
+			margin: 0 auto;
+			background: rgba(18, 25, 45, 0.92);
+			backdrop-filter: blur(2px);
+			border-radius: 1.2rem;
+			padding: 2rem;
+			border: 1px solid var(--border-light);
+			box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+		}
+		.home-button {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			background: var(--primary);
+			color: white;
+			padding: 0.5rem 1.2rem;
+			border-radius: 2rem;
+			text-decoration: none;
+			font-weight: 600;
+			margin-bottom: 1.5rem;
+			transition: 0.2s;
+		}
+		.home-button:hover {
+			background: var(--primary-dark);
+			transform: translateY(-2px);
+		}
+		/* تعديل العناوين داخل المحاضرة */
+		.lecture-container-special h2 {
+			font-size: 1.7rem;
+			font-weight: 700;
+			margin: 2rem 0 1rem 0;
+			color: #7dd3fc;
+			border-bottom: 2px solid #2d3a5e;
+			padding-bottom: 0.5rem;
+		}
+		.lecture-container-special h3 {
+			font-size: 1.3rem;
+			font-weight: 600;
+			margin: 1.2rem 0 0.8rem 0;
+			color: #b9e6ff;
+		}
+		/* تحسين عرض pre */
+		.lecture-container-special pre {
+			background: #0b1120;
+			color: #e2e8f0;
+			padding: 1rem;
+			border-radius: 0.5rem;
+			font-family: 'Courier New', monospace;
+			font-size: 0.85rem;
+			overflow-x: auto;
+			margin: 1.2rem 0;
+			border: 1px solid #2d3a5e;
+		}
+		/* صناديق المعلومات والواجب - ضبط الهوامش الداخلية */
+		.info-note {
+			background: rgba(15, 25, 45, 0.7);
+			padding: 1rem 1rem 1rem 1.8rem;  /* يمين، أسفل، يسار، أعلى - هنا اليسار 1.8rem */
+			border-left: 4px solid var(--primary);
+			margin: 1.2rem 0;
+			border-radius: 0.5rem;
+		}
+		.homework-box {
+			background: rgba(15, 25, 45, 0.7);
+			padding: 1rem 1rem 1rem 1.8rem;
+			border-left: 4px solid var(--success);
+			margin: 1.2rem 0;
+			border-radius: 0.5rem;
+		}
+		/* ضبط القوائم داخل الصناديق */
+		.info-note ul, .info-note ol,
+		.homework-box ul, .homework-box ol {
+			margin: 0.5rem 0 0.5rem 1.5rem;
+			padding-left: 0;
+		}
+		.info-note li, .homework-box li {
+			margin-bottom: 0.4rem;
+		}
+		/* الأعمدة الثنائية */
+		.two-cols {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.5rem;
+			margin: 1.2rem 0;
+		}
+		.col {
+			flex: 1;
+			min-width: 250px;
+			background: rgba(0, 0, 0, 0.3);
+			padding: 1.2rem;
+			border-radius: 0.75rem;
+			border: 1px solid var(--border-light);
+		}
+		.col h3 {
+			margin-top: 0;
+			margin-bottom: 0.8rem;
+		}
+		.col ul, .col ol {
+			margin: 0.5rem 0 0.5rem 1.2rem;
+			padding-left: 0;
+		}
+		/* شبكة الوصول (access-grid) */
+		.access-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+			gap: 1rem;
+			margin: 1.2rem 0;
+		}
+		.access-card {
+			background: rgba(0, 0, 0, 0.3);
+			padding: 0.8rem 1rem;
+			border-radius: 0.5rem;
+			border-left: 3px solid var(--primary);
+		}
+		/* قوائم عادية داخل النص */
+		.lecture-container-special ul:not(.no-style),
+		.lecture-container-special ol:not(.no-style) {
+			margin: 0.75rem 0 0.75rem 1.8rem;
+			padding-left: 0;
+		}
+		.lecture-container-special li {
+			margin-bottom: 0.5rem;
+			line-height: 1.5;
+		}
+		/* توحيد الفقرات */
+		.lecture-container-special p {
+			margin-bottom: 0.8rem;
+			line-height: 1.6;
+		}
+		@media (max-width: 700px) {
+			.lecture-container-special { padding: 1rem; }
+			.col { padding: 1rem; }
+			.info-note, .homework-box { padding: 0.8rem 0.8rem 0.8rem 1.2rem; }
+		}
+
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="quick-nav">
+<div class="bg-grid"></div>
+<div class="lecture-container-special">
+    <!-- زر العودة إلى الرئيسية -->
+    <a href="index.html" class="home-button"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
+
+    <div class="quick-nav" style="margin-bottom: 1.5rem;">
         <a href="#internet">Internet</a> <a href="#protocol">Protocol</a> <a href="#edge">Edge</a>
         <a href="#core">Core</a> <a href="#performance">Performance</a> <a href="#security">Security</a>
         <a href="#layers">Layers</a> <a href="#history">History</a> <a href="#osi">OSI</a> <a href="#homework">Homework</a>
     </div>
 
     <h1>Chapter 1: Computer Networks and the Internet</h1>
-    <p style="font-size: 0.9rem; color: #94a3b8;">Kurose & Ross, <em>Computer Networking: A Top-Down Approach</em>, 9th edition (2025) – Full lecture coverage</p>
+    <p style="font-size: 0.9rem; color: var(--text-muted);">Kurose & Ross, <em>Computer Networking: A Top-Down Approach</em>, 9th edition (2025) – Full lecture coverage</p>
 
     <!-- ================= 1. WHAT IS THE INTERNET? ================= -->
     <h2 id="internet"><i class="fas fa-globe"></i> 1. What is the Internet?</h2>
@@ -263,13 +348,14 @@
     <!-- ================= 5. PERFORMANCE ================= -->
     <h2 id="performance"><i class="fas fa-tachometer-alt"></i> 5. Performance: Loss, Delay, Throughput</h2>
     <h3>⏱️ Four sources of packet delay</h3>
-    <div class="code-block">
-        d_nodal = d_proc + d_queue + d_trans + d_prop<br>
-        • d_proc: nodal processing (bit error check, output link) – typically &lt; microseconds.<br>
-        • d_queue: queueing delay – depends on congestion level.<br>
-        • d_trans = L/R (transmission delay).<br>
-        • d_prop = d/s (propagation delay; s ≈ 2×10⁸ m/s).
-    </div>
+    <pre>
+d_nodal = d_proc + d_queue + d_trans + d_prop
+
+• d_proc: nodal processing (bit error check, output link) – typically &lt; microseconds.
+• d_queue: queueing delay – depends on congestion level.
+• d_trans = L/R (transmission delay).
+• d_prop = d/s (propagation delay; s ≈ 2×10⁸ m/s).
+    </pre>
     <h3>📊 Queueing delay & traffic intensity</h3>
     <p>Traffic intensity = <strong>La/R</strong> (a = average packet arrival rate, L = packet length, R = link bandwidth).<br>
     • La/R → 0 : small average delay.<br>
@@ -280,12 +366,12 @@
     <p>Throughput = rate (bits/sec) at which bits are transferred from sender to receiver. The <strong>bottleneck link</strong> determines end‑end throughput = min(R<sub>s</sub>, R<sub>c</sub>) in the simple two‑link case. In complex networks, the link with the smallest capacity limits overall throughput.</p>
     <h3>🔎 traceroute</h3>
     <p>Measures real delays: source sends packets with increasing TTL values; each router returns a message. Example output (UMass to Eurecom):</p>
-    <div class="code-block">
-1  cs-gw (128.119.240.254)  1 ms  1 ms  2 ms<br>
-2  border1-rt-fa5-1-0.gw.umass.edu  1 ms  1 ms  2 ms<br>
-...<br>
+    <pre>
+1  cs-gw (128.119.240.254)  1 ms  1 ms  2 ms
+2  border1-rt-fa5-1-0.gw.umass.edu  1 ms  1 ms  2 ms
+...
 15 fantasia.eurecom.fr  132 ms 128 ms 136 ms
-    </div>
+    </pre>
     <p><strong>Packet loss:</strong> buffers (queues) have finite capacity; a packet arriving at a full buffer is dropped (lost). It may or may not be retransmitted.</p>
 
     <!-- ================= 6. NETWORK SECURITY ================= -->
@@ -302,19 +388,19 @@
     <!-- ================= 7. PROTOCOL LAYERS & ENCAPSULATION ================= -->
     <h2 id="layers"><i class="fas fa-layer-group"></i> 7. Protocol Layers, Service Models &amp; Encapsulation</h2>
     <p>Layering organizes complex systems. Each layer provides services to the layer above using services from the layer below. Changes inside a layer are transparent to other layers.</p>
-    <div class="code-block">
-        <strong>Internet 5‑layer stack</strong><br>
-        • Application: HTTP, SMTP, DNS (messages)<br>
-        • Transport: TCP, UDP (segments)<br>
-        • Network: IP, routing protocols (datagrams)<br>
-        • Link: Ethernet, WiFi, PPP (frames)<br>
-        • Physical: bits on the wire
-    </div>
+    <pre>
+<strong>Internet 5‑layer stack</strong>
+• Application: HTTP, SMTP, DNS (messages)
+• Transport: TCP, UDP (segments)
+• Network: IP, routing protocols (datagrams)
+• Link: Ethernet, WiFi, PPP (frames)
+• Physical: bits on the wire
+    </pre>
     <h3>📦 Encapsulation</h3>
     <p>At the source: <strong>message</strong> → add transport header (H<sub>t</sub>) → <strong>segment</strong> → add network header (H<sub>n</sub>) → <strong>datagram</strong> → add link header (H<sub>l</sub>) → <strong>frame</strong>. The destination reverses the process.</p>
-    <div class="code-block">
-message → [H<sub>t</sub>|message] → [H<sub>n</sub>|[H<sub>t</sub>|message]] → [H<sub>l</sub>|[H<sub>n</sub>|[H<sub>t</sub>|message]]]
-    </div>
+    <pre>
+message → [Ht|message] → [Hn|[Ht|message]] → [Hl|[Hn|[Ht|message]]]
+    </pre>
     <p>This modular design enables independent evolution of technologies (e.g., replacing Ethernet with WiFi without affecting upper layers).</p>
 
     <!-- ================= 8. INTERNET HISTORY ================= -->
@@ -329,15 +415,15 @@ message → [H<sub>t</sub>|message] → [H<sub>n</sub>|[H<sub>t</sub>|message]] 
 
     <!-- ================= 9. ISO/OSI REFERENCE MODEL ================= -->
     <h2 id="osi"><i class="fas fa-project-diagram"></i> 9. ISO/OSI Reference Model (7 layers)</h2>
-    <p>The OSI model adds two layers not present in the Internet stack:</p>
+    <p>The OSI model adds two layers not found in the Internet stack:</p>
     <ul>
         <li><strong>Presentation layer:</strong> encryption, compression, machine‑specific conventions.</li>
         <li><strong>Session layer:</strong> synchronization, checkpointing, recovery of data exchange.</li>
     </ul>
     <p>These services, if needed, must be implemented within the application layer in the Internet architecture.</p>
-    <div class="code-block">
+    <pre>
 OSI layers: Application → Presentation → Session → Transport → Network → Link → Physical
-    </div>
+    </pre>
 
     <!-- ================= 10. HOMEWORK ASSIGNMENT ================= -->
     <h2 id="homework"><i class="fas fa-tasks"></i> Homework Assignment (Theoretical, Graded)</h2>
@@ -393,10 +479,14 @@ OSI layers: Application → Presentation → Session → Transport → Network �
         • Why are application‑layer protocols such as HTTP critical for end‑users?
     </div>
 
-    <footer>
-        <p>© 2026 Mahmoud Khalil – All Rights Reserved</p>
+    <footer style="margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+        <p>© <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved</p>
         <p>Recommended tools: Wireshark, traceroute, Cisco Packet Tracer, GNS3.</p>
     </footer>
 </div>
+<script>
+    document.getElementById('lecture-year').textContent = new Date().getFullYear();
+</script>
+<script src="scripts.js" defer></script>
 </body>
 </html>

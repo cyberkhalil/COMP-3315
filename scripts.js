@@ -3,8 +3,24 @@
     document.addEventListener('DOMContentLoaded', () => {
         console.log('COMP-3315 | Course scripts loaded (Main + Lecture support)');
 
+        // ========== تحديث السنة في جميع التواقيع ==========
+        const currentYear = new Date().getFullYear();
+        const yearSpans = document.querySelectorAll('#current-year, #lecture-year, .copyright-year span');
+        yearSpans.forEach(span => {
+            if (span.tagName === 'SPAN') {
+                span.textContent = currentYear;
+            } else if (span.classList?.contains('copyright-year')) {
+                // إذا كان العنصر هو الفقرة نفسها
+                span.innerHTML = span.innerHTML.replace(/\d{4}/, currentYear);
+            }
+        });
+        // معالجة حالة footer العادي بدون id
+        const footerCopyright = document.querySelector('footer p:last-of-type');
+        if (footerCopyright && footerCopyright.innerText.includes('©')) {
+            footerCopyright.innerHTML = footerCopyright.innerHTML.replace(/\d{4}/, currentYear);
+        }
+
         // ========== الوظائف العامة للصفحة الرئيسية ==========
-        // تفاعل أزرار المحاضرات
         const lectureBtns = document.querySelectorAll('.lecture-btn');
         lectureBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -12,15 +28,6 @@
                 console.log(`Navigating to ${targetChapter} material: ${this.getAttribute('href')}`);
             });
         });
-
-        // تحديث سنة حقوق النشر تلقائياً
-        const footerYear = document.querySelector('footer p:last-of-type');
-        if (footerYear) {
-            const currentYear = new Date().getFullYear();
-            if (footerYear.innerText.includes('© 2026')) {
-                footerYear.innerText = footerYear.innerText.replace('2026', currentYear);
-            }
-        }
 
         // تمرير سلس للروابط الداخلية (لأي صفحة)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -46,13 +53,59 @@
             });
         });
 
-        // ========== وظائف إضافية خاصة بصفحة lecture1 ==========
-        // إذا كانت الصفحة تحتوي على كلاسات lecture-card (أي lecture1)
-        if (document.querySelector('.lecture-card')) {
-            console.log('Lecture mode detected: adding extra enhancements');
+        // ========== وظائف إضافية خاصة بصفحات المحاضرات (lecture) ==========
+        // إضافة زر نسخ لكل عنصر pre مع تجنب إضافة أزرار متكررة
+        const preBlocks = document.querySelectorAll('pre:not(.no-copy)');
+        preBlocks.forEach(pre => {
+            // تجنب إضافة الزر إذا كان موجوداً بالفعل
+            if (pre.parentElement?.querySelector('.copy-pre-btn')) return;
             
-            // إضافة تأثير ظهور تدريجي للبطاقات عند التمرير (اختياري)
-            const cards = document.querySelectorAll('.lecture-card');
+            const copyBtn = document.createElement('button');
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            copyBtn.className = 'copy-pre-btn';
+            copyBtn.style.position = 'absolute';
+            copyBtn.style.right = '12px';
+            copyBtn.style.top = '12px';
+            copyBtn.style.background = 'var(--primary)';
+            copyBtn.style.border = 'none';
+            copyBtn.style.borderRadius = '30px';
+            copyBtn.style.padding = '4px 12px';
+            copyBtn.style.cursor = 'pointer';
+            copyBtn.style.fontSize = '0.7rem';
+            copyBtn.style.color = 'white';
+            copyBtn.style.zIndex = '3';
+            copyBtn.style.transition = '0.2s';
+            copyBtn.title = 'Copy to clipboard';
+            
+            // جعل الـ pre له موضع نسبي
+            const container = document.createElement('div');
+            container.style.position = 'relative';
+            container.style.margin = '1rem 0';
+            pre.parentNode.insertBefore(container, pre);
+            container.appendChild(pre);
+            container.appendChild(copyBtn);
+            
+            copyBtn.addEventListener('click', async () => {
+                const text = pre.innerText;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 1500);
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    copyBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 1500);
+                }
+            });
+        });
+
+        // تأثير ظهور تدريجي للبطاقات إذا كانت موجودة (للمحاضرات المستقبلية)
+        const cards = document.querySelectorAll('.lecture-card');
+        if (cards.length) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -68,41 +121,6 @@
                 card.style.transform = 'translateY(12px)';
                 card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
                 observer.observe(card);
-            });
-
-            // إضافة أيقونة نسخ لكود الـ traceroute (تحسين تجربة المستخدم)
-            const preBlocks = document.querySelectorAll('pre');
-            preBlocks.forEach(pre => {
-                const copyBtn = document.createElement('button');
-                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                copyBtn.style.position = 'absolute';
-                copyBtn.style.right = '20px';
-                copyBtn.style.top = '10px';
-                copyBtn.style.background = 'var(--primary)';
-                copyBtn.style.border = 'none';
-                copyBtn.style.borderRadius = '30px';
-                copyBtn.style.padding = '4px 12px';
-                copyBtn.style.cursor = 'pointer';
-                copyBtn.style.fontSize = '0.7rem';
-                copyBtn.style.color = 'white';
-                copyBtn.style.zIndex = '3';
-                copyBtn.title = 'نسخ النص';
-                
-                const container = document.createElement('div');
-                container.style.position = 'relative';
-                pre.parentNode.insertBefore(container, pre);
-                container.appendChild(pre);
-                container.appendChild(copyBtn);
-                
-                copyBtn.addEventListener('click', () => {
-                    const text = pre.innerText;
-                    navigator.clipboard.writeText(text).then(() => {
-                        copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-                        setTimeout(() => {
-                            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                        }, 1500);
-                    });
-                });
             });
         }
     });

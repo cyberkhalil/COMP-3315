@@ -1,4 +1,4 @@
-/* styles.css - شامل للصفحة الرئيسية و lecture1 */
+/* styles.css - شامل للصفحة الرئيسية و lecture1 مع تحسينات */
 
 * {
     margin: 0;
@@ -14,7 +14,7 @@
     --primary-glow: rgba(59, 130, 246, 0.5);
     --accent: #60a5fa;
     --text-light: #e2e8f0;
-    --text-muted: #94a3b8;
+    --text-muted: #cbd5e1;  /* تحسين التباين من #94a3b8 إلى #cbd5e1 */
     --border-light: rgba(255, 255, 255, 0.08);
     --success: #10b981;
 }
@@ -587,6 +587,7 @@ pre {
     font-size: 0.8rem;
     border: 1px solid var(--border-light);
     margin: 1rem 0;
+    font-family: 'Courier New', monospace;
 }
 
 .security-grid {
@@ -748,4 +749,64 @@ pre {
         align-items: flex-start;
         gap: 6px;
     }
+}
+
+/* إضافة في نهاية الملف - لتحسين المسافات والعناصر القابلة للقراءة */
+.lecture-container, .lecture-container-special {
+    padding: 2rem;
+}
+
+/* توحيد هوامش القوائم */
+.lecture-container-special ul, 
+.lecture-container-special ol,
+.lecture-card ul,
+.lecture-card ol {
+    margin: 0.75rem 0 0.75rem 1.8rem; /* مسافة من اليسار كافية */
+    padding-left: 0;
+}
+
+/* عناصر الـ li تحت القوائم */
+.lecture-container-special li,
+.lecture-card li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* للعناصر التي تحتوي على border-left (مثل الملاحظات) */
+.info-note, .homework-box, .callout, .comparison-box {
+    padding: 1rem 1rem 1rem 1.5rem; /* زيادة padding-left */
+    margin: 1.2rem 0;
+    border-left-width: 4px;
+    border-left-style: solid;
+}
+
+/* العناوين داخل هذه الصناديق يجب أن تحافظ على محاذاتها */
+.info-note h3, .homework-box h3,
+.info-note h4, .homework-box h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+/* الأعمدة (two-cols) */
+.two-cols .col {
+    padding: 1.2rem;
+}
+
+/* قوائم داخل الأعمدة */
+.two-cols .col ul,
+.two-cols .col ol {
+    margin-left: 1.2rem;
+}
+
+/* تحسين عرض البطاقات (access-card) */
+.access-card {
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+/* معالجة القوائم المتداخلة */
+ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
 }
