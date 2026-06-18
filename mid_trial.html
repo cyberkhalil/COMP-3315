@@ -944,7 +944,7 @@
         }
 
         // ================================================================
-        //  7.  BUILD QUESTIONS UI
+        //  7.  BUILD QUESTIONS UI  (with enhanced anti‑paste)
         // ================================================================
         function buildQuestionsUI() {
             examContainer.innerHTML = '';
@@ -992,11 +992,33 @@
 
                 lastValues.set(textarea, '');
 
-                // anti‑paste on this textarea (enhanced for mobile)
+                // -------------------- ENHANCED ANTI‑PASTE --------------------
                 let lastValue = '';
                 let lastLen = 0;
                 let lastTime = Date.now();
 
+                // 1. Block paste and drop events
+                textarea.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    clearField(textarea, q.id);
+                    showPasteWarning();
+                });
+                textarea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    clearField(textarea, q.id);
+                    showPasteWarning();
+                });
+
+                // 2. Block beforeinput with paste/drop types (works on most modern browsers including mobile)
+                textarea.addEventListener('beforeinput', (e) => {
+                    if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') {
+                        e.preventDefault();
+                        clearField(textarea, q.id);
+                        showPasteWarning();
+                    }
+                });
+
+                // 3. Secondary detection via input event (speed-based)
                 textarea.addEventListener('input', (e) => {
                     const now = Date.now();
                     const currentVal = textarea.value;
@@ -1004,8 +1026,9 @@
                     const timeDiff = now - lastTime;
                     const charDiff = currentLen - lastLen;
 
-                    // If many characters added in a short time -> paste detected
-                    if (charDiff > 3 && timeDiff < 200) {
+                    // If many characters added in a short time → paste detected
+                    // Threshold: >2 chars within 250ms
+                    if (charDiff > 2 && timeDiff < 250) {
                         // Revert to previous value
                         textarea.value = lastValue;
                         const printSpan = document.getElementById(`print_answer_${q.id}`);
@@ -1013,7 +1036,7 @@
                         if (examStarted) localStorage.setItem(`answer_${q.id}`, textarea.value);
                         lastValues.set(textarea, textarea.value);
                         showPasteWarning();
-                        // Reset counters
+                        // Reset counters to the reverted state
                         lastLen = textarea.value.length;
                         lastTime = Date.now();
                         lastValue = textarea.value;
@@ -1024,26 +1047,36 @@
                     lastLen = currentLen;
                     lastTime = now;
                     lastValue = currentVal;
-                    // The auto-save will handle saving periodically
+                    // The auto-save will handle periodic saving
                 });
 
-                // Additional protection: block paste and drop events
-                textarea.addEventListener('paste', (e) => {
-                    e.preventDefault();
-                    clearField(textarea, q.id);
-                    showPasteWarning();
-                });
-                textarea.addEventListener('beforeinput', (e) => {
-                    if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') {
-                        e.preventDefault();
-                        clearField(textarea, q.id);
-                        showPasteWarning();
+                // Also reset the state when the field is cleared programmatically
+                const originalClear = clearField;
+                const boundClear = (ta, id) => {
+                    originalClear(ta, id);
+                    lastLen = 0;
+                    lastTime = Date.now();
+                    lastValue = '';
+                };
+                // We need to override clearField for this specific textarea, but we can just use the global one.
+                // We'll attach a custom reset function to the textarea for internal use.
+                textarea._resetPasteState = () => {
+                    lastLen = 0;
+                    lastTime = Date.now();
+                    lastValue = '';
+                };
+                // When clearField is called globally, it will reset lastValues but not these local vars.
+                // We'll patch the clearField function to also reset local state for all textareas.
+                // Actually, we can just attach a mutation observer or simply rely on the fact that after clear,
+                // the input event will trigger and set lastValue to ''.
+                // But we'll manually reset when we call clearField from inside.
+                // To keep it simple, we'll add a listener for 'focus' to reset state if empty.
+                textarea.addEventListener('focus', () => {
+                    if (textarea.value === '') {
+                        lastLen = 0;
+                        lastTime = Date.now();
+                        lastValue = '';
                     }
-                });
-                textarea.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    clearField(textarea, q.id);
-                    showPasteWarning();
                 });
             });
         }
