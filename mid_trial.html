@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>COMP-3315 | Mid Exam – Chapters 1 &amp; 2</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* ========== GLOBAL RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: #0b1120;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(30, 50, 80, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 50, 80, 0.15) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 24px 50px;
+        }
+
+        /* ========== HEADER ========== */
+        .exam-header {
+            background: rgba(18, 25, 45, 0.92);
+            backdrop-filter: blur(2px);
+            border: 1px solid #2d3a5e;
+            border-radius: 1.2rem;
+            padding: 28px 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .exam-header .badge {
+            display: inline-block;
+            background: #1e3a5f;
+            color: #7dd3fc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 4px 16px;
+            border-radius: 30px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .exam-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f0f9ff;
+            margin-bottom: 6px;
+        }
+
+        .exam-header .sub {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .exam-header .sub i {
+            color: #7dd3fc;
+            margin-right: 6px;
+        }
+
+        .instructor-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 32px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 0.75rem;
+            padding: 14px 22px;
+            margin-top: 16px;
+            border: 1px solid #1e2d4a;
+        }
+
+        .instructor-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .instructor-item i {
+            color: #7dd3fc;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* ========== STUDENT INFO ========== */
+        .student-info-card {
+            background: rgba(18, 25, 45, 0.92);
+            backdrop-filter: blur(2px);
+            border: 1px solid #2d3a5e;
+            border-radius: 1rem;
+            padding: 22px 28px;
+            margin-bottom: 28px;
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .info-item label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .info-item input {
+            width: 100%;
+            padding: 10px 14px;
+            background: #0b1120;
+            border: 1.5px solid #2d3a5e;
+            border-radius: 0.6rem;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .info-item input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .info-item input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ========== TIMER BAR ========== */
+        .timer-bar {
+            background: rgba(18, 25, 45, 0.92);
+            backdrop-filter: blur(2px);
+            border: 1px solid #2d3a5e;
+            border-radius: 1rem;
+            padding: 16px 28px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .timer-bar .label {
+            font-weight: 600;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .timer-bar .label i {
+            color: #fbbf24;
+            margin-right: 8px;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: #0b1120;
+            color: #fbbf24;
+            padding: 4px 22px;
+            border-radius: 50px;
+            letter-spacing: 3px;
+            border: 1px solid #2d3a5e;
+        }
+
+        .timer-bar .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-success:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .expired-msg {
+            color: #fca5a5;
+            font-weight: 600;
+            background: rgba(220, 38, 38, 0.15);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        /* ========== EXAM CONTAINER ========== */
+        .exam-container {
+            background: rgba(18, 25, 45, 0.92);
+            backdrop-filter: blur(2px);
+            border: 1px solid #2d3a5e;
+            border-radius: 1.2rem;
+            padding: 24px 28px;
+            min-height: 300px;
+        }
+
+        .exam-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .exam-placeholder i {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .exam-placeholder p {
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ========== QUESTION CARDS ========== */
+        .question-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #2d3a5e;
+            border-radius: 0.9rem;
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .question-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-card .q-header {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 14px 22px;
+            border-bottom: 1px solid #2d3a5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .question-card .q-header .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .question-card .q-header .q-label {
+            font-weight: 600;
+            color: #7dd3fc;
+            font-size: 0.95rem;
+        }
+
+        .question-card .q-body {
+            padding: 20px 24px;
+        }
+
+        .question-card .q-text {
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 4px solid #3b82f6;
+            padding: 16px 20px;
+            border-radius: 0.5rem;
+            margin-bottom: 18px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+        }
+
+        .question-card .q-text strong {
+            color: #b9e6ff;
+        }
+
+        .question-card .answer-area label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .question-card .answer-area label i {
+            color: #7dd3fc;
+            margin-right: 6px;
+        }
+
+        .question-card textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 14px 16px;
+            background: #0b1120;
+            border: 1.5px solid #2d3a5e;
+            border-radius: 0.6rem;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            resize: vertical;
+            transition: 0.2s;
+        }
+
+        .question-card textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+
+        .question-card textarea:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .question-card textarea::placeholder {
+            color: #475569;
+        }
+
+        .print-answer {
+            display: none;
+            background: #0b1120;
+            border: 1px solid #2d3a5e;
+            border-radius: 0.5rem;
+            padding: 14px 18px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #e2e8f0;
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        .print-student-data {
+            display: none;
+        }
+
+        /* ========== BOTTOM BUTTON (single) ========== */
+        .bottom-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .bottom-actions .btn {
+            padding: 12px 40px;
+            font-size: 1rem;
+        }
+
+        /* ========== FOOTER ========== */
+        .exam-footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #2d3a5e;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .exam-footer strong {
+            color: #94a3b8;
+        }
+
+        /* ========== PASTE WARNING ========== */
+        .paste-warning {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #dc2626;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            animation: fadeOut 3.5s forwards;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            70% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(20px);
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 780px) {
+            .container {
+                padding: 16px 12px 30px;
+            }
+
+            .exam-header {
+                padding: 20px 18px;
+            }
+
+            .exam-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .student-info-card {
+                padding: 16px 18px;
+                gap: 16px;
+            }
+
+            .timer-bar {
+                padding: 14px 18px;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .timer-bar .actions {
+                justify-content: center;
+            }
+
+            .timer {
+                font-size: 1.4rem;
+                padding: 4px 14px;
+            }
+
+            .exam-container {
+                padding: 16px 14px;
+            }
+
+            .question-card .q-body {
+                padding: 14px 16px;
+            }
+
+            .question-card .q-text {
+                padding: 12px 14px;
+                font-size: 0.92rem;
+            }
+
+            .question-card textarea {
+                min-height: 110px;
+                font-size: 0.88rem;
+            }
+
+            .instructor-panel {
+                gap: 10px 20px;
+                padding: 12px 16px;
+                font-size: 0.8rem;
+            }
+
+            .bottom-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .exam-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .info-item {
+                min-width: 100%;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                padding: 6px 16px;
+            }
+
+            .timer {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ========== PRINT STYLES ========== */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: #fff !important;
+                color: #0b1120 !important;
+            }
+
+            .bg-grid {
+                display: none !important;
+            }
+
+            .container {
+                padding: 20px !important;
+                max-width: 100% !important;
+            }
+
+            .exam-header {
+                background: #f0f4fa !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+            }
+
+            .exam-header h1 {
+                color: #0b1120 !important;
+            }
+
+            .exam-header .sub {
+                color: #334155 !important;
+            }
+
+            .instructor-panel {
+                background: #e9edf4 !important;
+                border-color: #ccc !important;
+            }
+
+            .instructor-item {
+                color: #1e293b !important;
+            }
+
+            .instructor-item i {
+                color: #2563eb !important;
+            }
+
+            .student-info-card {
+                background: #f8fafc !important;
+                border: 1px solid #ccc !important;
+            }
+
+            .info-item label {
+                color: #1e293b !important;
+            }
+
+            .info-item input {
+                background: #fff !important;
+                border: 1px solid #aaa !important;
+                color: #0b1120 !important;
+            }
+
+            .timer-bar {
+                background: #f8fafc !important;
+                border: 1px solid #ccc !important;
+            }
+
+            .timer {
+                background: #e9edf4 !important;
+                color: #0b1120 !important;
+                border: 1px solid #aaa !important;
+            }
+
+            .exam-container {
+                background: #fff !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                padding: 16px !important;
+            }
+
+            .question-card {
+                background: #fafcff !important;
+                border: 1px solid #d0d7e2 !important;
+                page-break-inside: avoid;
+            }
+
+            .question-card .q-header {
+                background: #e9edf4 !important;
+                border-bottom: 1px solid #ccc !important;
+            }
+
+            .question-card .q-header .q-label {
+                color: #1e3a5f !important;
+            }
+
+            .question-card .q-header .q-num {
+                background: #2563eb !important;
+            }
+
+            .question-card .q-text {
+                background: #f1f5f9 !important;
+                border-left-color: #2563eb !important;
+                color: #0b1120 !important;
+            }
+
+            .question-card .q-text strong {
+                color: #1e3a5f !important;
+            }
+
+            .question-card textarea {
+                background: #f8fafc !important;
+                border: 1px solid #ccc !important;
+                color: #0b1120 !important;
+                min-height: 100px !important;
+            }
+
+            .question-card textarea:disabled {
+                opacity: 1 !important;
+                background: #f8fafc !important;
+            }
+
+            .print-answer {
+                display: block !important;
+            }
+
+            .print-student-data {
+                display: block !important;
+                font-weight: 600;
+                color: #0b1120;
+                padding: 4px 0;
+            }
+
+            .exam-footer {
+                border-top-color: #ccc !important;
+                color: #475569 !important;
+            }
+
+            .paste-warning {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <!-- ===== HEADER ===== -->
+        <header class="exam-header">
+            <div class="badge"><i class="fas fa-network-wired"></i> COMP‑3315 · Mid Exam</div>
+            <h1>Mid Exam – Computer Networks</h1>
+            <div class="sub"><i class="fas fa-book-open"></i> Chapters 1 &amp; 2 · Kurose &amp; Ross, 9th Edition · 9
+                Essay Questions · 70 Minutes</div>
+            <div class="instructor-panel">
+                <span class="instructor-item"><i class="fas fa-chalkboard-user"></i> Mahmoud Khalil</span>
+                <span class="instructor-item"><i class="fas fa-envelope"></i> mkhalil@ucas.edu.ps</span>
+                <span class="instructor-item"><i class="fas fa-calendar-alt"></i> 3 Credits · Cybersecurity
+                    Engineering</span>
+                <span class="instructor-item"><i class="fas fa-shield-alt"></i> No copy/paste · Proctored</span>
+            </div>
+        </header>
+
+        <!-- ===== STUDENT INFO ===== -->
+        <div class="student-info-card">
+            <div class="info-item">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="studentName" placeholder="Enter your full name" />
+                <div class="print-student-data" id="printName"></div>
+            </div>
+            <div class="info-item">
+                <label><i class="fas fa-id-card"></i> Student ID</label>
+                <input type="text" id="studentId" placeholder="Enter your university ID" inputmode="numeric" />
+                <div class="print-student-data" id="printId"></div>
+            </div>
+        </div>
+
+        <!-- ===== TIMER BAR ===== -->
+        <div class="timer-bar no-print">
+            <span class="label"><i class="fas fa-hourglass-half"></i> Time Remaining</span>
+            <span class="timer" id="timerDisplay">01:10:00</span>
+            <div class="actions">
+                <button id="startExamBtn" class="btn btn-success"><i class="fas fa-play"></i> Start Exam</button>
+            </div>
+        </div>
+
+        <!-- ===== EXAM CONTAINER ===== -->
+        <div id="examContainer" class="exam-container">
+            <div class="exam-placeholder">
+                <i class="fas fa-lock"></i>
+                <p><strong>Enter your name and ID</strong> above, then click <strong>"Start Exam"</strong> to
+                    begin.<br />
+                    You have <strong>70 minutes</strong> to complete the Mid Exam (Chapters 1 &amp; 2).<br />
+                    Answers are auto‑saved locally – you may close the page and resume later.</p>
+            </div>
+        </div>
+
+        <!-- ===== SINGLE BOTTOM BUTTON ===== -->
+        <div class="bottom-actions no-print">
+            <button id="finishPrintBtn" class="btn btn-primary" disabled>
+                <i class="fas fa-print"></i> Finish and Print as PDF
+            </button>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="exam-footer">
+            <p><i class="fas fa-university"></i> University College of Applied Sciences · Cybersecurity Engineering
+                Dept.</p>
+            <p>Based on <strong>Kurose &amp; Ross, 9th Edition</strong> – Chapters 1 &amp; 2 &nbsp;|&nbsp; Instructor:
+                <strong>Mahmoud Khalil</strong>
+            </p>
+            <p style="margin-top: 6px; font-size: 0.75rem; color: #475569;">© <span id="current-year"></span> Cyber
+                Khalil – All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        // ================================================================
+        //  1.  ANTI‑CHEAT: block copy, cut, paste, context menu, drag/drop
+        // ================================================================
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('dragstart', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+
+        // ================================================================
+        //  2.  QUESTIONS  (Chapters 1 & 2, essay style)
+        // ================================================================
+        const questions = [{
+            id: 1,
+            text: `Explain the <strong>two perspectives</strong> of the Internet: the <strong>"nuts‑and‑bolts"</strong> view and the <strong>"services"</strong> view. For each perspective, provide at least <strong>three specific examples</strong> and explain why both views are necessary to fully understand the Internet.`
+        }, {
+            id: 2,
+            text: `Compare and contrast <strong>packet switching</strong> and <strong>circuit switching</strong>. Discuss the advantages and disadvantages of each, and provide specific scenarios where one is clearly superior to the other. Include the concept of <strong>statistical multiplexing</strong> in your answer.`
+        }, {
+            id: 3,
+            text: `List and explain the <strong>four sources of packet delay</strong> in a network. Write the formula for each delay component. Then, explain how <strong>traffic intensity (La/R)</strong> affects queueing delay, and describe what happens when La/R approaches or exceeds 1.`
+        }, {
+            id: 4,
+            text: `What is a <strong>protocol</strong>? Explain the key elements that a protocol defines. Provide at least <strong>three examples</strong> of Internet protocols, stating which layer each belongs to and what function it serves.`
+        }, {
+            id: 5,
+            text: `Explain the difference between <strong>non‑persistent HTTP</strong> and <strong>persistent HTTP</strong>. Calculate the total response time for a web page with <strong>8 small images</strong> using non‑persistent HTTP, given <strong>RTT = 80 ms</strong> and negligible transmission time. Then, calculate the same for persistent HTTP and explain the difference.`
+        }, {
+            id: 6,
+            text: `What are <strong>cookies</strong> in the context of HTTP? How do they enable stateful behavior in a stateless protocol? Describe the <strong>four steps</strong> of how cookies work and discuss the privacy concerns associated with <strong>third‑party cookies</strong>.`
+        }, {
+            id: 7,
+            text: `Describe the <strong>Domain Name System (DNS)</strong> architecture. Explain the roles of <strong>root name servers</strong>, <strong>TLD servers</strong>, <strong>authoritative servers</strong>, and <strong>local DNS servers</strong>. Compare <strong>iterative</strong> and <strong>recursive</strong> queries, and explain why DNS caching is important for performance.`
+        }, {
+            id: 8,
+            text: `Compare the <strong>client‑server</strong> and <strong>P2P</strong> architectures. Give <strong>two advantages</strong> and <strong>two disadvantages</strong> of each. Provide real‑world examples of applications that use each architecture, and explain why each architecture is suited for its respective applications.`
+        }, {
+            id: 9,
+            text: `Define <strong>encapsulation</strong> in the context of the Internet protocol stack. Describe step by step how a <strong>message becomes a frame</strong> at the sender, and what happens at the receiver. Include the names of the <strong>protocol data units (PDUs)</strong> at each layer of the 5‑layer Internet stack.`
+        }];
+
+        // ================================================================
+        //  3.  CONSTANTS & STATE
+        // ================================================================
+        const EXAM_ID = 'comp3315_mid_exam';
+        const STATUS_KEY = `${EXAM_ID}_status`;
+
+        let examStarted = false;
+        let timerInterval = null;
+        let endTime = null;
+        let pollingInterval = null;
+        let autoSaveInterval = null;
+
+        const startBtn = document.getElementById('startExamBtn');
+        const finishPrintBtn = document.getElementById('finishPrintBtn');
+        const examContainer = document.getElementById('examContainer');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const studentNameInput = document.getElementById('studentName');
+        const studentIdInput = document.getElementById('studentId');
+        const printNameSpan = document.getElementById('printName');
+        const printIdSpan = document.getElementById('printId');
+
+        const lastValues = new Map();
+
+        // ================================================================
+        //  4.  PASTE WARNING HELPER
+        // ================================================================
+        function showPasteWarning() {
+            alert('⚠️ Copy/paste is disabled. Please write your answer manually.');
+            const div = document.createElement('div');
+            div.className = 'paste-warning';
+            div.innerHTML = '<i class="fas fa-ban"></i> Paste blocked – type your answer.';
+            document.body.appendChild(div);
+            setTimeout(() => { if (div && div.remove) div.remove(); }, 3500);
+        }
+
+        function clearField(textarea, qId) {
+            if (!textarea) return;
+            textarea.value = '';
+            const printSpan = document.getElementById(`print_answer_${qId}`);
+            if (printSpan) printSpan.innerText = '';
+            if (examStarted) localStorage.setItem(`answer_${qId}`, '');
+            lastValues.set(textarea, '');
+        }
+
+        // ================================================================
+        //  5.  POLLING & AUTO‑SAVE
+        // ================================================================
+        function startPastePolling() {
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(() => {
+                if (!examStarted) return;
+                const textareas = document.querySelectorAll('#examContainer textarea:not([disabled])');
+                for (const ta of textareas) {
+                    const currentVal = ta.value;
+                    const previousVal = lastValues.get(ta) || '';
+                    const currentLen = currentVal.length;
+                    const previousLen = previousVal.length;
+                    const now = Date.now();
+                    const lastTime = ta._lastTime || now;
+                    const timeDiff = now - lastTime;
+                    if ((currentLen - previousLen > 20) && timeDiff < 80) {
+                        ta._lastTime = now;
+                        const match = ta.id.match(/answer_(\d+)/);
+                        if (match) clearField(ta, match[1]);
+                        showPasteWarning();
+                    }
+                    lastValues.set(ta, currentVal);
+                }
+            }, 100);
+        }
+
+        function stopPastePolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        function startAutoSave() {
+            if (autoSaveInterval) return;
+            autoSaveInterval = setInterval(() => {
+                if (!examStarted) return;
+                const textareas = document.querySelectorAll('#examContainer textarea');
+                textareas.forEach(ta => {
+                    const id = ta.id.split('_')[1];
+                    localStorage.setItem(`answer_${id}`, ta.value);
+                });
+            }, 5000);
+        }
+
+        function stopAutoSave() {
+            if (autoSaveInterval) {
+                clearInterval(autoSaveInterval);
+                autoSaveInterval = null;
+            }
+        }
+
+        // ================================================================
+        //  6.  ENABLE / DISABLE ANSWERS
+        // ================================================================
+        function enableAnswers(enable) {
+            const textareas = document.querySelectorAll('#examContainer textarea');
+            textareas.forEach(ta => {
+                if (enable) {
+                    ta.disabled = false;
+                    ta.classList.remove('disabled-input');
+                    lastValues.set(ta, ta.value);
+                } else {
+                    ta.disabled = true;
+                    ta.classList.add('disabled-input');
+                }
+            });
+            if (enable) {
+                startPastePolling();
+                startAutoSave();
+            } else {
+                stopPastePolling();
+                stopAutoSave();
+            }
+        }
+
+        // ================================================================
+        //  7.  BUILD QUESTIONS UI
+        // ================================================================
+        function buildQuestionsUI() {
+            examContainer.innerHTML = '';
+            questions.forEach((q) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.setAttribute('data-qid', q.id);
+
+                const header = document.createElement('div');
+                header.className = 'q-header';
+                header.innerHTML = `
+                    <span class="q-num">${q.id}</span>
+                    <span class="q-label">Question ${q.id} of ${questions.length}</span>
+                `;
+                card.appendChild(header);
+
+                const body = document.createElement('div');
+                body.className = 'q-body';
+
+                const textDiv = document.createElement('div');
+                textDiv.className = 'q-text';
+                textDiv.innerHTML = `<p>${q.text}</p>`;
+                body.appendChild(textDiv);
+
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer-area';
+                answerDiv.innerHTML = `<label><i class="fas fa-pen"></i> Your Answer:</label>`;
+
+                const textarea = document.createElement('textarea');
+                textarea.id = `answer_${q.id}`;
+                textarea.placeholder = 'Write your detailed answer here… (include code, diagrams, or formulas where appropriate)';
+                textarea.rows = 6;
+                textarea.style.minHeight = '150px';
+                textarea.disabled = true;
+                answerDiv.appendChild(textarea);
+
+                const printDiv = document.createElement('div');
+                printDiv.className = 'print-answer';
+                printDiv.id = `print_answer_${q.id}`;
+                answerDiv.appendChild(printDiv);
+
+                body.appendChild(answerDiv);
+                card.appendChild(body);
+                examContainer.appendChild(card);
+
+                lastValues.set(textarea, '');
+
+                // anti‑paste on this textarea
+                textarea.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    clearField(textarea, q.id);
+                    showPasteWarning();
+                });
+                textarea.addEventListener('beforeinput', (e) => {
+                    if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') {
+                        e.preventDefault();
+                        clearField(textarea, q.id);
+                        showPasteWarning();
+                    }
+                });
+                textarea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    clearField(textarea, q.id);
+                    showPasteWarning();
+                });
+
+                let lastLen = 0,
+                    lastTime = Date.now();
+                textarea.addEventListener('input', () => {
+                    const now = Date.now();
+                    const currentLen = textarea.value.length;
+                    const charDiff = currentLen - lastLen;
+                    const timeDiff = now - lastTime;
+                    if (charDiff > 15 && timeDiff < 50) {
+                        clearField(textarea, q.id);
+                        showPasteWarning();
+                        return;
+                    }
+                    lastLen = currentLen;
+                    lastTime = now;
+                });
+            });
+        }
+
+        // ================================================================
+        //  8.  TIMER
+        // ================================================================
+        function updateTimerDisplay() {
+            if (!endTime) return;
+            const remaining = Math.max(0, endTime - Date.now());
+            const hours = Math.floor(remaining / 3600000);
+            const minutes = Math.floor((remaining % 3600000) / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            timerDisplay.innerText =
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (remaining <= 0) {
+                localStorage.setItem(STATUS_KEY, 'finished');
+                localStorage.setItem(`${EXAM_ID}_finishedAt`, Date.now());
+                clearInterval(timerInterval);
+                enableAnswers(false);
+                startBtn.disabled = true;
+                finishPrintBtn.disabled = false;
+                examStarted = false;
+                const bar = document.querySelector('.timer-bar');
+                if (bar && !bar.querySelector('.expired-msg')) {
+                    const msg = document.createElement('span');
+                    msg.className = 'expired-msg';
+                    msg.innerHTML = '<i class="fas fa-hourglass-end"></i> Time expired! Review only.';
+                    bar.appendChild(msg);
+                }
+                alert('⏰ Time is up! Answers have been locked. You may review and print.');
+            }
+        }
+
+        function startTimer() {
+            const duration = 70 * 60 * 1000;
+            endTime = Date.now() + duration;
+            updateTimerDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+        }
+
+        // ================================================================
+        //  9.  UPDATE PRINT STUDENT DATA
+        // ================================================================
+        function updatePrintStudentData() {
+            printNameSpan.innerText = studentNameInput.value;
+            printIdSpan.innerText = studentIdInput.value;
+        }
+
+        // ================================================================
+        //  10. START EXAM
+        // ================================================================
+        function startExam() {
+            const name = studentNameInput.value.trim();
+            const id = studentIdInput.value.trim();
+            if (name === '' || id === '') {
+                alert('Please enter your full name and student ID before starting.');
+                return;
+            }
+            if (examContainer.children.length === 0 || examContainer.querySelector('.exam-placeholder')) {
+                buildQuestionsUI();
+            }
+            if (examStarted) return;
+
+            studentNameInput.disabled = true;
+            studentIdInput.disabled = true;
+            updatePrintStudentData();
+
+            enableAnswers(true);
+            startTimer();
+            examStarted = true;
+            startBtn.disabled = true;
+            finishPrintBtn.disabled = false;
+
+            localStorage.setItem(STATUS_KEY, 'running');
+            localStorage.setItem('examStartTime', Date.now());
+            localStorage.setItem('examStudentName', name);
+            localStorage.setItem('examStudentId', id);
+
+            // restore saved answers
+            for (let i = 1; i <= questions.length; i++) {
+                const saved = localStorage.getItem(`answer_${i}`);
+                if (saved !== null) {
+                    const ta = document.getElementById(`answer_${i}`);
+                    if (ta && ta.value !== saved) {
+                        ta.value = saved;
+                        const ps = document.getElementById(`print_answer_${i}`);
+                        if (ps) ps.innerText = saved;
+                        lastValues.set(ta, saved);
+                    }
+                }
+            }
+        }
+
+        // ================================================================
+        //  11. RESTORE STATE ON LOAD
+        // ================================================================
+        function restoreExamState() {
+            const status = localStorage.getItem(STATUS_KEY);
+            if (status === 'running') {
+                const startTime = parseInt(localStorage.getItem('examStartTime'), 10);
+                const elapsed = Date.now() - startTime;
+                const duration = 70 * 60 * 1000;
+                if (elapsed < duration) {
+                    const savedName = localStorage.getItem('examStudentName') || '';
+                    const savedId = localStorage.getItem('examStudentId') || '';
+                    studentNameInput.value = savedName;
+                    studentIdInput.value = savedId;
+                    studentNameInput.disabled = true;
+                    studentIdInput.disabled = true;
+                    updatePrintStudentData();
+                    buildQuestionsUI();
+                    enableAnswers(true);
+                    endTime = startTime + duration;
+                    updateTimerDisplay();
+                    if (timerInterval) clearInterval(timerInterval);
+                    timerInterval = setInterval(updateTimerDisplay, 1000);
+                    examStarted = true;
+                    startBtn.disabled = true;
+                    finishPrintBtn.disabled = false;
+                    for (let i = 1; i <= questions.length; i++) {
+                        const saved = localStorage.getItem(`answer_${i}`);
+                        if (saved !== null) {
+                            const ta = document.getElementById(`answer_${i}`);
+                            if (ta) {
+                                ta.value = saved;
+                                const ps = document.getElementById(`print_answer_${i}`);
+                                if (ps) ps.innerText = saved;
+                                lastValues.set(ta, saved);
+                            }
+                        }
+                    }
+                } else {
+                    // expired
+                    if (examContainer.children.length === 0 || examContainer.querySelector('.exam-placeholder'))
+                        buildQuestionsUI();
+                    for (let i = 1; i <= questions.length; i++) {
+                        const saved = localStorage.getItem(`answer_${i}`);
+                        if (saved !== null) {
+                            const ta = document.getElementById(`answer_${i}`);
+                            if (ta) {
+                                ta.value = saved;
+                                const ps = document.getElementById(`print_answer_${i}`);
+                                if (ps) ps.innerText = saved;
+                                lastValues.set(ta, saved);
+                            }
+                        }
+                    }
+                    enableAnswers(false);
+                    startBtn.disabled = true;
+                    finishPrintBtn.disabled = false;
+                    studentNameInput.disabled = true;
+                    studentIdInput.disabled = true;
+                    timerDisplay.innerText = '00:00:00';
+                    const bar = document.querySelector('.timer-bar');
+                    if (bar && !bar.querySelector('.expired-msg')) {
+                        const msg = document.createElement('span');
+                        msg.className = 'expired-msg';
+                        msg.innerHTML = '<i class="fas fa-hourglass-end"></i> Exam expired previously. Review only.';
+                        bar.appendChild(msg);
+                    }
+                    examStarted = false;
+                }
+            } else if (status === 'finished') {
+                const finishedAt = parseInt(localStorage.getItem(`${EXAM_ID}_finishedAt`), 10);
+                const now = Date.now();
+                const hours24 = 24 * 60 * 60 * 1000;
+                if (finishedAt && (now - finishedAt >= hours24)) {
+                    localStorage.clear();
+                    location.reload();
+                    return;
+                }
+                if (examContainer.children.length === 0 || examContainer.querySelector('.exam-placeholder'))
+                    buildQuestionsUI();
+                for (let i = 1; i <= questions.length; i++) {
+                    const saved = localStorage.getItem(`answer_${i}`);
+                    if (saved !== null) {
+                        const ta = document.getElementById(`answer_${i}`);
+                        if (ta) {
+                            ta.value = saved;
+                            const ps = document.getElementById(`print_answer_${i}`);
+                            if (ps) ps.innerText = saved;
+                            lastValues.set(ta, saved);
+                        }
+                    }
+                }
+                enableAnswers(false);
+                studentNameInput.disabled = true;
+                studentIdInput.disabled = true;
+                timerDisplay.innerText = '00:00:00';
+                const bar = document.querySelector('.timer-bar');
+                if (bar && !bar.querySelector('.expired-msg')) {
+                    const msg = document.createElement('span');
+                    msg.className = 'expired-msg';
+                    msg.innerHTML = '<i class="fas fa-check-circle"></i> Exam completed – review only.';
+                    bar.appendChild(msg);
+                }
+                examStarted = false;
+                startBtn.disabled = true;
+                finishPrintBtn.disabled = false;
+            } else {
+                examContainer.innerHTML = `
+                    <div class="exam-placeholder">
+                        <i class="fas fa-lock"></i>
+                        <p><strong>Enter your name and ID</strong> above, then click <strong>"Start Exam"</strong> to begin.<br />
+                        You have <strong>70 minutes</strong> to complete the Mid Exam (Chapters 1 &amp; 2).<br />
+                        Answers are auto‑saved locally – you may close the page and resume later.</p>
+                    </div>
+                `;
+                finishPrintBtn.disabled = true;
+            }
+        }
+
+        // ================================================================
+        //  12. EVENT BINDINGS & INIT
+        // ================================================================
+        window.onload = () => {
+            restoreExamState();
+
+            startBtn.addEventListener('click', startExam);
+
+            finishPrintBtn.addEventListener('click', () => {
+                if (examStarted || localStorage.getItem(STATUS_KEY) === 'running' || localStorage.getItem(STATUS_KEY) ===
+                    'finished') {
+                    window.print();
+                } else {
+                    alert('Please start the exam before printing.');
+                }
+            });
+
+            studentNameInput.addEventListener('input', updatePrintStudentData);
+            studentIdInput.addEventListener('input', updatePrintStudentData);
+
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        };
+
+        // Save on page unload
+        window.addEventListener('beforeunload', () => {
+            if (!examStarted) return;
+            const textareas = document.querySelectorAll('#examContainer textarea');
+            textareas.forEach(ta => {
+                const id = ta.id.split('_')[1];
+                localStorage.setItem(`answer_${id}`, ta.value);
+            });
+        });
+    </script>
+</body>
+
+</html>
