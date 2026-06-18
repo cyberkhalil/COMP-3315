@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>COMP-3315 | Chapter 2: Application Layer – Full Lecture</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -17,8 +20,9 @@
             border-radius: 1.2rem;
             padding: 2rem;
             border: 1px solid var(--border-light);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
+
         .home-button {
             display: inline-flex;
             align-items: center;
@@ -32,10 +36,12 @@
             margin-bottom: 1.5rem;
             transition: 0.2s;
         }
+
         .home-button:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
         }
+
         .lecture-container-special h2 {
             font-size: 1.7rem;
             font-weight: 700;
@@ -44,12 +50,14 @@
             border-bottom: 2px solid #2d3a5e;
             padding-bottom: 0.5rem;
         }
+
         .lecture-container-special h3 {
             font-size: 1.3rem;
             font-weight: 600;
             margin: 1.2rem 0 0.8rem 0;
             color: #b9e6ff;
         }
+
         .info-note {
             background: rgba(15, 25, 45, 0.7);
             padding: 1rem 1rem 1rem 1.8rem;
@@ -57,6 +65,7 @@
             margin: 1.2rem 0;
             border-radius: 0.5rem;
         }
+
         .homework-box {
             background: rgba(15, 25, 45, 0.7);
             padding: 1rem 1rem 1rem 1.8rem;
@@ -64,12 +73,14 @@
             margin: 1.2rem 0;
             border-radius: 0.5rem;
         }
+
         .two-cols {
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
             margin: 1.2rem 0;
         }
+
         .col {
             flex: 1;
             min-width: 250px;
@@ -78,7 +89,9 @@
             border-radius: 0.75rem;
             border: 1px solid var(--border-light);
         }
-        .code-block, pre {
+
+        .code-block,
+        pre {
             background: #0b1120;
             color: #e2e8f0;
             padding: 1rem;
@@ -89,97 +102,117 @@
             margin: 1.2rem 0;
             border: 1px solid #2d3a5e;
         }
+
         .access-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 1rem;
             margin: 1.2rem 0;
         }
+
         .access-card {
             background: rgba(0, 0, 0, 0.3);
             padding: 0.8rem 1rem;
             border-radius: 0.5rem;
             border-left: 3px solid var(--primary);
         }
+
         @media (max-width: 700px) {
-            .lecture-container-special { padding: 1rem; }
+            .lecture-container-special {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
-<div class="bg-grid"></div>
-<div class="lecture-container-special">
-    <a href="index.html" class="home-button"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
+    <div class="bg-grid"></div>
+    <div class="lecture-container-special">
+        <a href="index.html" class="home-button"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
 
-    <div class="quick-nav" style="margin-bottom: 1.5rem;">
-        <a href="#principles">Principles</a>
-        <a href="#http">HTTP</a>
-        <a href="#cookies">Cookies</a>
-        <a href="#caching">Caching</a>
-        <a href="#http2">HTTP/2 & QUIC</a>
-        <a href="#email">Email</a>
-        <a href="#dns">DNS</a>
-        <a href="#streaming">Video & CDNs</a>
-        <a href="#socket">Socket Programming</a>
-        <a href="#homework">Homework</a>
-    </div>
-
-    <h1>Chapter 2: Application Layer</h1>
-    <p style="font-size: 0.9rem; color: var(--text-muted);">Kurose & Ross, <em>Computer Networking: A Top-Down Approach</em>, 9th edition (2025) – Full lecture coverage</p>
-
-    <!-- ================= 1. PRINCIPLES OF NETWORK APPLICATIONS ================= -->
-    <h2 id="principles"><i class="fas fa-cogs"></i> 1. Principles of Network Applications</h2>
-    <p>Network apps run on end systems (hosts) – not on core network devices. They communicate using the transport layer's services.</p>
-    <div class="two-cols">
-        <div class="col">
-            <h3>🏢 Client-Server Architecture</h3>
-            <ul>
-                <li><strong>Server</strong>: always-on, permanent IP address, often in data centers.</li>
-                <li><strong>Clients</strong>: communicate with server, may be intermittently connected, may have dynamic IP addresses.</li>
-                <li>Examples: Web (HTTP), email (SMTP/IMAP), FTP.</li>
-            </ul>
+        <div class="quick-nav" style="margin-bottom: 1.5rem;">
+            <a href="#principles">Principles</a>
+            <a href="#http">HTTP</a>
+            <a href="#cookies">Cookies</a>
+            <a href="#caching">Caching</a>
+            <a href="#http2">HTTP/2 & QUIC</a>
+            <a href="#email">Email</a>
+            <a href="#dns">DNS</a>
+            <a href="#streaming">Video & CDNs</a>
+            <a href="#socket">Socket Programming</a>
+            <a href="#homework">Homework</a>
         </div>
-        <div class="col">
-            <h3>🌍 Peer-to-Peer (P2P) Architecture</h3>
-            <ul>
-                <li>No always-on server; arbitrary end systems (peers) communicate directly.</li>
-                <li>Self-scalability: new peers bring new capacity and demand.</li>
-                <li>Peers are intermittently connected and change IP addresses.</li>
-                <li>Examples: BitTorrent, Skype (legacy), file sharing.</li>
-            </ul>
+
+        <h1>Chapter 2: Application Layer</h1>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Kurose & Ross, <em>Computer Networking: A Top-Down
+                Approach</em>, 9th edition (2025) – Full lecture coverage</p>
+
+        <!-- ================= 1. PRINCIPLES OF NETWORK APPLICATIONS ================= -->
+        <h2 id="principles"><i class="fas fa-cogs"></i> 1. Principles of Network Applications</h2>
+        <p>Network apps run on end systems (hosts) – not on core network devices. They communicate using the transport
+            layer's services.</p>
+        <div class="two-cols">
+            <div class="col">
+                <h3>🏢 Client-Server Architecture</h3>
+                <ul>
+                    <li><strong>Server</strong>: always-on, permanent IP address, often in data centers.</li>
+                    <li><strong>Clients</strong>: communicate with server, may be intermittently connected, may have
+                        dynamic IP addresses.</li>
+                    <li>Examples: Web (HTTP), email (SMTP/IMAP), FTP.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>🌍 Peer-to-Peer (P2P) Architecture</h3>
+                <ul>
+                    <li>No always-on server; arbitrary end systems (peers) communicate directly.</li>
+                    <li>Self-scalability: new peers bring new capacity and demand.</li>
+                    <li>Peers are intermittently connected and change IP addresses.</li>
+                    <li>Examples: BitTorrent, Skype (legacy), file sharing.</li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <h3>🔌 Processes, Sockets, and Addressing</h3>
-    <p>A <strong>process</strong> is a program running within a host. Processes communicate via <strong>sockets</strong> (API to the network). To identify a socket, we need both the <strong>IP address</strong> (host) and a <strong>port number</strong> (e.g., HTTP:80, SMTP:25).</p>
-    <div class="info-note">
-        <strong>Application-layer protocol</strong> defines: message types (request/response), syntax (fields and delimiters), semantics (meaning of fields), and rules for when/how processes send messages.
-    </div>
+        <h3>🔌 Processes, Sockets, and Addressing</h3>
+        <p>A <strong>process</strong> is a program running within a host. Processes communicate via
+            <strong>sockets</strong> (API to the network). To identify a socket, we need both the <strong>IP
+                address</strong> (host) and a <strong>port number</strong> (e.g., HTTP:80, SMTP:25).</p>
+        <div class="info-note">
+            <strong>Application-layer protocol</strong> defines: message types (request/response), syntax (fields and
+            delimiters), semantics (meaning of fields), and rules for when/how processes send messages.
+        </div>
 
-    <h3>📡 What transport service does an app need?</h3>
-    <ul>
-        <li><strong>Data integrity</strong>: some apps (file transfer, web) need 100% reliable transfer; others (audio) tolerate some loss.</li>
-        <li><strong>Timing</strong>: low delay is critical for Internet telephony, interactive games.</li>
-        <li><strong>Throughput</strong>: multimedia apps require minimum throughput; elastic apps use whatever is available.</li>
-        <li><strong>Security</strong>: encryption, data integrity, authentication (e.g., TLS).</li>
-    </ul>
+        <h3>📡 What transport service does an app need?</h3>
+        <ul>
+            <li><strong>Data integrity</strong>: some apps (file transfer, web) need 100% reliable transfer; others
+                (audio) tolerate some loss.</li>
+            <li><strong>Timing</strong>: low delay is critical for Internet telephony, interactive games.</li>
+            <li><strong>Throughput</strong>: multimedia apps require minimum throughput; elastic apps use whatever is
+                available.</li>
+            <li><strong>Security</strong>: encryption, data integrity, authentication (e.g., TLS).</li>
+        </ul>
 
-    <h3>🚚 Internet transport protocols</h3>
-    <ul>
-        <li><strong>TCP</strong>: reliable, in-order delivery, flow control, congestion control, connection-oriented. No timing/minimum throughput guarantees.</li>
-        <li><strong>UDP</strong>: unreliable, unordered, no connection setup, no congestion control. Used for streaming, DNS, VoIP (where speed matters over reliability).</li>
-        <li><strong>TLS</strong> (Transport Layer Security): provides encrypted TCP connections, data integrity, and endpoint authentication (implemented in application layer).</li>
-    </ul>
+        <h3>🚚 Internet transport protocols</h3>
+        <ul>
+            <li><strong>TCP</strong>: reliable, in-order delivery, flow control, congestion control,
+                connection-oriented. No timing/minimum throughput guarantees.</li>
+            <li><strong>UDP</strong>: unreliable, unordered, no connection setup, no congestion control. Used for
+                streaming, DNS, VoIP (where speed matters over reliability).</li>
+            <li><strong>TLS</strong> (Transport Layer Security): provides encrypted TCP connections, data integrity, and
+                endpoint authentication (implemented in application layer).</li>
+        </ul>
 
-    <!-- ================= 2. HTTP ================= -->
-    <h2 id="http"><i class="fas fa-globe"></i> 2. Web and HTTP</h2>
-    <p><strong>HTTP</strong> (HyperText Transfer Protocol) – Web's application-layer protocol. Uses TCP port 80 (default).</p>
-    <ul>
-        <li><strong>Non-persistent HTTP</strong>: one object per TCP connection → 2 RTTs per object (connection setup + request/response).</li>
-        <li><strong>Persistent HTTP (HTTP/1.1)</strong>: multiple objects over single TCP connection → lower response time, less overhead.</li>
-    </ul>
-    <h3>📄 HTTP request message (ASCII)</h3>
-    <pre>
+        <!-- ================= 2. HTTP ================= -->
+        <h2 id="http"><i class="fas fa-globe"></i> 2. Web and HTTP</h2>
+        <p><strong>HTTP</strong> (HyperText Transfer Protocol) – Web's application-layer protocol. Uses TCP port 80
+            (default).</p>
+        <ul>
+            <li><strong>Non-persistent HTTP</strong>: one object per TCP connection → 2 RTTs per object (connection
+                setup + request/response).</li>
+            <li><strong>Persistent HTTP (HTTP/1.1)</strong>: multiple objects over single TCP connection → lower
+                response time, less overhead.</li>
+        </ul>
+        <h3>📄 HTTP request message (ASCII)</h3>
+        <pre>
 GET /somedir/page.html HTTP/1.1
 Host: www.someschool.edu
 User-Agent: Mozilla/5.0
@@ -187,8 +220,8 @@ Accept: text/html,application/xhtml+xml
 Accept-Language: en-us
 (blank line)
     </pre>
-    <h3>📬 HTTP response message</h3>
-    <pre>
+        <h3>📬 HTTP response message</h3>
+        <pre>
 HTTP/1.1 200 OK
 Date: Mon, 10 Mar 2025 12:00:00 GMT
 Server: Apache/2.4
@@ -197,41 +230,50 @@ Content-Length: 1024
 
 (html data...)
     </pre>
-    <p><strong>Status codes</strong>: 200 OK, 301 Moved Permanently, 400 Bad Request, 404 Not Found, 505 HTTP Version Not Supported.</p>
+        <p><strong>Status codes</strong>: 200 OK, 301 Moved Permanently, 400 Bad Request, 404 Not Found, 505 HTTP
+            Version Not Supported.</p>
 
-    <h3 id="cookies">🍪 Cookies – maintaining user/server state</h3>
-    <p>HTTP is stateless; cookies add state via:</p>
-    <ol>
-        <li>Cookie header in HTTP response (set by server)</li>
-        <li>Cookie header in next HTTP request (sent by browser)</li>
-        <li>Cookie file stored on user's host</li>
-        <li>Back-end database at website</li>
-    </ol>
-    <div class="info-note">
-        <strong>Privacy note:</strong> Third-party cookies can track users across sites. GDPR gives users explicit control over cookie acceptance.
-    </div>
+        <h3 id="cookies">🍪 Cookies – maintaining user/server state</h3>
+        <p>HTTP is stateless; cookies add state via:</p>
+        <ol>
+            <li>Cookie header in HTTP response (set by server)</li>
+            <li>Cookie header in next HTTP request (sent by browser)</li>
+            <li>Cookie file stored on user's host</li>
+            <li>Back-end database at website</li>
+        </ol>
+        <div class="info-note">
+            <strong>Privacy note:</strong> Third-party cookies can track users across sites. GDPR gives users explicit
+            control over cookie acceptance.
+        </div>
 
-    <h3 id="caching">💾 Web Caching (Proxy Servers)</h3>
-    <p>Web cache (proxy) stores copies of objects, reducing response time and access link traffic. Browser sends requests to cache; if object is fresh, cache returns it; otherwise cache fetches from origin server.</p>
-    <div class="info-note">
-        <strong>Conditional GET</strong>: client asks "If-modified-since", server replies "304 Not Modified" if cached copy is up-to-date → saves bandwidth.
-    </div>
+        <h3 id="caching">💾 Web Caching (Proxy Servers)</h3>
+        <p>Web cache (proxy) stores copies of objects, reducing response time and access link traffic. Browser sends
+            requests to cache; if object is fresh, cache returns it; otherwise cache fetches from origin server.</p>
+        <div class="info-note">
+            <strong>Conditional GET</strong>: client asks "If-modified-since", server replies "304 Not Modified" if
+            cached copy is up-to-date → saves bandwidth.
+        </div>
 
-    <h3 id="http2">⚡ HTTP/2 and QUIC</h3>
-    <ul>
-        <li><strong>HTTP/2</strong>: multiplexed frames, server push, prioritized responses → reduces head-of-line (HOL) blocking.</li>
-        <li><strong>QUIC</strong> (Quick UDP Internet Connections): application-layer over UDP, integrates TLS + reliability + congestion control, reduces handshake to 1 RTT (or 0 RTT).</li>
-    </ul>
+        <h3 id="http2">⚡ HTTP/2 and QUIC</h3>
+        <ul>
+            <li><strong>HTTP/2</strong>: multiplexed frames, server push, prioritized responses → reduces head-of-line
+                (HOL) blocking.</li>
+            <li><strong>QUIC</strong> (Quick UDP Internet Connections): application-layer over UDP, integrates TLS +
+                reliability + congestion control, reduces handshake to 1 RTT (or 0 RTT).</li>
+        </ul>
 
-    <!-- ================= 3. EMAIL (SMTP, IMAP) ================= -->
-    <h2 id="email"><i class="fas fa-envelope"></i> 3. E‑mail: SMTP and IMAP</h2>
-    <p>Three major components: <strong>user agents</strong> (mail readers), <strong>mail servers</strong>, and <strong>SMTP</strong> (Simple Mail Transfer Protocol).</p>
-    <ul>
-        <li><strong>SMTP</strong>: uses TCP port 25, persistent connections, push protocol (sending server pushes message to receiving server). Requires 7-bit ASCII.</li>
-        <li><strong>Mail access protocols</strong>: <strong>IMAP</strong> (retrieves, stores, manages messages on server) or <strong>HTTP</strong> (web-based email like Gmail).</li>
-    </ul>
-    <h3>Sample SMTP interaction</h3>
-    <pre>
+        <!-- ================= 3. EMAIL (SMTP, IMAP) ================= -->
+        <h2 id="email"><i class="fas fa-envelope"></i> 3. E‑mail: SMTP and IMAP</h2>
+        <p>Three major components: <strong>user agents</strong> (mail readers), <strong>mail servers</strong>, and
+            <strong>SMTP</strong> (Simple Mail Transfer Protocol).</p>
+        <ul>
+            <li><strong>SMTP</strong>: uses TCP port 25, persistent connections, push protocol (sending server pushes
+                message to receiving server). Requires 7-bit ASCII.</li>
+            <li><strong>Mail access protocols</strong>: <strong>IMAP</strong> (retrieves, stores, manages messages on
+                server) or <strong>HTTP</strong> (web-based email like Gmail).</li>
+        </ul>
+        <h3>Sample SMTP interaction</h3>
+        <pre>
 S: 220 hamburger.edu
 C: HELO crepes.fr
 S: 250 Hello crepes.fr
@@ -249,51 +291,58 @@ C: QUIT
 S: 221 closing connection
     </pre>
 
-    <!-- ================= 4. DNS ================= -->
-    <h2 id="dns"><i class="fas fa-search"></i> 4. Domain Name System (DNS)</h2>
-    <p>DNS translates hostnames (e.g., www.example.com) to IP addresses. It is a <strong>distributed hierarchical database</strong> implemented by many name servers.</p>
-    <ul>
-        <li><strong>Root name servers</strong> (13 logical, heavily replicated) – managed by ICANN.</li>
-        <li><strong>Top-Level Domain (TLD) servers</strong> – for .com, .org, .edu, country domains, etc.</li>
-        <li><strong>Authoritative DNS servers</strong> – provide mapping for specific organization’s hosts.</li>
-        <li><strong>Local DNS server</strong> – not part of hierarchy, caches results, acts as proxy.</li>
-    </ul>
-    <h3>DNS resolution: iterative vs. recursive</h3>
-    <p><strong>Iterated query</strong>: contacted server replies with name of next server to ask. <strong>Recursive query</strong>: puts burden on name server (rare in practice).</p>
-    <h3>DNS records (Resource Records – RR)</h3>
-    <ul>
-        <li><strong>A</strong> – hostname to IP address</li>
-        <li><strong>NS</strong> – domain to authoritative name server hostname</li>
-        <li><strong>CNAME</strong> – alias to canonical name</li>
-        <li><strong>MX</strong> – mail server for domain</li>
-    </ul>
-    <div class="info-note">
-        <strong>DNS security:</strong> Cache poisoning and DDoS attacks are threats; DNSSEC provides authentication and integrity.
-    </div>
+        <!-- ================= 4. DNS ================= -->
+        <h2 id="dns"><i class="fas fa-search"></i> 4. Domain Name System (DNS)</h2>
+        <p>DNS translates hostnames (e.g., www.example.com) to IP addresses. It is a <strong>distributed hierarchical
+                database</strong> implemented by many name servers.</p>
+        <ul>
+            <li><strong>Root name servers</strong> (13 logical, heavily replicated) – managed by ICANN.</li>
+            <li><strong>Top-Level Domain (TLD) servers</strong> – for .com, .org, .edu, country domains, etc.</li>
+            <li><strong>Authoritative DNS servers</strong> – provide mapping for specific organization’s hosts.</li>
+            <li><strong>Local DNS server</strong> – not part of hierarchy, caches results, acts as proxy.</li>
+        </ul>
+        <h3>DNS resolution: iterative vs. recursive</h3>
+        <p><strong>Iterated query</strong>: contacted server replies with name of next server to ask. <strong>Recursive
+                query</strong>: puts burden on name server (rare in practice).</p>
+        <h3>DNS records (Resource Records – RR)</h3>
+        <ul>
+            <li><strong>A</strong> – hostname to IP address</li>
+            <li><strong>NS</strong> – domain to authoritative name server hostname</li>
+            <li><strong>CNAME</strong> – alias to canonical name</li>
+            <li><strong>MX</strong> – mail server for domain</li>
+        </ul>
+        <div class="info-note">
+            <strong>DNS security:</strong> Cache poisoning and DDoS attacks are threats; DNSSEC provides authentication
+            and integrity.
+        </div>
 
-    <!-- ================= 5. VIDEO STREAMING AND CDNS ================= -->
-    <h2 id="streaming"><i class="fas fa-video"></i> 5. Video Streaming & Content Distribution Networks (CDNs)</h2>
-    <p>Streaming video dominates Internet traffic. <strong>Challenge</strong>: deliver high-quality video to millions of heterogeneous users.</p>
-    <h3>DASH (Dynamic Adaptive Streaming over HTTP)</h3>
-    <ul>
-        <li>Server splits video into chunks, each encoded at multiple bitrates.</li>
-        <li>Client dynamically requests the best chunk based on measured bandwidth and buffer level.</li>
-        <li>Intelligence at client: avoids rebuffering, maximizes quality.</li>
-    </ul>
-    <h3>Content Distribution Networks (CDNs)</h3>
-    <ul>
-        <li>Replicate content across many geographically distributed servers (e.g., Akamai, Cloudflare, Amazon CloudFront).</li>
-        <li><strong>Enter deep</strong>: many small clusters near users; <strong>Bring home</strong>: fewer large clusters in IXPs.</li>
-        <li>Netflix uses its own CDN (OpenConnect) to store content close to ISPs.</li>
-    </ul>
+        <!-- ================= 5. VIDEO STREAMING AND CDNS ================= -->
+        <h2 id="streaming"><i class="fas fa-video"></i> 5. Video Streaming & Content Distribution Networks (CDNs)</h2>
+        <p>Streaming video dominates Internet traffic. <strong>Challenge</strong>: deliver high-quality video to
+            millions of heterogeneous users.</p>
+        <h3>DASH (Dynamic Adaptive Streaming over HTTP)</h3>
+        <ul>
+            <li>Server splits video into chunks, each encoded at multiple bitrates.</li>
+            <li>Client dynamically requests the best chunk based on measured bandwidth and buffer level.</li>
+            <li>Intelligence at client: avoids rebuffering, maximizes quality.</li>
+        </ul>
+        <h3>Content Distribution Networks (CDNs)</h3>
+        <ul>
+            <li>Replicate content across many geographically distributed servers (e.g., Akamai, Cloudflare, Amazon
+                CloudFront).</li>
+            <li><strong>Enter deep</strong>: many small clusters near users; <strong>Bring home</strong>: fewer large
+                clusters in IXPs.</li>
+            <li>Netflix uses its own CDN (OpenConnect) to store content close to ISPs.</li>
+        </ul>
 
-    <!-- ================= 6. SOCKET PROGRAMMING ================= -->
-    <h2 id="socket"><i class="fas fa-code"></i> 6. Socket Programming (UDP & TCP)</h2>
-    <p><strong>Socket</strong> = door between application process and transport layer. Two main types: UDP socket (unreliable datagram) and TCP socket (reliable byte stream).</p>
-    
-    <h3>UDP socket programming (Python)</h3>
-    <p>Client attaches destination IP and port to each packet; no connection setup.</p>
-    <pre>
+        <!-- ================= 6. SOCKET PROGRAMMING ================= -->
+        <h2 id="socket"><i class="fas fa-code"></i> 6. Socket Programming (UDP & TCP)</h2>
+        <p><strong>Socket</strong> = door between application process and transport layer. Two main types: UDP socket
+            (unreliable datagram) and TCP socket (reliable byte stream).</p>
+
+        <h3>UDP socket programming (Python)</h3>
+        <p>Client attaches destination IP and port to each packet; no connection setup.</p>
+        <pre>
 # UDPClient.py
 from socket import *
 serverName = 'hostname'
@@ -305,7 +354,7 @@ modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
 print(modifiedMessage.decode())
 clientSocket.close()
     </pre>
-    <pre>
+        <pre>
 # UDPServer.py
 from socket import *
 serverPort = 12000
@@ -318,9 +367,9 @@ while True:
     serverSocket.sendto(modifiedMessage.encode(), clientAddress)
     </pre>
 
-    <h3>TCP socket programming (Python)</h3>
-    <p>Connection-oriented; server must first create a welcoming socket, then accept connections.</p>
-    <pre>
+        <h3>TCP socket programming (Python)</h3>
+        <p>Connection-oriented; server must first create a welcoming socket, then accept connections.</p>
+        <pre>
 # TCPClient.py
 from socket import *
 serverName = 'servername'
@@ -333,7 +382,7 @@ modifiedSentence = clientSocket.recv(1024)
 print('From Server:', modifiedSentence.decode())
 clientSocket.close()
     </pre>
-    <pre>
+        <pre>
 # TCPServer.py
 from socket import *
 serverPort = 12000
@@ -348,73 +397,87 @@ while True:
     connectionSocket.send(capitalizedSentence.encode())
     connectionSocket.close()
     </pre>
-    <div class="info-note">
-        <strong>Timeouts:</strong> Use <code>socket.settimeout(seconds)</code> and <code>try-except</code> to handle unresponsive servers.
+        <div class="info-note">
+            <strong>Timeouts:</strong> Use <code>socket.settimeout(seconds)</code> and <code>try-except</code> to handle
+            unresponsive servers.
+        </div>
+
+        <!-- ================= 7. HOMEWORK ASSIGNMENT ================= -->
+        <h2 id="homework"><i class="fas fa-tasks"></i> Homework Assignment (Theoretical, Graded)</h2>
+        <div class="homework-box">
+            <p><strong>Instructions:</strong> Answer all questions in a separate document (PDF or Word). Submit via the
+                learning platform. This assignment counts towards your final grade (5%).</p>
+
+            <h3>Part I: Short Essays (40 points)</h3>
+            <ol>
+                <li>Compare client-server and P2P architectures. Give two advantages and two disadvantages of each.</li>
+                <li>Explain the difference between non-persistent HTTP and persistent HTTP. Calculate the total response
+                    time for a web page with 10 small images using non-persistent HTTP, given RTT = 100 ms and
+                    negligible transmission time.</li>
+                <li>What is a cookie? How does it enable stateful behavior in HTTP? Discuss privacy concerns related to
+                    third-party cookies.</li>
+                <li>Describe the role of DNS in the Internet. How does a local DNS server help reduce resolution time?
+                </li>
+                <li>What is DASH? Why is client-side adaptation critical for streaming video over the Internet?</li>
+            </ol>
+
+            <h3>Part II: True/False + Correction (30 points)</h3>
+            <ol>
+                <li>SMTP is a pull protocol – the receiver’s mail server fetches messages from the sender’s server.</li>
+                <li>UDP provides reliable, in-order delivery of data.</li>
+                <li>In HTTP/1.1, multiple objects can be sent over a single TCP connection.</li>
+                <li>The DNS root servers are centralized and handle all DNS queries directly.</li>
+                <li>Conditional GET allows a web cache to avoid downloading an object that hasn’t changed.</li>
+            </ol>
+            <p>For each false statement, write the correct version.</p>
+
+            <h3>Part III: Calculations and Protocol Analysis (30 points)</h3>
+            <ol>
+                <li>Assume RTT = 50 ms and an HTML file of size 10 KB plus 5 images of 20 KB each. Using non-persistent
+                    HTTP (one object per connection), compute total delay (ignore transmission time). Compare to
+                    persistent HTTP (one connection, sequential requests).</li>
+                <li>Given a DNS hierarchy: Client queries local DNS, then root, then TLD (.com), then authoritative.
+                    Assume RTT between each pair is 10 ms. How long does iterative resolution take? Recursive
+                    resolution?</li>
+                <li>Write a Python UDP client that sends a message "HELLO" to server at IP 127.0.0.1 port 9999, waits
+                    for response, and prints it. Include error handling for timeout (2 seconds).</li>
+            </ol>
+            <p><strong>Grading criteria:</strong> correctness, completeness, proper use of terminology, and clarity of
+                explanation.</p>
+            <p><strong>Deadline:</strong> Two weeks from the lecture date.</p>
+        </div>
+
+        <!-- ================= SUMMARY ================= -->
+        <h2><i class="fas fa-check-double"></i> Chapter 2 Summary</h2>
+        <ul>
+            <li>Application architectures: client-server, P2P, hybrid.</li>
+            <li>Transport service requirements: reliability, timing, throughput, security.</li>
+            <li>TCP vs. UDP: reliable connection-oriented vs. unreliable datagram.</li>
+            <li>HTTP: stateless, persistent connections, cookies for state, web caching, HTTP/2, QUIC.</li>
+            <li>Email: SMTP (push), IMAP (pull), mail access protocols.</li>
+            <li>DNS: distributed hierarchical database, iterative/recursive queries, caching, resource records.</li>
+            <li>Video streaming: DASH, CDNs for scalability and low latency.</li>
+            <li>Socket programming: UDP (datagram) and TCP (stream) examples in Python.</li>
+        </ul>
+        <div class="info-note">
+            <strong>Self-review questions (exam preparation):</strong><br>
+            • How does a web cache reduce response time?<br>
+            • What is the difference between a forward proxy and a reverse proxy?<br>
+            • How does DNS caching improve performance and what problems can it cause?<br>
+            • Why is QUIC built on UDP instead of TCP?<br>
+            • What happens when you type a URL into a browser? (steps: DNS, TCP, HTTP, rendering)
+        </div>
+
+        <footer
+            style="margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+            <p>© <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved</p>
+            <p>Recommended tools: Wireshark, Python, curl, nslookup/dig, browser developer tools.</p>
+        </footer>
     </div>
-
-    <!-- ================= 7. HOMEWORK ASSIGNMENT ================= -->
-    <h2 id="homework"><i class="fas fa-tasks"></i> Homework Assignment (Theoretical, Graded)</h2>
-    <div class="homework-box">
-        <p><strong>Instructions:</strong> Answer all questions in a separate document (PDF or Word). Submit via the learning platform. This assignment counts towards your final grade (5%).</p>
-        
-        <h3>Part I: Short Essays (40 points)</h3>
-        <ol>
-            <li>Compare client-server and P2P architectures. Give two advantages and two disadvantages of each.</li>
-            <li>Explain the difference between non-persistent HTTP and persistent HTTP. Calculate the total response time for a web page with 10 small images using non-persistent HTTP, given RTT = 100 ms and negligible transmission time.</li>
-            <li>What is a cookie? How does it enable stateful behavior in HTTP? Discuss privacy concerns related to third-party cookies.</li>
-            <li>Describe the role of DNS in the Internet. How does a local DNS server help reduce resolution time?</li>
-            <li>What is DASH? Why is client-side adaptation critical for streaming video over the Internet?</li>
-        </ol>
-
-        <h3>Part II: True/False + Correction (30 points)</h3>
-        <ol>
-            <li>SMTP is a pull protocol – the receiver’s mail server fetches messages from the sender’s server.</li>
-            <li>UDP provides reliable, in-order delivery of data.</li>
-            <li>In HTTP/1.1, multiple objects can be sent over a single TCP connection.</li>
-            <li>The DNS root servers are centralized and handle all DNS queries directly.</li>
-            <li>Conditional GET allows a web cache to avoid downloading an object that hasn’t changed.</li>
-        </ol>
-        <p>For each false statement, write the correct version.</p>
-
-        <h3>Part III: Calculations and Protocol Analysis (30 points)</h3>
-        <ol>
-            <li>Assume RTT = 50 ms and an HTML file of size 10 KB plus 5 images of 20 KB each. Using non-persistent HTTP (one object per connection), compute total delay (ignore transmission time). Compare to persistent HTTP (one connection, sequential requests).</li>
-            <li>Given a DNS hierarchy: Client queries local DNS, then root, then TLD (.com), then authoritative. Assume RTT between each pair is 10 ms. How long does iterative resolution take? Recursive resolution?</li>
-            <li>Write a Python UDP client that sends a message "HELLO" to server at IP 127.0.0.1 port 9999, waits for response, and prints it. Include error handling for timeout (2 seconds).</li>
-        </ol>
-        <p><strong>Grading criteria:</strong> correctness, completeness, proper use of terminology, and clarity of explanation.</p>
-        <p><strong>Deadline:</strong> Two weeks from the lecture date.</p>
-    </div>
-
-    <!-- ================= SUMMARY ================= -->
-    <h2><i class="fas fa-check-double"></i> Chapter 2 Summary</h2>
-    <ul>
-        <li>Application architectures: client-server, P2P, hybrid.</li>
-        <li>Transport service requirements: reliability, timing, throughput, security.</li>
-        <li>TCP vs. UDP: reliable connection-oriented vs. unreliable datagram.</li>
-        <li>HTTP: stateless, persistent connections, cookies for state, web caching, HTTP/2, QUIC.</li>
-        <li>Email: SMTP (push), IMAP (pull), mail access protocols.</li>
-        <li>DNS: distributed hierarchical database, iterative/recursive queries, caching, resource records.</li>
-        <li>Video streaming: DASH, CDNs for scalability and low latency.</li>
-        <li>Socket programming: UDP (datagram) and TCP (stream) examples in Python.</li>
-    </ul>
-    <div class="info-note">
-        <strong>Self-review questions (exam preparation):</strong><br>
-        • How does a web cache reduce response time?<br>
-        • What is the difference between a forward proxy and a reverse proxy?<br>
-        • How does DNS caching improve performance and what problems can it cause?<br>
-        • Why is QUIC built on UDP instead of TCP?<br>
-        • What happens when you type a URL into a browser? (steps: DNS, TCP, HTTP, rendering)
-    </div>
-
-    <footer style="margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
-        <p>© <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved</p>
-        <p>Recommended tools: Wireshark, Python, curl, nslookup/dig, browser developer tools.</p>
-    </footer>
-</div>
-<script>
-    document.getElementById('lecture-year').textContent = new Date().getFullYear();
-</script>
-<script src="scripts.js" defer></script>
+    <script>
+        document.getElementById('lecture-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="scripts.js" defer></script>
 </body>
+
 </html>

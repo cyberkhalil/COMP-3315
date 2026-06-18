@@ -992,7 +992,42 @@
 
                 lastValues.set(textarea, '');
 
-                // anti‑paste on this textarea
+                // anti‑paste on this textarea (enhanced for mobile)
+                let lastValue = '';
+                let lastLen = 0;
+                let lastTime = Date.now();
+
+                textarea.addEventListener('input', (e) => {
+                    const now = Date.now();
+                    const currentVal = textarea.value;
+                    const currentLen = currentVal.length;
+                    const timeDiff = now - lastTime;
+                    const charDiff = currentLen - lastLen;
+
+                    // If many characters added in a short time -> paste detected
+                    if (charDiff > 3 && timeDiff < 200) {
+                        // Revert to previous value
+                        textarea.value = lastValue;
+                        const printSpan = document.getElementById(`print_answer_${q.id}`);
+                        if (printSpan) printSpan.innerText = textarea.value;
+                        if (examStarted) localStorage.setItem(`answer_${q.id}`, textarea.value);
+                        lastValues.set(textarea, textarea.value);
+                        showPasteWarning();
+                        // Reset counters
+                        lastLen = textarea.value.length;
+                        lastTime = Date.now();
+                        lastValue = textarea.value;
+                        return;
+                    }
+
+                    // Normal update
+                    lastLen = currentLen;
+                    lastTime = now;
+                    lastValue = currentVal;
+                    // The auto-save will handle saving periodically
+                });
+
+                // Additional protection: block paste and drop events
                 textarea.addEventListener('paste', (e) => {
                     e.preventDefault();
                     clearField(textarea, q.id);
@@ -1009,22 +1044,6 @@
                     e.preventDefault();
                     clearField(textarea, q.id);
                     showPasteWarning();
-                });
-
-                let lastLen = 0,
-                    lastTime = Date.now();
-                textarea.addEventListener('input', () => {
-                    const now = Date.now();
-                    const currentLen = textarea.value.length;
-                    const charDiff = currentLen - lastLen;
-                    const timeDiff = now - lastTime;
-                    if (charDiff > 15 && timeDiff < 50) {
-                        clearField(textarea, q.id);
-                        showPasteWarning();
-                        return;
-                    }
-                    lastLen = currentLen;
-                    lastTime = now;
                 });
             });
         }
