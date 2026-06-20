@@ -1035,6 +1035,7 @@
         const RETAKE_DELAY = 2 * 60 * 60 * 1000; // 2 hours in ms
 
         let examStarted = false;
+        let restoringAnswers = false;
         let timerInterval = null;
         let endTime = null;
         let pollingInterval = null;
@@ -1098,19 +1099,18 @@
                     const now = Date.now();
                     const lastTime = ta._lastTime || now;
                     const timeDiff = now - lastTime;
-                    if ((currentLen - previousLen > 20) && timeDiff < 80) {
-                        ta._lastTime = now;
+                    if (!restoringAnswers && (currentLen - previousLen > 20)) {
+                        // إعادة النص إلى ما كان عليه قبل القفزة
+                        ta.value = previousVal;
                         const match = ta.id.match(/answer_(\d+)/);
                         if (match) {
-                            // إعادة النص إلى ما كان عليه قبل الإدخال السريع
-                            ta.value = previousVal;
                             const printSpan = document.getElementById(`print_answer_${match[1]}`);
                             if (printSpan) printSpan.innerText = previousVal;
                             if (examStarted) localStorage.setItem(`answer_${match[1]}`, previousVal);
-                            lastValues.set(ta, previousVal);
-                            if (ta._resetPasteState) ta._resetPasteState();
                         }
+                        lastValues.set(ta, previousVal);
                         showPasteWarning();
+                        return;  // نمنع تحديث lastValues بالقيمة الجديدة في هذا الدور
                     }
                     lastValues.set(ta, currentVal);
                 }
@@ -1227,7 +1227,6 @@
                 });
                 textarea.addEventListener('drop', (e) => {
                     e.preventDefault();
-                    clearField(textarea, q.id);
                     showPasteWarning();
                 });
 
@@ -1242,10 +1241,9 @@
                     const now = Date.now();
                     const currentVal = textarea.value;
                     const currentLen = currentVal.length;
-                    const timeDiff = now - lastTime;
-                    const charDiff = currentLen - lastLen;
 
-                    if (charDiff > 2 && timeDiff < 250) {
+                    if (!restoringAnswers && (currentLen - lastLen) > 5) {
+                        // أي إضافة دفعة واحدة لأكثر من 5 أحرف تُعتبر لصقاً
                         textarea.value = lastValue;
                         const printSpan = document.getElementById(`print_answer_${q.id}`);
                         if (printSpan) printSpan.innerText = textarea.value;
@@ -1261,6 +1259,7 @@
                     lastLen = currentLen;
                     lastTime = now;
                     lastValue = currentVal;
+
                 });
 
                 textarea._resetPasteState = () => {
@@ -1651,6 +1650,7 @@
             requestFullscreen();
             startDevToolsMonitoring();
 
+            restoringAnswers = true;
             for (let i = 1; i <= questions.length; i++) {
                 const saved = localStorage.getItem(`answer_${i}`);
                 if (saved !== null) {
@@ -1663,6 +1663,7 @@
                     }
                 }
             }
+            restoringAnswers = false;
 
             visibilityViolations = 0;
         }
@@ -1731,6 +1732,7 @@
                     finishExamBtn.disabled = false;
                     downloadPdfBtn.style.display = 'none';
                     retakeNotice.style.display = 'none';
+                    restoringAnswers = true;
                     for (let i = 1; i <= questions.length; i++) {
                         const saved = localStorage.getItem(`answer_${i}`);
                         if (saved !== null) {
@@ -1743,6 +1745,8 @@
                             }
                         }
                     }
+                    restoringAnswers = false;
+
                     startDevToolsMonitoring();
                     visibilityViolations = 0;
                     requestFullscreen();
