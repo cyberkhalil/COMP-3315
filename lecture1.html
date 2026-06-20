@@ -493,7 +493,8 @@ d_nodal = d_proc + d_queue + d_trans + d_prop
         <h3>📦 Encapsulation</h3>
         <p>At the source: <strong>message</strong> → add transport header (H<sub>t</sub>) → <strong>segment</strong> →
             add network header (H<sub>n</sub>) → <strong>datagram</strong> → add link header (H<sub>l</sub>) →
-            <strong>frame</strong>. The destination reverses the process.</p>
+            <strong>frame</strong>. The destination reverses the process.
+        </p>
         <pre>
 message → [Ht|message] → [Hn|[Ht|message]] → [Hl|[Hn|[Ht|message]]]
     </pre>
