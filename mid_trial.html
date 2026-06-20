@@ -1101,7 +1101,15 @@
                     if ((currentLen - previousLen > 20) && timeDiff < 80) {
                         ta._lastTime = now;
                         const match = ta.id.match(/answer_(\d+)/);
-                        if (match) clearField(ta, match[1]);
+                        if (match) {
+                            // إعادة النص إلى ما كان عليه قبل الإدخال السريع
+                            ta.value = previousVal;
+                            const printSpan = document.getElementById(`print_answer_${match[1]}`);
+                            if (printSpan) printSpan.innerText = previousVal;
+                            if (examStarted) localStorage.setItem(`answer_${match[1]}`, previousVal);
+                            lastValues.set(ta, previousVal);
+                            if (ta._resetPasteState) ta._resetPasteState();
+                        }
                         showPasteWarning();
                     }
                     lastValues.set(ta, currentVal);
@@ -1215,7 +1223,6 @@
 
                 textarea.addEventListener('paste', (e) => {
                     e.preventDefault();
-                    clearField(textarea, q.id);
                     showPasteWarning();
                 });
                 textarea.addEventListener('drop', (e) => {
@@ -1227,7 +1234,6 @@
                 textarea.addEventListener('beforeinput', (e) => {
                     if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') {
                         e.preventDefault();
-                        clearField(textarea, q.id);
                         showPasteWarning();
                     }
                 });
