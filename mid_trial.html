@@ -24,6 +24,14 @@
             line-height: 1.6;
             min-height: 100vh;
             position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        input,
+        textarea {
+            user-select: text;
+            -webkit-user-select: text;
         }
 
         .bg-grid {
@@ -254,6 +262,22 @@
             transform: none;
         }
 
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .expired-msg {
             color: #fca5a5;
             font-weight: 600;
@@ -262,6 +286,11 @@
             border-radius: 40px;
             font-size: 0.85rem;
             border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        #finishExamBtn,
+        #downloadPdfBtn {
+            display: none;
         }
 
         /* ========== EXAM CONTAINER ========== */
@@ -416,7 +445,7 @@
             display: none;
         }
 
-        /* ========== BOTTOM BUTTON (single) ========== */
+        /* ========== BOTTOM BUTTON ========== */
         .bottom-actions {
             display: flex;
             justify-content: center;
@@ -476,6 +505,122 @@
                 visibility: hidden;
                 transform: translateY(20px);
             }
+        }
+
+        .fullscreen-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #b91c1c;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            z-index: 9999;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* ========== CONFIRMATION MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            border: 1px solid #2d3a5e;
+            border-radius: 1rem;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: modalIn 0.25s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-icon {
+            font-size: 2.8rem;
+            color: #fbbf24;
+            margin-bottom: 16px;
+        }
+
+        .modal-box h3 {
+            color: #f0f9ff;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .modal-box p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-actions .btn {
+            padding: 10px 28px;
+            font-size: 0.95rem;
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+            transform: translateY(-2px);
+        }
+
+        /* ========== RETAKE NOTICE ========== */
+        .retake-notice {
+            background: rgba(30, 58, 95, 0.4);
+            border: 1px solid #1e3a5f;
+            border-radius: 0.75rem;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            color: #7dd3fc;
+            font-size: 0.9rem;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .retake-notice i {
+            color: #fbbf24;
+            font-size: 1.1rem;
         }
 
         /* ========== RESPONSIVE ========== */
@@ -577,6 +722,12 @@
                 display: none !important;
             }
 
+            .fullscreen-warning,
+            .modal-overlay,
+            .paste-warning {
+                display: none !important;
+            }
+
             .container {
                 padding: 20px !important;
                 max-width: 100% !important;
@@ -586,6 +737,7 @@
                 background: #f0f4fa !important;
                 border: 1px solid #ccc !important;
                 box-shadow: none !important;
+                color: #0b1120 !important;
             }
 
             .exam-header h1 {
@@ -594,6 +746,13 @@
 
             .exam-header .sub {
                 color: #334155 !important;
+            }
+
+            .exam-header .badge {
+                background: #2563eb !important;
+                color: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             .instructor-panel {
@@ -607,6 +766,8 @@
 
             .instructor-item i {
                 color: #2563eb !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             .student-info-card {
@@ -659,6 +820,9 @@
 
             .question-card .q-header .q-num {
                 background: #2563eb !important;
+                color: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             .question-card .q-text {
@@ -685,6 +849,9 @@
 
             .print-answer {
                 display: block !important;
+                background: #f8fafc !important;
+                border: 1px solid #ccc !important;
+                color: #0b1120 !important;
             }
 
             .print-student-data {
@@ -699,8 +866,20 @@
                 color: #475569 !important;
             }
 
-            .paste-warning {
-                display: none !important;
+            .expired-msg {
+                background: #fee2e2 !important;
+                color: #991b1b !important;
+                border-color: #fca5a5 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .retake-notice {
+                background: #dbeafe !important;
+                color: #1e3a8a !important;
+                border-color: #93c5fd !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>
@@ -708,6 +887,24 @@
 
 <body>
     <div class="bg-grid"></div>
+    <div class="fullscreen-warning" id="fullscreenWarning">
+        <i class="fas fa-exclamation-triangle"></i> You have exited fullscreen mode. Please return immediately (press
+        F11 or allow return).
+    </div>
+
+    <!-- ===== CONFIRMATION MODAL ===== -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3>End Exam?</h3>
+            <p>Are you sure you want to end the exam? You will <strong>not</strong> be able to change your answers
+                after this. Your answers will be saved and you can print/save them as a PDF.</p>
+            <div class="modal-actions">
+                <button id="cancelEndBtn" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</button>
+                <button id="confirmEndBtn" class="btn btn-danger"><i class="fas fa-check"></i> Yes, End Exam</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- ===== HEADER ===== -->
@@ -724,6 +921,12 @@
                 <span class="instructor-item"><i class="fas fa-shield-alt"></i> No copy/paste · Proctored</span>
             </div>
         </header>
+
+        <!-- ===== RETAKE NOTICE ===== -->
+        <div class="retake-notice" id="retakeNotice">
+            <i class="fas fa-info-circle"></i>
+            <span id="retakeNoticeText"></span>
+        </div>
 
         <!-- ===== STUDENT INFO ===== -->
         <div class="student-info-card">
@@ -745,6 +948,7 @@
             <span class="timer" id="timerDisplay">01:10:00</span>
             <div class="actions">
                 <button id="startExamBtn" class="btn btn-success"><i class="fas fa-play"></i> Start Exam</button>
+                <button id="finishExamBtn" class="btn btn-danger"><i class="fas fa-stop"></i> Finish Exam</button>
             </div>
         </div>
 
@@ -759,10 +963,10 @@
             </div>
         </div>
 
-        <!-- ===== SINGLE BOTTOM BUTTON ===== -->
+        <!-- ===== PRINT / SAVE AS PDF BUTTON ===== -->
         <div class="bottom-actions no-print">
-            <button id="finishPrintBtn" class="btn btn-primary" disabled>
-                <i class="fas fa-print"></i> Finish and Print as PDF
+            <button id="downloadPdfBtn" class="btn btn-primary">
+                <i class="fas fa-print"></i> Print / Save as PDF
             </button>
         </div>
 
@@ -827,21 +1031,33 @@
         // ================================================================
         const EXAM_ID = 'comp3315_mid_exam';
         const STATUS_KEY = `${EXAM_ID}_status`;
+        const FINISHED_AT_KEY = `${EXAM_ID}_finishedAt`;
+        const RETAKE_DELAY = 2 * 60 * 60 * 1000; // 2 hours in ms
 
         let examStarted = false;
         let timerInterval = null;
         let endTime = null;
         let pollingInterval = null;
         let autoSaveInterval = null;
+        let visibilityViolations = 0;
+        const MAX_VISIBILITY_VIOLATIONS = 3;
+        let fullscreenActive = false;
 
         const startBtn = document.getElementById('startExamBtn');
-        const finishPrintBtn = document.getElementById('finishPrintBtn');
+        const finishExamBtn = document.getElementById('finishExamBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
         const examContainer = document.getElementById('examContainer');
         const timerDisplay = document.getElementById('timerDisplay');
         const studentNameInput = document.getElementById('studentName');
         const studentIdInput = document.getElementById('studentId');
         const printNameSpan = document.getElementById('printName');
         const printIdSpan = document.getElementById('printId');
+        const fullscreenWarning = document.getElementById('fullscreenWarning');
+        const confirmModal = document.getElementById('confirmModal');
+        const cancelEndBtn = document.getElementById('cancelEndBtn');
+        const confirmEndBtn = document.getElementById('confirmEndBtn');
+        const retakeNotice = document.getElementById('retakeNotice');
+        const retakeNoticeText = document.getElementById('retakeNoticeText');
 
         const lastValues = new Map();
 
@@ -849,7 +1065,6 @@
         //  4.  PASTE WARNING HELPER
         // ================================================================
         function showPasteWarning() {
-            alert('⚠️ Copy/paste is disabled. Please write your answer manually.');
             const div = document.createElement('div');
             div.className = 'paste-warning';
             div.innerHTML = '<i class="fas fa-ban"></i> Paste blocked – type your answer.';
@@ -864,6 +1079,7 @@
             if (printSpan) printSpan.innerText = '';
             if (examStarted) localStorage.setItem(`answer_${qId}`, '');
             lastValues.set(textarea, '');
+            if (textarea._resetPasteState) textarea._resetPasteState();
         }
 
         // ================================================================
@@ -944,7 +1160,7 @@
         }
 
         // ================================================================
-        //  7.  BUILD QUESTIONS UI  (with enhanced anti‑paste)
+        //  7.  BUILD QUESTIONS UI
         // ================================================================
         function buildQuestionsUI() {
             examContainer.innerHTML = '';
@@ -992,12 +1208,11 @@
 
                 lastValues.set(textarea, '');
 
-                // -------------------- ENHANCED ANTI‑PASTE --------------------
+                // ENHANCED ANTI‑PASTE
                 let lastValue = '';
                 let lastLen = 0;
                 let lastTime = Date.now();
 
-                // 1. Block paste and drop events
                 textarea.addEventListener('paste', (e) => {
                     e.preventDefault();
                     clearField(textarea, q.id);
@@ -1009,7 +1224,6 @@
                     showPasteWarning();
                 });
 
-                // 2. Block beforeinput with paste/drop types (works on most modern browsers including mobile)
                 textarea.addEventListener('beforeinput', (e) => {
                     if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') {
                         e.preventDefault();
@@ -1018,7 +1232,6 @@
                     }
                 });
 
-                // 3. Secondary detection via input event (speed-based)
                 textarea.addEventListener('input', (e) => {
                     const now = Date.now();
                     const currentVal = textarea.value;
@@ -1026,51 +1239,30 @@
                     const timeDiff = now - lastTime;
                     const charDiff = currentLen - lastLen;
 
-                    // If many characters added in a short time → paste detected
-                    // Threshold: >2 chars within 250ms
                     if (charDiff > 2 && timeDiff < 250) {
-                        // Revert to previous value
                         textarea.value = lastValue;
                         const printSpan = document.getElementById(`print_answer_${q.id}`);
                         if (printSpan) printSpan.innerText = textarea.value;
                         if (examStarted) localStorage.setItem(`answer_${q.id}`, textarea.value);
                         lastValues.set(textarea, textarea.value);
                         showPasteWarning();
-                        // Reset counters to the reverted state
                         lastLen = textarea.value.length;
                         lastTime = Date.now();
                         lastValue = textarea.value;
                         return;
                     }
 
-                    // Normal update
                     lastLen = currentLen;
                     lastTime = now;
                     lastValue = currentVal;
-                    // The auto-save will handle periodic saving
                 });
 
-                // Also reset the state when the field is cleared programmatically
-                const originalClear = clearField;
-                const boundClear = (ta, id) => {
-                    originalClear(ta, id);
-                    lastLen = 0;
-                    lastTime = Date.now();
-                    lastValue = '';
-                };
-                // We need to override clearField for this specific textarea, but we can just use the global one.
-                // We'll attach a custom reset function to the textarea for internal use.
                 textarea._resetPasteState = () => {
                     lastLen = 0;
                     lastTime = Date.now();
                     lastValue = '';
                 };
-                // When clearField is called globally, it will reset lastValues but not these local vars.
-                // We'll patch the clearField function to also reset local state for all textareas.
-                // Actually, we can just attach a mutation observer or simply rely on the fact that after clear,
-                // the input event will trigger and set lastValue to ''.
-                // But we'll manually reset when we call clearField from inside.
-                // To keep it simple, we'll add a listener for 'focus' to reset state if empty.
+
                 textarea.addEventListener('focus', () => {
                     if (textarea.value === '') {
                         lastLen = 0;
@@ -1093,21 +1285,7 @@
             timerDisplay.innerText =
                 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             if (remaining <= 0) {
-                localStorage.setItem(STATUS_KEY, 'finished');
-                localStorage.setItem(`${EXAM_ID}_finishedAt`, Date.now());
-                clearInterval(timerInterval);
-                enableAnswers(false);
-                startBtn.disabled = true;
-                finishPrintBtn.disabled = false;
-                examStarted = false;
-                const bar = document.querySelector('.timer-bar');
-                if (bar && !bar.querySelector('.expired-msg')) {
-                    const msg = document.createElement('span');
-                    msg.className = 'expired-msg';
-                    msg.innerHTML = '<i class="fas fa-hourglass-end"></i> Time expired! Review only.';
-                    bar.appendChild(msg);
-                }
-                alert('⏰ Time is up! Answers have been locked. You may review and print.');
+                endExamAutomatically();
             }
         }
 
@@ -1120,7 +1298,256 @@
         }
 
         // ================================================================
-        //  9.  UPDATE PRINT STUDENT DATA
+        //  9.  END EXAM (manual or automatic)
+        // ================================================================
+        function endExamAutomatically() {
+            localStorage.setItem(STATUS_KEY, 'finished');
+            localStorage.setItem(FINISHED_AT_KEY, Date.now());
+            clearInterval(timerInterval);
+            enableAnswers(false);
+            examStarted = false;
+            startBtn.disabled = true;
+            startBtn.style.display = 'none';
+            finishExamBtn.style.display = 'none';
+            downloadPdfBtn.style.display = 'inline-flex';
+            downloadPdfBtn.disabled = false;
+
+            const bar = document.querySelector('.timer-bar');
+            if (bar && !bar.querySelector('.expired-msg')) {
+                const msg = document.createElement('span');
+                msg.className = 'expired-msg';
+                msg.innerHTML = '<i class="fas fa-hourglass-end"></i> Time expired! Review only.';
+                bar.appendChild(msg);
+            }
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => { });
+            }
+            stopDevToolsMonitoring();
+            alert('⏰ Time is up! Answers have been locked. You may review and print/save as PDF.');
+        }
+
+        function endExamManually() {
+            localStorage.setItem(STATUS_KEY, 'finished');
+            localStorage.setItem(FINISHED_AT_KEY, Date.now());
+            clearInterval(timerInterval);
+            enableAnswers(false);
+            examStarted = false;
+            startBtn.disabled = true;
+            startBtn.style.display = 'none';
+            finishExamBtn.style.display = 'none';
+            downloadPdfBtn.style.display = 'inline-flex';
+            downloadPdfBtn.disabled = false;
+
+            timerDisplay.innerText = '00:00:00';
+
+            const bar = document.querySelector('.timer-bar');
+            if (bar && !bar.querySelector('.expired-msg')) {
+                const msg = document.createElement('span');
+                msg.className = 'expired-msg';
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> Exam ended. Review only.';
+                bar.appendChild(msg);
+            }
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => { });
+            }
+            stopDevToolsMonitoring();
+        }
+
+        // ================================================================
+        //  10. CONFIRMATION MODAL
+        // ================================================================
+        function showConfirmModal() {
+            confirmModal.classList.add('active');
+        }
+
+        function hideConfirmModal() {
+            confirmModal.classList.remove('active');
+        }
+
+        cancelEndBtn.addEventListener('click', hideConfirmModal);
+
+        confirmEndBtn.addEventListener('click', () => {
+            hideConfirmModal();
+            endExamManually();
+        });
+
+        confirmModal.addEventListener('click', (e) => {
+            if (e.target === confirmModal) {
+                hideConfirmModal();
+            }
+        });
+
+        // ================================================================
+        //  11. PRINT / SAVE AS PDF
+        // ================================================================
+        function printExamAsPDF() {
+            // Sync all textarea values into their corresponding print-answer divs
+            // so they show up correctly in print view
+            const textareas = document.querySelectorAll('#examContainer textarea');
+            textareas.forEach(ta => {
+                const match = ta.id.match(/answer_(\d+)/);
+                if (match) {
+                    const printSpan = document.getElementById(`print_answer_${match[1]}`);
+                    if (printSpan) {
+                        printSpan.innerText = ta.value.trim() || '(No answer provided)';
+                    }
+                }
+            });
+            window.print();
+        }
+
+        downloadPdfBtn.addEventListener('click', printExamAsPDF);
+
+        // ================================================================
+        //  12. FULLSCREEN MANAGEMENT
+        // ================================================================
+        function requestFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().then(() => {
+                    fullscreenActive = true;
+                    fullscreenWarning.style.display = 'none';
+                }).catch(err => {
+                    console.warn('Fullscreen request failed:', err);
+                    alert('Please enable fullscreen mode (F11) for exam integrity.');
+                });
+            }
+        }
+
+        function onFullscreenChange() {
+            if (!examStarted) return;
+            if (!document.fullscreenElement) {
+                fullscreenActive = false;
+                fullscreenWarning.style.display = 'block';
+                setTimeout(() => {
+                    if (!document.fullscreenElement && examStarted) {
+                        visibilityViolations++;
+                        console.warn(`Fullscreen exit violation ${visibilityViolations}`);
+                        if (visibilityViolations >= MAX_VISIBILITY_VIOLATIONS) {
+                            terminateExam('You have exceeded the maximum number of fullscreen exits allowed.');
+                        }
+                    }
+                }, 10000);
+            } else {
+                fullscreenActive = true;
+                fullscreenWarning.style.display = 'none';
+            }
+        }
+
+        // ================================================================
+        //  13. VISIBILITY API MONITORING
+        // ================================================================
+        function onVisibilityChange() {
+            if (!examStarted) return;
+            if (document.visibilityState === 'hidden') {
+                visibilityViolations++;
+                console.warn(`Tab hidden violation ${visibilityViolations}`);
+                if (visibilityViolations >= MAX_VISIBILITY_VIOLATIONS) {
+                    terminateExam('You have exceeded the maximum number of tab switches allowed.');
+                } else {
+                    alert(`Warning: You have left the exam tab! (${visibilityViolations}/${MAX_VISIBILITY_VIOLATIONS})`);
+                }
+            }
+        }
+
+        function terminateExam(reason) {
+            alert(reason + ' The exam has been terminated.');
+            localStorage.setItem(STATUS_KEY, 'terminated');
+            localStorage.setItem(FINISHED_AT_KEY, Date.now());
+            enableAnswers(false);
+            examStarted = false;
+            startBtn.disabled = true;
+            startBtn.style.display = 'none';
+            finishExamBtn.style.display = 'none';
+            downloadPdfBtn.style.display = 'inline-flex';
+            downloadPdfBtn.disabled = false;
+            if (timerInterval) clearInterval(timerInterval);
+            timerDisplay.innerText = '00:00:00';
+            const bar = document.querySelector('.timer-bar');
+            if (bar && !bar.querySelector('.expired-msg')) {
+                const msg = document.createElement('span');
+                msg.className = 'expired-msg';
+                msg.innerHTML = '<i class="fas fa-times-circle"></i> Exam terminated.';
+                bar.appendChild(msg);
+            }
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => { });
+            }
+            stopDevToolsMonitoring();
+        }
+
+        // ================================================================
+        //  14. KEYBOARD SHORTCUT BLOCKING
+        // ================================================================
+        function onKeyDown(e) {
+            if (!examStarted) return;
+
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return;
+            }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                e.preventDefault();
+                return;
+            }
+            if (e.ctrlKey && e.key === 'U') {
+                e.preventDefault();
+                return;
+            }
+            if (e.ctrlKey && e.key === 'S') {
+                e.preventDefault();
+                alert('Saving is disabled during the exam.');
+                return;
+            }
+            if (e.ctrlKey && e.key === 'P') {
+                e.preventDefault();
+                alert('PDF download is only available after the exam ends.');
+                return;
+            }
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return;
+            }
+            if (e.ctrlKey && e.key === 'F4') {
+                e.preventDefault();
+                return;
+            }
+        }
+
+        // ================================================================
+        //  15. DEVTOOLS DETECTION (basic)
+        // ================================================================
+        function detectDevTools() {
+            if (!examStarted) return;
+            const widthThreshold = 160;
+            const diff = window.outerWidth - window.innerWidth;
+            if (diff > widthThreshold && !fullscreenActive) {
+                console.warn('DevTools detected (width diff):', diff);
+                visibilityViolations++;
+                if (visibilityViolations >= MAX_VISIBILITY_VIOLATIONS) {
+                    terminateExam('Developer tools usage detected.');
+                } else {
+                    alert(`Warning: Suspicious activity detected. (${visibilityViolations}/${MAX_VISIBILITY_VIOLATIONS})`);
+                }
+            }
+        }
+
+        let devToolsCheckInterval = null;
+        function startDevToolsMonitoring() {
+            if (devToolsCheckInterval) return;
+            devToolsCheckInterval = setInterval(detectDevTools, 3000);
+        }
+        function stopDevToolsMonitoring() {
+            if (devToolsCheckInterval) {
+                clearInterval(devToolsCheckInterval);
+                devToolsCheckInterval = null;
+            }
+        }
+
+        // ================================================================
+        //  16. UPDATE PRINT STUDENT DATA
         // ================================================================
         function updatePrintStudentData() {
             printNameSpan.innerText = studentNameInput.value;
@@ -1128,7 +1555,60 @@
         }
 
         // ================================================================
-        //  10. START EXAM
+        //  17. CLEAR EXAM DATA (for retake)
+        // ================================================================
+        function clearExamData() {
+            localStorage.removeItem(STATUS_KEY);
+            localStorage.removeItem(FINISHED_AT_KEY);
+            localStorage.removeItem('examStartTime');
+            localStorage.removeItem('examStudentName');
+            localStorage.removeItem('examStudentId');
+            for (let i = 1; i <= questions.length; i++) {
+                localStorage.removeItem(`answer_${i}`);
+            }
+        }
+
+        // ================================================================
+        //  18. SHOW EXAM ENDED STATE (for reload after finish)
+        // ================================================================
+        function showExamEndedState() {
+            if (examContainer.children.length === 0 || examContainer.querySelector('.exam-placeholder'))
+                buildQuestionsUI();
+            for (let i = 1; i <= questions.length; i++) {
+                const saved = localStorage.getItem(`answer_${i}`);
+                if (saved !== null) {
+                    const ta = document.getElementById(`answer_${i}`);
+                    if (ta) {
+                        ta.value = saved;
+                        const ps = document.getElementById(`print_answer_${i}`);
+                        if (ps) ps.innerText = saved;
+                        lastValues.set(ta, saved);
+                    }
+                }
+            }
+            enableAnswers(false);
+            studentNameInput.disabled = true;
+            studentIdInput.disabled = true;
+            timerDisplay.innerText = '00:00:00';
+            startBtn.disabled = true;
+            startBtn.style.display = 'none';
+            finishExamBtn.style.display = 'none';
+            downloadPdfBtn.style.display = 'inline-flex';
+            downloadPdfBtn.disabled = false;
+            examStarted = false;
+            stopDevToolsMonitoring();
+
+            const bar = document.querySelector('.timer-bar');
+            if (bar && !bar.querySelector('.expired-msg')) {
+                const msg = document.createElement('span');
+                msg.className = 'expired-msg';
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> Exam completed – review only.';
+                bar.appendChild(msg);
+            }
+        }
+
+        // ================================================================
+        //  19. START EXAM
         // ================================================================
         function startExam() {
             const name = studentNameInput.value.trim();
@@ -1149,15 +1629,22 @@
             enableAnswers(true);
             startTimer();
             examStarted = true;
-            startBtn.disabled = true;
-            finishPrintBtn.disabled = false;
+
+            startBtn.style.display = 'none';
+            finishExamBtn.style.display = 'inline-flex';
+            finishExamBtn.disabled = false;
+            downloadPdfBtn.style.display = 'none';
+
+            retakeNotice.style.display = 'none';
 
             localStorage.setItem(STATUS_KEY, 'running');
             localStorage.setItem('examStartTime', Date.now());
             localStorage.setItem('examStudentName', name);
             localStorage.setItem('examStudentId', id);
 
-            // restore saved answers
+            requestFullscreen();
+            startDevToolsMonitoring();
+
             for (let i = 1; i <= questions.length; i++) {
                 const saved = localStorage.getItem(`answer_${i}`);
                 if (saved !== null) {
@@ -1170,13 +1657,50 @@
                     }
                 }
             }
+
+            visibilityViolations = 0;
         }
 
         // ================================================================
-        //  11. RESTORE STATE ON LOAD
+        //  20. RESTORE STATE ON LOAD
         // ================================================================
         function restoreExamState() {
             const status = localStorage.getItem(STATUS_KEY);
+            const finishedAt = parseInt(localStorage.getItem(FINISHED_AT_KEY), 10);
+
+            if ((status === 'finished' || status === 'terminated') && finishedAt) {
+                const elapsed = Date.now() - finishedAt;
+                if (elapsed >= RETAKE_DELAY) {
+                    clearExamData();
+                    retakeNotice.style.display = 'flex';
+                    retakeNoticeText.innerText = 'Your previous exam session has expired. You may start a new attempt.';
+                    examContainer.innerHTML = `
+                        <div class="exam-placeholder">
+                            <i class="fas fa-lock"></i>
+                            <p><strong>Enter your name and ID</strong> above, then click <strong>"Start Exam"</strong> to begin.<br />
+                            You have <strong>70 minutes</strong> to complete the Mid Exam (Chapters 1 &amp; 2).<br />
+                            Answers are auto‑saved locally – you may close the page and resume later.</p>
+                        </div>
+                    `;
+                    startBtn.style.display = 'inline-flex';
+                    startBtn.disabled = false;
+                    finishExamBtn.style.display = 'none';
+                    downloadPdfBtn.style.display = 'none';
+                    studentNameInput.disabled = false;
+                    studentIdInput.disabled = false;
+                    studentNameInput.value = '';
+                    studentIdInput.value = '';
+                    timerDisplay.innerText = '01:10:00';
+                    return;
+                } else {
+                    showExamEndedState();
+                    const remainingMin = Math.ceil((RETAKE_DELAY - elapsed) / 60000);
+                    retakeNotice.style.display = 'flex';
+                    retakeNoticeText.innerText = `You can retake the exam after ${remainingMin} minutes.`;
+                    return;
+                }
+            }
+
             if (status === 'running') {
                 const startTime = parseInt(localStorage.getItem('examStartTime'), 10);
                 const elapsed = Date.now() - startTime;
@@ -1196,8 +1720,11 @@
                     if (timerInterval) clearInterval(timerInterval);
                     timerInterval = setInterval(updateTimerDisplay, 1000);
                     examStarted = true;
-                    startBtn.disabled = true;
-                    finishPrintBtn.disabled = false;
+                    startBtn.style.display = 'none';
+                    finishExamBtn.style.display = 'inline-flex';
+                    finishExamBtn.disabled = false;
+                    downloadPdfBtn.style.display = 'none';
+                    retakeNotice.style.display = 'none';
                     for (let i = 1; i <= questions.length; i++) {
                         const saved = localStorage.getItem(`answer_${i}`);
                         if (saved !== null) {
@@ -1210,74 +1737,21 @@
                             }
                         }
                     }
+                    startDevToolsMonitoring();
+                    visibilityViolations = 0;
+                    requestFullscreen();
                 } else {
-                    // expired
-                    if (examContainer.children.length === 0 || examContainer.querySelector('.exam-placeholder'))
-                        buildQuestionsUI();
-                    for (let i = 1; i <= questions.length; i++) {
-                        const saved = localStorage.getItem(`answer_${i}`);
-                        if (saved !== null) {
-                            const ta = document.getElementById(`answer_${i}`);
-                            if (ta) {
-                                ta.value = saved;
-                                const ps = document.getElementById(`print_answer_${i}`);
-                                if (ps) ps.innerText = saved;
-                                lastValues.set(ta, saved);
-                            }
-                        }
-                    }
-                    enableAnswers(false);
-                    startBtn.disabled = true;
-                    finishPrintBtn.disabled = false;
-                    studentNameInput.disabled = true;
-                    studentIdInput.disabled = true;
-                    timerDisplay.innerText = '00:00:00';
+                    localStorage.setItem(STATUS_KEY, 'finished');
+                    localStorage.setItem(FINISHED_AT_KEY, startTime + duration);
+                    showExamEndedState();
                     const bar = document.querySelector('.timer-bar');
                     if (bar && !bar.querySelector('.expired-msg')) {
                         const msg = document.createElement('span');
                         msg.className = 'expired-msg';
-                        msg.innerHTML = '<i class="fas fa-hourglass-end"></i> Exam expired previously. Review only.';
+                        msg.innerHTML = '<i class="fas fa-hourglass-end"></i> Time expired while away.';
                         bar.appendChild(msg);
                     }
-                    examStarted = false;
                 }
-            } else if (status === 'finished') {
-                const finishedAt = parseInt(localStorage.getItem(`${EXAM_ID}_finishedAt`), 10);
-                const now = Date.now();
-                const hours24 = 24 * 60 * 60 * 1000;
-                if (finishedAt && (now - finishedAt >= hours24)) {
-                    localStorage.clear();
-                    location.reload();
-                    return;
-                }
-                if (examContainer.children.length === 0 || examContainer.querySelector('.exam-placeholder'))
-                    buildQuestionsUI();
-                for (let i = 1; i <= questions.length; i++) {
-                    const saved = localStorage.getItem(`answer_${i}`);
-                    if (saved !== null) {
-                        const ta = document.getElementById(`answer_${i}`);
-                        if (ta) {
-                            ta.value = saved;
-                            const ps = document.getElementById(`print_answer_${i}`);
-                            if (ps) ps.innerText = saved;
-                            lastValues.set(ta, saved);
-                        }
-                    }
-                }
-                enableAnswers(false);
-                studentNameInput.disabled = true;
-                studentIdInput.disabled = true;
-                timerDisplay.innerText = '00:00:00';
-                const bar = document.querySelector('.timer-bar');
-                if (bar && !bar.querySelector('.expired-msg')) {
-                    const msg = document.createElement('span');
-                    msg.className = 'expired-msg';
-                    msg.innerHTML = '<i class="fas fa-check-circle"></i> Exam completed – review only.';
-                    bar.appendChild(msg);
-                }
-                examStarted = false;
-                startBtn.disabled = true;
-                finishPrintBtn.disabled = false;
             } else {
                 examContainer.innerHTML = `
                     <div class="exam-placeholder">
@@ -1287,24 +1761,24 @@
                         Answers are auto‑saved locally – you may close the page and resume later.</p>
                     </div>
                 `;
-                finishPrintBtn.disabled = true;
+                startBtn.style.display = 'inline-flex';
+                startBtn.disabled = false;
+                finishExamBtn.style.display = 'none';
+                downloadPdfBtn.style.display = 'none';
             }
         }
 
         // ================================================================
-        //  12. EVENT BINDINGS & INIT
+        //  21. EVENT BINDINGS & INIT
         // ================================================================
         window.onload = () => {
             restoreExamState();
 
             startBtn.addEventListener('click', startExam);
 
-            finishPrintBtn.addEventListener('click', () => {
-                if (examStarted || localStorage.getItem(STATUS_KEY) === 'running' || localStorage.getItem(STATUS_KEY) ===
-                    'finished') {
-                    window.print();
-                } else {
-                    alert('Please start the exam before printing.');
+            finishExamBtn.addEventListener('click', () => {
+                if (examStarted) {
+                    showConfirmModal();
                 }
             });
 
@@ -1312,9 +1786,12 @@
             studentIdInput.addEventListener('input', updatePrintStudentData);
 
             document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            document.addEventListener('fullscreenchange', onFullscreenChange);
+            document.addEventListener('visibilitychange', onVisibilityChange);
+            document.addEventListener('keydown', onKeyDown);
         };
 
-        // Save on page unload
         window.addEventListener('beforeunload', () => {
             if (!examStarted) return;
             const textareas = document.querySelectorAll('#examContainer textarea');
@@ -1322,6 +1799,12 @@
                 const id = ta.id.split('_')[1];
                 localStorage.setItem(`answer_${id}`, ta.value);
             });
+        });
+
+        window.addEventListener('unload', () => {
+            stopPastePolling();
+            stopAutoSave();
+            stopDevToolsMonitoring();
         });
     </script>
 </body>
