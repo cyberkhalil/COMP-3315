@@ -11,7 +11,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Improved Back Button */
+        /* ========== تعريف متغير CSS احتياطي ========== */
+        :root {
+            --accent: #7dd3fc;
+        }
+
+        /* ========== حاوية المحاضرة الأساسية ========== */
+        .lecture-container-special {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(18, 25, 45, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========== زر العودة المحسّن ========== */
         .home-button-enhanced {
             display: inline-flex;
             align-items: center;
@@ -44,7 +61,44 @@
             transform: translateX(-3px);
         }
 
-        /* Accordion Styles */
+        /* ========== عنوان المشروع ========== */
+        .project-hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .project-hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffffff, var(--primary), #a5f3fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* ========== تقسيمات العناوين ========== */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .section-title i {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .section-title h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #7dd3fc;
+            margin: 0;
+        }
+
+        /* ========== الأكورديون ========== */
         .accordion-option {
             background: rgba(18, 25, 45, 0.85);
             backdrop-filter: blur(4px);
@@ -63,6 +117,7 @@
             cursor: pointer;
             background: rgba(0, 0, 0, 0.25);
             transition: background 0.2s;
+            user-select: none;
         }
 
         .accordion-header:hover {
@@ -99,8 +154,8 @@
         }
 
         .accordion-content.active {
-            max-height: 800px;
-            /* enough for all content */
+            max-height: 900px;
+            /* مساحة كافية للمحتوى */
             padding: 1.2rem 1.5rem;
             border-top: 1px solid var(--border-light);
         }
@@ -127,20 +182,7 @@
             margin-top: 0.5rem;
         }
 
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 2rem 0 1rem 0;
-            border-bottom: 2px solid var(--border-light);
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title i {
-            font-size: 1.8rem;
-            color: var(--primary);
-        }
-
+        /* ========== قوائم المتطلبات والتسليمات ========== */
         .requirements-list,
         .deliverables-list {
             background: rgba(0, 0, 0, 0.25);
@@ -149,6 +191,29 @@
             margin: 1rem 0;
         }
 
+        .requirements-list ul,
+        .deliverables-list ul {
+            margin-left: 1.5rem;
+            padding-left: 0;
+        }
+
+        .requirements-list li,
+        .deliverables-list li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* ========== كود داخل النص ========== */
+        code {
+            background: rgba(0, 0, 0, 0.4);
+            color: #fbbf24;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.3rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        /* ========== جدول التقييم ========== */
         .eval-table {
             width: 100%;
             border-collapse: collapse;
@@ -161,8 +226,10 @@
         .eval-table th {
             background: rgba(59, 130, 246, 0.25);
             color: var(--accent);
+            /* استخدمنا المتغير المعرّف أعلاه */
             font-weight: 700;
             padding: 1rem;
+            text-align: left;
         }
 
         .eval-table td {
@@ -175,6 +242,7 @@
             border-bottom: none;
         }
 
+        /* ========== تذييل الصفحة ========== */
         .footer-note {
             text-align: center;
             margin-top: 2.5rem;
@@ -184,7 +252,12 @@
             font-size: 0.85rem;
         }
 
+        /* ========== تجاوب مع الشاشات الصغيرة ========== */
         @media (max-width: 700px) {
+            .lecture-container-special {
+                padding: 1rem;
+            }
+
             .accordion-header {
                 padding: 1rem;
             }
@@ -196,6 +269,16 @@
             .accordion-content.active {
                 padding: 1rem;
             }
+
+            .project-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .eval-table th,
+            .eval-table td {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -203,16 +286,16 @@
 <body>
     <div class="bg-grid"></div>
     <div class="lecture-container-special">
+        <!-- زر العودة -->
         <a href="index.html" class="home-button-enhanced"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
 
-        <div class="project-hero" style="text-align: center; margin-bottom: 2rem;">
-            <h1
-                style="font-size: 2.5rem; background: linear-gradient(135deg, #ffffff, var(--primary), #a5f3fc); background-clip: text; -webkit-background-clip: text; color: transparent;">
-                Python Programming Project Assignment</h1>
-            <p style="color: var(--text-muted);">Network Socket Programming | COMP‑3315 | Spring 2025</p>
+        <!-- رأس المشروع -->
+        <div class="project-hero">
+            <h1>Python Programming Project Assignment</h1>
+            <p style="color: var(--text-muted);">Network Socket Programming | COMP‑3315</p>
         </div>
 
-        <!-- 1. Objective -->
+        <!-- 1. الهدف من المشروع -->
         <div class="section-title">
             <i class="fas fa-bullseye"></i>
             <h2>1. Project Objective</h2>
@@ -224,7 +307,7 @@
             application development. Students are expected to implement robust network configurations using either TCP
             or UDP, depending on their chosen project application.</p>
 
-        <!-- 2. Project Options (Accordion) -->
+        <!-- 2. خيارات المشروع (أكورديون) -->
         <div class="section-title">
             <i class="fas fa-code-branch"></i>
             <h2>2. Project Options</h2>
@@ -232,7 +315,7 @@
         <p>Students may work individually or in designated groups (subject to instructor approval). You must select ONE
             of the following project specifications to implement:</p>
 
-        <!-- Option 1 Accordion -->
+        <!-- الخيار 1 -->
         <div class="accordion-option">
             <div class="accordion-header" data-target="opt1">
                 <div class="accordion-title">
@@ -255,7 +338,7 @@
             </div>
         </div>
 
-        <!-- Option 2 Accordion -->
+        <!-- الخيار 2 -->
         <div class="accordion-option">
             <div class="accordion-header" data-target="opt2">
                 <div class="accordion-title">
@@ -278,7 +361,7 @@
             </div>
         </div>
 
-        <!-- Option 3 Accordion -->
+        <!-- الخيار 3 -->
         <div class="accordion-option">
             <div class="accordion-header" data-target="opt3">
                 <div class="accordion-title">
@@ -300,7 +383,7 @@
             </div>
         </div>
 
-        <!-- Option 4 Accordion -->
+        <!-- الخيار 4 -->
         <div class="accordion-option">
             <div class="accordion-header" data-target="opt4">
                 <div class="accordion-title">
@@ -321,7 +404,7 @@
             </div>
         </div>
 
-        <!-- 3. General Technical Requirements -->
+        <!-- 3. المتطلبات التقنية العامة -->
         <div class="section-title">
             <i class="fas fa-microchip"></i>
             <h2>3. General Technical Requirements</h2>
@@ -343,7 +426,7 @@
             </ul>
         </div>
 
-        <!-- 4. Deliverables -->
+        <!-- 4. التسليمات -->
         <div class="section-title">
             <i class="fas fa-folder-open"></i>
             <h2>4. Deliverables</h2>
@@ -369,7 +452,7 @@
             </ul>
         </div>
 
-        <!-- 5. Evaluation Criteria -->
+        <!-- 5. معايير التقييم -->
         <div class="section-title">
             <i class="fas fa-chart-simple"></i>
             <h2>5. Evaluation Criteria</h2>
@@ -410,17 +493,18 @@
             </tbody>
         </table>
 
+        <!-- التذييل -->
         <div class="footer-note">
-            <p>© <span id="project-year"></span> Cyber Khalil – All Rights Reserved</p>
+            <p>&copy; <span id="project-year"></span> Cyber Khalil – All Rights Reserved</p>
             <p>COMP‑3315 | Computer Networking – Course Project</p>
         </div>
     </div>
 
     <script>
-        // Set current year
+        // تعيين السنة الحالية
         document.getElementById('project-year').textContent = new Date().getFullYear();
 
-        // Accordion functionality
+        // وظيفة الأكورديون
         const headers = document.querySelectorAll('.accordion-header');
         headers.forEach(header => {
             header.addEventListener('click', function () {
@@ -428,10 +512,24 @@
                 const content = document.getElementById(targetId);
                 const icon = this.querySelector('.accordion-icon');
 
-                // Toggle active class on content
+                // إغلاق كل المحتويات الأخرى أولاً (اختياري - يسمح بفتح واحد فقط في كل مرة)
+                const allContents = document.querySelectorAll('.accordion-content');
+                const allIcons = document.querySelectorAll('.accordion-icon');
+                allContents.forEach(c => {
+                    if (c !== content) {
+                        c.classList.remove('active');
+                    }
+                });
+                allIcons.forEach(ic => {
+                    if (ic !== icon) {
+                        ic.style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                // تبديل حالة المحتوى المستهدف
                 content.classList.toggle('active');
 
-                // Rotate icon
+                // تدوير الأيقونة
                 if (content.classList.contains('active')) {
                     icon.style.transform = 'rotate(180deg)';
                 } else {

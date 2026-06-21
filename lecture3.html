@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>COMP-3315 | Chapter 3: Transport Layer – Full Lecture</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ========== حاوية المحاضرة الأساسية ========== */
+        .lecture-container-special {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(18, 25, 45, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .lecture-container-special p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .lecture-container-special h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            color: #7dd3fc;
+            border-bottom: 2px solid #2d3a5e;
+            padding-bottom: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .lecture-container-special h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.8rem 0;
+            color: #b9e6ff;
+        }
+
+        .info-note {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1rem 1rem 1.8rem;
+            border-left: 4px solid var(--primary);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .homework-box {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1rem 1rem 1.8rem;
+            border-left: 4px solid var(--success);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .two-cols {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.2rem 0;
+            align-items: stretch;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 260px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.2rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .col h3 {
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .code-block,
+        pre {
+            background: #0b1120;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border: 1px solid #2d3a5e;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin: 1.2rem 0;
+        }
+
+        .access-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--primary);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .access-card:hover {
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-nav a {
+            background: rgba(45, 58, 94, 0.5);
+            color: #b9e6ff;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .quick-nav a:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* active link for scroll spy */
+        .quick-nav a.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* styles for qa boxes, tables, accordions */
+        .qa-box {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .qa-box strong {
+            color: #7dd3fc;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin: 1.2rem 0;
+        }
+
+        .comparison-table th {
+            background: rgba(59, 130, 246, 0.25);
+            color: #7dd3fc;
+            font-weight: 700;
+            padding: 0.7rem 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: #e2e8f0;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* FSM representation */
+        .fsm-state {
+            display: inline-block;
+            background: #1e3a5f;
+            color: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.3rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin: 0.1rem 0;
+        }
+
+        .fsm-arrow {
+            color: #7dd3fc;
+            margin: 0 0.3rem;
+        }
+
+        /* keyword highlighting */
+        .keyword {
+            background: rgba(59, 130, 246, 0.2);
+            color: #7dd3fc;
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.2rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 700px) {
+            .lecture-container-special {
+                padding: 1rem;
+            }
+
+            .col {
+                padding: 1rem;
+            }
+
+            .info-note p,
+            .info-note li,
+            .homework-box p,
+            .homework-box li {
+                line-height: 1.7;
+            }
+
+            .info-note ul,
+            .info-note ol,
+            .homework-box ul,
+            .homework-box ol {
+                margin-top: 0.5rem;
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+    <div class="lecture-container-special">
+        <a href="index.html" class="home-button"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
+
+        <div class="quick-nav">
+            <a href="#overview">Overview</a>
+            <a href="#mux">Multiplexing</a>
+            <a href="#udp">UDP</a>
+            <a href="#rdt">Reliable Data Transfer</a>
+            <a href="#tcp">TCP</a>
+            <a href="#flow">Flow Control</a>
+            <a href="#connection">Connection Mgmt</a>
+            <a href="#congestion">Congestion Control</a>
+            <a href="#tcpcc">TCP CC</a>
+            <a href="#evolution">QUIC & Evolution</a>
+            <a href="#homework">Homework</a>
+        </div>
+
+        <h1>Chapter 3: Transport Layer</h1>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Kurose & Ross, <em>Computer Networking: A Top-Down
+                Approach</em>, 9th edition (2025) – Full lecture coverage</p>
+
+        <!-- ================= 1. TRANSPORT-LAYER SERVICES ================= -->
+        <h2 id="overview"><i class="fas fa-truck"></i> 1. Transport-Layer Services and Protocols</h2>
+        <p>The transport layer provides <strong>logical communication</strong> between application processes running on
+            different hosts. It breaks messages into <strong>segments</strong>, passes them to the network layer, and
+            reassembles them at the receiver. Two main protocols: <mark class="keyword">TCP</mark> and <mark
+                class="keyword">UDP</mark>.</p>
+        <div class="two-cols">
+            <div class="col">
+                <h3>🏠 Household Analogy</h3>
+                <p>12 kids in Ann’s house sending letters to 12 kids in Bill’s house:</p>
+                <ul>
+                    <li>Hosts = houses</li>
+                    <li>Processes = kids</li>
+                    <li>App messages = letters in envelopes</li>
+                    <li><strong>Transport protocol</strong> = Ann & Bill demultiplexing to siblings</li>
+                    <li><strong>Network-layer protocol</strong> = postal service</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>📦 Transport vs. Network Layer</h3>
+                <ul>
+                    <li><strong>Network layer:</strong> communication between <em>hosts</em></li>
+                    <li><strong>Transport layer:</strong> communication between <em>processes</em></li>
+                    <li>Relies on and enhances network layer services</li>
+                    <li><mark class="keyword">TCP</mark>: reliable, in-order delivery, congestion control, flow control,
+                        connection setup</li>
+                    <li><mark class="keyword">UDP</mark>: unreliable, unordered, no-frills best-effort service</li>
+                </ul>
+            </div>
+        </div>
+        <div class="info-note">
+            <strong>Transport layer actions:</strong><br>
+            <strong>Sender:</strong> receives app message → determines segment header → creates segment → passes to
+            IP.<br>
+            <strong>Receiver:</strong> receives segment from IP → checks header → extracts app message → demultiplexes
+            to
+            correct socket.
+        </div>
+
+        <!-- Quick comparison TCP vs UDP (new table) -->
+        <h3>Quick Comparison: TCP vs UDP</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th><mark class="keyword">TCP</mark></th>
+                    <th><mark class="keyword">UDP</mark></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Connection</td>
+                    <td>Connection-oriented (handshake)</td>
+                    <td>Connectionless</td>
+                </tr>
+                <tr>
+                    <td>Reliability</td>
+                    <td>Reliable (retransmissions, <mark class="keyword">ACK</mark>s)</td>
+                    <td>Unreliable (best-effort)</td>
+                </tr>
+                <tr>
+                    <td>Ordering</td>
+                    <td>In-order delivery</td>
+                    <td>No ordering guarantees</td>
+                </tr>
+                <tr>
+                    <td>Congestion Control</td>
+                    <td>Yes (<mark class="keyword">AIMD</mark>, slow start, etc.)</td>
+                    <td>None (applications can add their own)</td>
+                </tr>
+                <tr>
+                    <td>Flow Control</td>
+                    <td>Yes (receive window <mark class="keyword">rwnd</mark>)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Header Size</td>
+                    <td>20–60 bytes</td>
+                    <td>8 bytes</td>
+                </tr>
+                <tr>
+                    <td>Typical Applications</td>
+                    <td>Web, email, file transfer</td>
+                    <td>Streaming, DNS, VoIP, HTTP/3</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Having seen the big picture, let’s dive into how transport-layer protocols multiplex and demultiplex data
+            streams.</p>
+
+        <!-- ================= 2. MULTIPLEXING / DEMULTIPLEXING ================= -->
+        <h2 id="mux"><i class="fas fa-code-branch"></i> 2. Multiplexing and Demultiplexing</h2>
+        <p>Multiplexing at sender: handle data from multiple sockets, add transport header (source/destination port #).
+            Demultiplexing at receiver: use header info (IPs + ports) to deliver segments to the correct socket.</p>
+
+        <!-- استبدال: وضع UDP و TCP داخل بطاقات متجاورة -->
+        <div class="two-cols">
+            <div class="col">
+                <h3>Connectionless Demultiplexing (<mark class="keyword">UDP</mark>)</h3>
+                <ul>
+                    <li><mark class="keyword">UDP</mark> socket identified by destination IP + destination port only.
+                    </li>
+                    <li>Datagrams with same dest port # but different source IP/port go to the same socket.</li>
+                    <li>Example: host binds <mark class="keyword">UDP</mark> socket to port 9157; all <mark
+                            class="keyword">UDP</mark> datagrams arriving with dest port 9157 are delivered to that
+                        socket.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>Connection-Oriented Demultiplexing (<mark class="keyword">TCP</mark>)</h3>
+                <ul>
+                    <li><mark class="keyword">TCP</mark> socket identified by <strong><mark
+                                class="keyword">4-tuple</mark>:</strong> source IP, source port, dest IP, dest port.
+                    </li>
+                    <li>Server can support many simultaneous <mark class="keyword">TCP</mark> sockets, each tied to a
+                        different client.</li>
+                    <li>Demux uses all four values to direct segment to the correct socket.</li>
+                </ul>
+            </div>
+        </div>
+
+        <pre>
+Example TCP demultiplexing:
+  Segment 1: src A:9157 → dst B:80 → socket 1
+  Segment 2: src C:5775 → dst B:80 → socket 2
+  Segment 3: src C:9157 → dst B:80 → socket 3
+        </pre>
+
+        <p>Now that we understand how segments are directed to the right application, we can examine the simpler of the
+            two transport protocols: <mark class="keyword">UDP</mark>.</p>
+
+        <!-- ================= 3. UDP ================= -->
+        <h2 id="udp"><i class="fas fa-paper-plane"></i> 3. Connectionless Transport: UDP</h2>
+        <p><mark class="keyword">UDP</mark> is a “no frills” protocol: no handshake, each segment handled independently.
+            It is used for streaming
+            multimedia, DNS, SNMP, and now HTTP/3 (QUIC). Reliability and congestion control can be added at the
+            application layer.</p>
+        <div class="two-cols">
+            <div class="col">
+                <h3><mark class="keyword">UDP</mark> Segment Header</h3>
+                <pre>
+ 0      16      31
++--------+--------+
+| source port | dest port |
++--------+--------+
+| length | checksum |
++--------+--------+
+| application data (payload)
+        </pre>
+            </div>
+            <div class="col">
+                <h3><mark class="keyword">UDP</mark> Checksum</h3>
+                <p>Goal: detect bit errors. Sender computes the 1’s complement sum of all 16‑bit words (including
+                    pseudo‑header fields) and stores the result in the checksum field. Receiver recomputes the sum and
+                    verifies it. It is simple and fast, though not extremely robust (some bit‑flips may cancel out).</p>
+            </div>
+        </div>
+        <div class="info-note">
+            <strong>Why <mark class="keyword">UDP</mark>?</strong><br>
+            • No connection establishment delay (no <mark class="keyword">RTT</mark>).<br>
+            • Simple: no connection state at sender/receiver.<br>
+            • Small header size.<br>
+            • No congestion control: can blast away as fast as desired (but may cause congestion collapse!).
+        </div>
+
+        <p><mark class="keyword">UDP</mark> is useful when speed and simplicity matter more than reliability. For
+            scenarios that require guaranteed
+            delivery, we need reliable data transfer protocols – our next topic.</p>
+
+        <!-- ================= 4. PRINCIPLES OF RELIABLE DATA TRANSFER ================= -->
+        <h2 id="rdt"><i class="fas fa-check-double"></i> 4. Principles of Reliable Data Transfer</h2>
+        <p>We incrementally develop a reliable data transfer protocol (rdt) over an unreliable channel. Finite state
+            machines (FSMs) specify sender and receiver behaviour.</p>
+
+        <!-- Summary table of rdt evolution -->
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Protocol</th>
+                    <th>Channel Assumptions</th>
+                    <th>Key Mechanisms</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>rdt1.0</td>
+                    <td>Perfectly reliable (no errors, no loss)</td>
+                    <td>No special mechanism needed</td>
+                </tr>
+                <tr>
+                    <td>rdt2.0 / 2.1 / 2.2</td>
+                    <td>Bit errors possible, no loss</td>
+                    <td>Checksum, <mark class="keyword">ACK</mark>s/NAKs, sequence numbers (to handle duplicates)</td>
+                </tr>
+                <tr>
+                    <td>rdt3.0</td>
+                    <td>Bit errors and packet loss</td>
+                    <td>All above + timeout &amp; retransmission (stop‑and‑wait)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>rdt1.0 – Perfectly Reliable Channel</h3>
+        <p>No bit errors, no loss. Sender sends packet, receiver extracts data. Trivial.</p>
+
+        <h3>rdt2.0 – Channel with Bit Errors</h3>
+        <ul>
+            <li>Use checksum to detect errors. Add <strong><mark class="keyword">ACK</mark></strong> (positive) and
+                <strong>NAK</strong>
+                (negative) feedback.
+            </li>
+            <li>Sender retransmits on NAK. Stop‑and‑wait operation.</li>
+            <li><strong>Fatal flaw:</strong> what if <mark class="keyword">ACK</mark>/NAK is corrupted? Need sequence
+                numbers.</li>
+        </ul>
+
+        <h3>rdt2.1 / 2.2 – Sequence Numbers, NAK‑free</h3>
+        <ul>
+            <li>Add 1‑bit sequence number (0,1) to handle duplicate packets.</li>
+            <li>rdt2.2 eliminates NAK: receiver sends <mark class="keyword">ACK</mark> for last correctly received
+                packet (includes seq #).
+                Duplicate <mark class="keyword">ACK</mark> at sender acts as NAK.</li>
+        </ul>
+
+        <h3>rdt3.0 – Channel with Errors and Loss</h3>
+        <ul>
+            <li>Adds <strong>timeout</strong> mechanism. Sender waits a reasonable time; if no <mark
+                    class="keyword">ACK</mark>, retransmits.</li>
+            <li>Sequence numbers handle duplicates from premature timeouts.</li>
+            <li><strong>Performance:</strong> Stop‑and‑wait delivers very poor link utilization on high‑speed
+                networks, because the sender spends most of its time idle waiting for an <mark
+                    class="keyword">ACK</mark>, leaving the link underutilised.</li>
+        </ul>
+
+        <h3>Pipelined Protocols</h3>
+        <p>To increase utilization, allow multiple in‑flight packets. Two generic approaches:</p>
+        <div class="two-cols">
+            <div class="col">
+                <h4>Go‑Back‑N (GBN)</h4>
+                <ul>
+                    <li>Sender window of up to N unACKed packets.</li>
+                    <li>Cumulative <mark class="keyword">ACK</mark>: <mark class="keyword">ACK</mark>(n) acknowledges
+                        all up to n.</li>
+                    <li>On timeout, retransmit packet n and all higher seq # in window.</li>
+                    <li>Receiver sends <mark class="keyword">ACK</mark> for highest in‑order seq #; out‑of‑order packets
+                        discarded (no buffering).</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4>Selective Repeat (SR)</h4>
+                <ul>
+                    <li>Receiver individually <mark class="keyword">ACK</mark>s all correctly received packets.</li>
+                    <li>Buffers out‑of‑order packets for in‑order delivery.</li>
+                    <li>Sender maintains timer for each unACKed packet, retransmits only lost packets.</li>
+                    <li>Window size must be ≤ half of sequence number space to avoid overlap (dilemma with seq # wrap).
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <p>These reliable transfer principles underpin the design of <mark class="keyword">TCP</mark>, which we explore
+            next.</p>
+
+        <!-- ================= 5. TCP ================= -->
+        <h2 id="tcp"><i class="fas fa-project-diagram"></i> 5. Connection-Oriented Transport: TCP</h2>
+        <p><mark class="keyword">TCP</mark>: point‑to‑point, reliable, in‑order byte stream, full duplex, flow
+            controlled, connection‑oriented. Uses
+            cumulative <mark class="keyword">ACK</mark>s, pipelining, and a dynamic window size.</p>
+        <h3><mark class="keyword">TCP</mark> Segment Structure</h3>
+        <pre>
+ 0                   16                   31
++--------+--------+--------+--------+
+| source port        | dest port          |
++--------+--------+--------+--------+
+| sequence number                        |
++--------+--------+--------+--------+
+| acknowledgement number                 |
++--------+--------+--------+--------+
+| hdr len | not used | U A P R S F       |
+|         |          | R C S S Y I       |
+|         |          | G K H T N N       |
++--------+--------+--------+--------+
+| checksum           | receive window (<mark class="keyword">rwnd</mark>) |
++--------+--------+--------+--------+
+| options (if any)                       |
++--------+--------+--------+--------+
+| application data (variable length)     |
++--------+--------+--------+--------+
+        </pre>
+        <ul>
+            <li><strong>Sequence number:</strong> byte stream number of first data byte in segment.</li>
+            <li><strong><mark class="keyword">ACK</mark> number:</strong> seq # of next expected byte from other side
+                (cumulative).</li>
+            <li><strong>Receive window (<mark class="keyword">rwnd</mark>):</strong> flow control – # bytes receiver
+                willing to accept.</li>
+            <li><strong>Flags:</strong> <mark class="keyword">RST</mark>, <mark class="keyword">SYN</mark>, <mark
+                    class="keyword">FIN</mark> for connection management; C, E for ECN.</li>
+        </ul>
+
+        <div class="qa-box">
+            <strong>Q:</strong> How to set <mark class="keyword">TCP</mark> timeout value?
+        </div>
+        <p><mark class="keyword">TCP</mark> uses an exponentially weighted moving average (<mark
+                class="keyword">EWMA</mark>) to estimate the round‑trip time (<mark class="keyword">RTT</mark>) and to
+            measure
+            its variation. The actual timeout is the estimated <mark class="keyword">RTT</mark> plus a safety margin
+            (typically 4 times the mean
+            deviation). This dynamic calculation prevents premature timeouts while still reacting quickly to packet
+            loss.</p>
+
+        <h3><mark class="keyword">TCP</mark> Reliable Data Transfer</h3>
+        <p><strong>Simplified sender:</strong> on data from app, create segment, start timer if not running. On <mark
+                class="keyword">ACK</mark>,
+            update ACKed base, restart timer if still unACKed data. On timeout, retransmit oldest unACKed segment.</p>
+        <p><strong>Fast retransmit:</strong> if sender receives 3 duplicate <mark class="keyword">ACK</mark>s (triple
+            duplicate <mark class="keyword">ACK</mark>), resend
+            missing segment immediately, without waiting for timeout.</p>
+
+        <!-- ACK generation table (replaces previous bullet list) -->
+        <h4>Receiver <mark class="keyword">ACK</mark> Generation (RFC 5681)</h4>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Event at Receiver</th>
+                    <th><mark class="keyword">TCP</mark> Receiver Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>In‑order segment with expected seq #, all data up to expected seq # already ACKed</td>
+                    <td>Delayed <mark class="keyword">ACK</mark> – wait up to 500 ms for next segment; if no next
+                        segment, send <mark class="keyword">ACK</mark></td>
+                </tr>
+                <tr>
+                    <td>In‑order segment with expected seq #, one other segment has <mark class="keyword">ACK</mark>
+                        pending</td>
+                    <td>Immediately send single cumulative <mark class="keyword">ACK</mark>, ACKing both in‑order
+                        segments</td>
+                </tr>
+                <tr>
+                    <td>Out‑of‑order segment (higher‑than‑expected seq #) – gap detected</td>
+                    <td>Immediately send duplicate <mark class="keyword">ACK</mark>, indicating seq # of next expected
+                        byte</td>
+                </tr>
+                <tr>
+                    <td>Segment that partially or completely fills gap</td>
+                    <td>Immediate send <mark class="keyword">ACK</mark>, provided that segment starts at lower end of
+                        gap</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Reliable delivery alone is not enough – <mark class="keyword">TCP</mark> also prevents a fast sender from
+            overwhelming a slow receiver
+            through flow control.</p>
+
+        <!-- ================= 6. TCP FLOW CONTROL ================= -->
+        <h2 id="flow"><i class="fas fa-water"></i> 6. TCP Flow Control</h2>
+        <p>Flow control prevents a fast sender from overwhelming a slow receiver. The receiver <strong>advertises
+                <mark class="keyword">rwnd</mark></strong> (receive window) in the <mark class="keyword">TCP</mark>
+            header, telling the sender how much free buffer space it has.</p>
+        <div class="info-note">
+            <strong>How it works:</strong> sender limits unACKed data (in‑flight) to ≤ <mark
+                class="keyword">rwnd</mark>. This guarantees the receive
+            buffer never overflows. RcvBuffer size set via socket options (default 4096 bytes, often auto‑adjusted).
+        </div>
+
+        <p>Before any data can flow, <mark class="keyword">TCP</mark> must first establish a connection – let’s see how
+            the 3‑way handshake
+            accomplishes that.</p>
+
+        <!-- ================= 7. TCP CONNECTION MANAGEMENT ================= -->
+        <h2 id="connection"><i class="fas fa-handshake"></i> 7. TCP Connection Management</h2>
+        <p><mark class="keyword">TCP</mark> uses a <strong>3‑way handshake</strong> to establish a connection:</p>
+        <ol>
+            <li><strong><mark class="keyword">SYN</mark> (seq=x):</strong> Client sends <mark
+                    class="keyword">SYN</mark>, enters SYN_SENT.</li>
+            <li><strong><mark class="keyword">SYN</mark>-<mark class="keyword">ACK</mark> (seq=y, ACKnum=x+1):</strong>
+                Server responds with <mark class="keyword">SYN</mark>+<mark class="keyword">ACK</mark>, enters SYN_RCVD.
+            </li>
+            <li><strong><mark class="keyword">ACK</mark> (ACKnum=y+1):</strong> Client sends <mark
+                    class="keyword">ACK</mark>; both sides now ESTABLISHED. Data may be piggybacked.</li>
+        </ol>
+
+        <!-- استبدال: تمثيل FSM لحالات إغلاق الاتصال -->
+        <p>Connection closing involves <mark class="keyword">FIN</mark> flags and a 2‑way or 3‑way exchange. The state
+            transitions can be visualised as:</p>
+        <p>
+            <strong>Active close (client):</strong>
+            <span class="fsm-state">ESTAB</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">FIN_WAIT_1</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">FIN_WAIT_2</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">TIME_WAIT</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">CLOSED</span>
+        </p>
+        <p>
+            <strong>Passive close (server):</strong>
+            <span class="fsm-state">ESTAB</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">CLOSE_WAIT</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">LAST_ACK</span> <span class="fsm-arrow">→</span>
+            <span class="fsm-state">CLOSED</span>
+        </p>
+        <p>A <strong><span class="fsm-state">TIME_WAIT</span></strong> state (2×MSL) ensures any delayed packets are
+            discarded before the socket is fully closed.</p>
+
+        <div class="info-note">
+            <strong>Why a 3‑way handshake?</strong> It prevents problems from duplicate connection requests (half‑open
+            connections) and ensures both sides agree to establish the connection.
+        </div>
+
+        <!-- SYN Flood security note -->
+        <div class="info-note">
+            <strong>Security note – <mark class="keyword">SYN</mark> Flood & <mark class="keyword">SYN</mark>
+                Cookies:</strong> An attacker can exhaust a server’s memory by
+            sending many <mark class="keyword">SYN</mark> segments without completing the handshake (half‑open
+            connections). To counter this, modern
+            operating systems use <strong><mark class="keyword">SYN</mark> cookies</strong>: the server does not
+            allocate resources after the initial
+            <mark class="keyword">SYN</mark>. Instead, it encodes the connection state in the <mark
+                class="keyword">SYN</mark>-<mark class="keyword">ACK</mark> sequence number. Only when the final <mark
+                class="keyword">ACK</mark>
+            arrives and validates the cookie does the server create the connection state.
+        </div>
+
+        <p>With a connection in place, <mark class="keyword">TCP</mark> must share network capacity fairly; this leads
+            us to congestion control.</p>
+
+        <!-- ================= 8. PRINCIPLES OF CONGESTION CONTROL ================= -->
+        <h2 id="congestion"><i class="fas fa-traffic-light"></i> 8. Principles of Congestion Control</h2>
+        <p><strong>Congestion:</strong> too many sources sending too much data too fast for the network to handle.
+            Manifested as long delays and packet loss. Distinct from flow control.</p>
+        <h3>Causes and Costs (Scenarios)</h3>
+        <div class="access-grid">
+            <div class="access-card"><strong>Scenario 1:</strong> Infinite buffers, two flows, no retransmission.
+                Throughput saturates at R/2; delay explodes as arrival rate → R/2.</div>
+            <div class="access-card"><strong>Scenario 2:</strong> Finite buffers, retransmissions. Throughput limited
+                because retransmissions waste capacity; un‑needed duplicates can further reduce effective throughput.
+            </div>
+            <div class="access-card"><strong>Scenario 3:</strong> Multi‑hop paths. Packet dropped downstream wastes
+                upstream resources; throughput can drop drastically under high load.</div>
+        </div>
+        <h3>Approaches to Congestion Control</h3>
+        <ul>
+            <li><strong>End‑end:</strong> no explicit feedback; congestion inferred from loss/delay (<mark
+                    class="keyword">TCP</mark>’s approach).</li>
+            <li><strong>Network‑assisted:</strong> routers provide direct feedback (e.g., ECN, ATM ABR).</li>
+        </ul>
+
+        <p>We now focus on <mark class="keyword">TCP</mark>’s end‑end congestion control, the dominant mechanism on the
+            Internet.</p>
+
+        <!-- ================= 9. TCP CONGESTION CONTROL ================= -->
+        <h2 id="tcpcc"><i class="fas fa-chart-line"></i> 9. TCP Congestion Control</h2>
+        <p><mark class="keyword">TCP</mark> uses <strong><mark class="keyword">AIMD</mark></strong> (Additive Increase,
+            Multiplicative Decrease): increase sending rate by 1 <mark class="keyword">MSS</mark>
+            per <mark class="keyword">RTT</mark> until loss detected, then halve the rate. This sawtooth behaviour
+            probes for available bandwidth.</p>
+        <h3>Mechanisms</h3>
+        <ul>
+            <li><strong>Slow Start:</strong> start <mark class="keyword">cwnd</mark> = 1 <mark
+                    class="keyword">MSS</mark>, double <mark class="keyword">cwnd</mark> every <mark
+                    class="keyword">RTT</mark> (exponential growth) until
+                threshold reached or loss occurs.</li>
+            <li><strong>Congestion Avoidance:</strong> after <mark class="keyword">cwnd</mark> ≥ <mark
+                    class="keyword">ssthresh</mark>, increase <mark class="keyword">cwnd</mark> by <mark
+                    class="keyword">MSS</mark>·(<mark class="keyword">MSS</mark>/<mark class="keyword">cwnd</mark>) per
+                <mark class="keyword">ACK</mark>
+                (linear increase).
+            </li>
+            <li><strong>Loss events:</strong> timeout: <mark class="keyword">ssthresh</mark> = <mark
+                    class="keyword">cwnd</mark>/2, <mark class="keyword">cwnd</mark> = 1 <mark
+                    class="keyword">MSS</mark>, enter slow start. Triple
+                duplicate <mark class="keyword">ACK</mark>s (fast recovery): <mark class="keyword">ssthresh</mark> =
+                <mark class="keyword">cwnd</mark>/2, <mark class="keyword">cwnd</mark> = <mark
+                    class="keyword">ssthresh</mark> + 3 <mark class="keyword">MSS</mark>, then increase linearly
+                (<mark class="keyword">cwnd</mark> += <mark class="keyword">MSS</mark> per duplicate <mark
+                    class="keyword">ACK</mark>).
+            </li>
+        </ul>
+
+        <!-- Tahoe vs Reno note -->
+        <div class="info-note">
+            <strong><mark class="keyword">TCP</mark> Tahoe vs <mark class="keyword">TCP</mark> Reno:</strong><br>
+            • <strong>Tahoe:</strong> treats any loss (timeout or triple duplicate <mark class="keyword">ACK</mark>) the
+            same way – <mark class="keyword">cwnd</mark> drops to
+            1 <mark class="keyword">MSS</mark> and slow start begins again.<br>
+            • <strong>Reno:</strong> on triple duplicate <mark class="keyword">ACK</mark>s, it enters <em>fast
+                recovery</em>: <mark class="keyword">ssthresh</mark> = <mark class="keyword">cwnd</mark>/2,
+            <mark class="keyword">cwnd</mark> = <mark class="keyword">ssthresh</mark> + 3 <mark
+                class="keyword">MSS</mark>, and only returns to congestion avoidance after receiving a new <mark
+                class="keyword">ACK</mark>. This keeps the
+            pipe fuller and avoids an unnecessary slow start.
+        </div>
+
+        <h3><mark class="keyword">TCP</mark> CUBIC</h3>
+        <p>Default in Linux (before 2024), CUBIC uses a cubic function to ramp up faster when far from
+            W<sub>max</sub> and slower when close, achieving higher throughput in high‑speed networks.</p>
+
+        <h3><mark class="keyword">TCP</mark> and the Bottleneck Link</h3>
+        <p><mark class="keyword">TCP</mark> tries to keep the pipe “just full, not fuller.” Bandwidth·delay product =
+            ideal inflight data.
+            <strong>BBR (Bottleneck Bandwidth and <mark class="keyword">RTT</mark>)</strong> probes for bandwidth by
+            pacing and measuring <mark class="keyword">RTT</mark>, avoiding buffer bloat.
+        </p>
+        <div class="info-note">
+            <strong>CUBIC vs BBR:</strong> CUBIC increases its sending rate based on the <em>time</em> since the last
+            congestion event (aggressive at first, then cautious near W<sub>max</sub>). BBR, on the other hand,
+            directly estimates the bottleneck bandwidth and the minimum <mark class="keyword">RTT</mark>, and regulates
+            inflight data to match the
+            bandwidth‑delay product. This makes BBR less dependent on packet loss and can achieve lower latencies
+            while still utilising the link fully.
+        </div>
+
+        <div class="qa-box">
+            <strong>Q:</strong> Is <mark class="keyword">TCP</mark> fair?
+        </div>
+        <h3><mark class="keyword">TCP</mark> Fairness</h3>
+        <p>Under idealized conditions (same <mark class="keyword">RTT</mark>, fixed sessions, congestion avoidance
+            only), <mark class="keyword">AIMD</mark> converges to fair
+            share R/K for K sessions. However, <mark class="keyword">UDP</mark> and parallel <mark
+                class="keyword">TCP</mark> connections can cheat.</p>
+        <div class="info-note">
+            <strong>Parallel <mark class="keyword">TCP</mark> connections:</strong> A single application can open
+            multiple <mark class="keyword">TCP</mark> connections to the same
+            server. If a bottleneck link of rate R is shared by N single‑connection flows, a new application that opens
+            M parallel connections may capture roughly M/(N+M) of the bandwidth, unfairly starving the other flows.
+            Modern browsers often use up to 6 parallel connections, which can give them a disproportionate share.
+        </div>
+
+        <h3>Explicit Congestion Notification (ECN)</h3>
+        <p>Network routers mark IP packets (ECN bits) to signal congestion; destination echoes this back via <mark
+                class="keyword">TCP</mark> <mark class="keyword">ACK</mark>
+            (ECE bit). Sender reduces rate before loss occurs.</p>
+
+        <p>The principles of <mark class="keyword">TCP</mark> congestion control have been evolving for decades; the
+            latest major evolution is QUIC.</p>
+
+        <!-- ================= 10. EVOLUTION: QUIC ================= -->
+        <h2 id="evolution"><i class="fas fa-rocket"></i> 10. Evolution of Transport-Layer Functionality: QUIC</h2>
+        <p><strong>QUIC (Quick <mark class="keyword">UDP</mark> Internet Connections)</strong> is an application‑layer
+            protocol on top of <mark class="keyword">UDP</mark>,
+            designed to improve HTTP performance. It integrates reliability, congestion control, and encryption in one
+            protocol, reducing handshake latency (1‑<mark class="keyword">RTT</mark>, even 0‑<mark
+                class="keyword">RTT</mark>). QUIC supports multiple streams within a single
+            connection, eliminating head‑of‑line blocking that occurs with <mark class="keyword">TCP</mark>.</p>
+        <ul>
+            <li>Reliable, secure data transfer per stream.</li>
+            <li>Common congestion control across streams.</li>
+            <li>Deployed widely by Google (Chrome, YouTube) and others.</li>
+            <li>HTTP/3 runs over QUIC.</li>
+        </ul>
+        <div class="info-note">
+            <strong>Key advantage:</strong> Connection migration (no need to re‑establish connection when IP address
+            changes). Built‑in TLS 1.3 encryption.
+        </div>
+
+        <!-- ================= HOMEWORK ASSIGNMENT ================= -->
+        <h2 id="homework"><i class="fas fa-tasks"></i> Homework Assignment (Theoretical, Graded)</h2>
+        <div class="homework-box">
+            <p><strong>Instructions:</strong> Answer all questions in a separate document (PDF or Word). Submit via the
+                learning platform. This assignment counts towards your final grade (5%).</p>
+
+            <h3>Part I: Short Essays (40 points)</h3>
+            <ol>
+                <li>Explain the difference between multiplexing and demultiplexing. How does <mark
+                        class="keyword">TCP</mark> demultiplexing differ
+                    from <mark class="keyword">UDP</mark> demultiplexing?</li>
+                <li>Why does <mark class="keyword">UDP</mark> exist? Give three applications that benefit from <mark
+                        class="keyword">UDP</mark> and justify each.</li>
+                <li>Describe the rdt3.0 protocol. Why is its performance poor on high‑speed links? Use the stop‑and‑wait
+                    concept in your explanation.</li>
+                <li>Compare Go‑Back‑N and Selective Repeat. Discuss their handling of out‑of‑order packets and buffer
+                    requirements.</li>
+                <li>What is the purpose of the <mark class="keyword">TCP</mark> 3‑way handshake? Describe a scenario
+                    where a 2‑way handshake could
+                    cause problems.</li>
+            </ol>
+
+            <h3>Part II: True/False + Correction (30 points)</h3>
+            <ol>
+                <li><mark class="keyword">UDP</mark> uses a <mark class="keyword">4-tuple</mark> to demultiplex
+                    segments. (True / False)</li>
+                <li>In Go‑Back‑N, the receiver buffers out‑of‑order packets. (True / False)</li>
+                <li><mark class="keyword">TCP</mark> fast retransmit occurs when the sender receives 3 duplicate <mark
+                        class="keyword">ACK</mark>s. (True / False)</li>
+                <li><mark class="keyword">TCP</mark> flow control is implemented using the congestion window (<mark
+                        class="keyword">cwnd</mark>). (True / False)</li>
+                <li>QUIC is built on top of <mark class="keyword">TCP</mark>. (True / False)</li>
+            </ol>
+            <p>For each false statement, write the correct version.</p>
+
+            <h3>Part III: Theoretical Analysis & Scenarios (30 points)</h3>
+            <ol>
+                <li><strong>Stop‑and‑Wait vs Pipelining:</strong> If we have a very fast link, why does Stop‑and‑Wait
+                    fail to utilise the available bandwidth? What solution do Pipelining protocols offer, and how does
+                    it
+                    improve performance?</li>
+                <li><strong>Duplicate <mark class="keyword">ACK</mark>s & Fast Retransmit:</strong> Explain why <mark
+                        class="keyword">TCP</mark> immediately sends a duplicate <mark class="keyword">ACK</mark>
+                    when an out‑of‑order segment arrives, and how the sender leverages these duplicate <mark
+                        class="keyword">ACK</mark>s to trigger
+                    Fast Retransmit.</li>
+                <li><strong>Congestion Control Philosophy:</strong> What is the fundamental difference in approach
+                    between traditional loss‑based congestion control (like <mark class="keyword">AIMD</mark>) and the
+                    newer BBR algorithm? Why might
+                    BBR achieve lower latency while still filling the pipe?</li>
+            </ol>
+            <p><strong>Grading criteria:</strong> correctness, completeness, proper use of terminology, and clarity of
+                explanation.</p>
+            <p><strong>Deadline:</strong> Two weeks from the lecture date.</p>
+        </div>
+
+        <!-- ================= SUMMARY ================= -->
+        <h2><i class="fas fa-check-double"></i> Chapter 3 Summary</h2>
+        <ul>
+            <li>Transport layer provides logical communication between processes, using <mark class="keyword">TCP</mark>
+                (reliable) or <mark class="keyword">UDP</mark>
+                (unreliable).</li>
+            <li>Multiplexing/demultiplexing uses port numbers and IP addresses.</li>
+            <li>Reliable data transfer protocols (rdt) evolve through incremental versions, culminating in pipelined
+                protocols (Go‑Back‑N, Selective Repeat).</li>
+            <li><mark class="keyword">TCP</mark>: segment header with seq/<mark class="keyword">ACK</mark> numbers,
+                dynamic timeout estimation, reliable data transfer (cumulative
+                <mark class="keyword">ACK</mark>, fast retransmit, receiver <mark class="keyword">ACK</mark> generation
+                rules), flow control (<mark class="keyword">rwnd</mark>), and connection management
+                (3‑way handshake, <mark class="keyword">SYN</mark> flood defences).
+            </li>
+            <li>Congestion control principles: costs of congestion, <mark class="keyword">AIMD</mark>, slow start,
+                congestion avoidance, fast
+                recovery, Tahoe vs Reno, CUBIC, BBR, ECN, fairness issues.</li>
+            <li>QUIC: modern transport over <mark class="keyword">UDP</mark>, integrating reliability, security, and
+                multiplexing, used in HTTP/3.</li>
+        </ul>
+        <div class="info-note">
+            <strong>Self‑review questions (exam preparation):</strong><br>
+            • How does a <mark class="keyword">TCP</mark> receiver generate <mark class="keyword">ACK</mark>s?<br>
+            • Why is the <mark class="keyword">TCP</mark> checksum computed over a pseudo‑header that includes IP
+            addresses?<br>
+            • What is the difference between <mark class="keyword">TCP</mark> Tahoe and <mark class="keyword">TCP</mark>
+            Reno?<br>
+            • Explain how BBR differs from loss‑based congestion control.<br>
+            • Why does <mark class="keyword">TCP</mark> need a <mark class="keyword">TIME_WAIT</mark> state after
+            closing?
+        </div>
+
+        <footer
+            style="margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+            <p>© <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved</p>
+            <p>Based on Kurose & Ross, <em>Computer Networking: A Top-Down Approach</em>, 9th edition, Chapter 3 slides.
+            </p>
+        </footer>
+    </div>
+    <script>
+        document.getElementById('lecture-year').textContent = new Date().getFullYear();
+    </script>
+    <script>
+        // === Scroll Spy for Quick Navigation ===
+        (function () {
+            const navLinks = document.querySelectorAll('.quick-nav a');
+            const sections = [];
+            // جمع جميع العناصر التي تحمل id والمشار إليها في الروابط
+            navLinks.forEach(link => {
+                const id = link.getAttribute('href');
+                if (id && id.startsWith('#')) {
+                    const section = document.querySelector(id);
+                    if (section) {
+                        sections.push({ link, section });
+                    }
+                }
+            });
+
+            function onScroll() {
+                let currentId = null;
+                const scrollPos = window.scrollY + window.innerHeight / 3; // تعديل للتعرف المبكر
+                for (let i = sections.length - 1; i >= 0; i--) {
+                    if (sections[i].section.offsetTop <= scrollPos) {
+                        currentId = sections[i].link.getAttribute('href');
+                        break;
+                    }
+                }
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentId) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', onScroll);
+            window.addEventListener('resize', onScroll);
+            // تشغيل مرة عند التحميل
+            onScroll();
+        })();
+    </script>
+    <script src="scripts.js" defer></script>
+</body>
+
+</html>
