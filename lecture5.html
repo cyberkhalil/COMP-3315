@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="COMP-3315 Chapter 5: Network Layer Control Plane — OSPF, BGP, SDN, ICMP">
+    <meta property="og:title" content="COMP-3315 | Chapter 5: Network Layer – Control Plane">
+    <meta property="og:description"
+        content="Comprehensive lecture on OSPF, BGP, SDN, ICMP, and Routing Algorithms based on Kurose & Ross 9th Edition.">
+    <meta property="og:type" content="article">
+    <title>COMP-3315 | Chapter 5: Network Layer – Control Plane</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ],
+                displayMath: [
+                    ['$$', '$$'],
+                    ['\\[', '\\]']
+                ],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --border-light: #2d3a5e;
+            --text-muted: #94a3b8;
+            --bg-dark: rgba(18, 25, 45, 0.92);
+            --bg-card: rgba(0, 0, 0, 0.3);
+            --highlight-blue: #7dd3fc;
+            --highlight-light: #b9e6ff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 2.5rem;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight-blue));
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            transition: transform 0.2s, opacity 0.3s;
+        }
+
+        #back-to-top:hover {
+            transform: translateY(-3px);
+        }
+
+        #back-to-top.visible {
+            display: flex;
+        }
+
+        .lecture-container-special {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-dark);
+            backdrop-filter: blur(2px);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .lecture-container-special p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .lecture-container-special h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 0.3rem;
+        }
+
+        .lecture-container-special h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1rem 0;
+            color: var(--highlight-blue);
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .lecture-container-special h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.8rem 0;
+            color: var(--highlight-light);
+        }
+
+        .lecture-container-special h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin: 0.8rem 0 0.4rem 0;
+        }
+
+        .info-note {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1rem 1rem 1.8rem;
+            border-left: 4px solid var(--primary);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .lab-box {
+            background: rgba(16, 185, 129, 0.08);
+            padding: 1.2rem 1.2rem 1.2rem 1.8rem;
+            border-left: 4px solid var(--success);
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .homework-box {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1rem 1rem 1.8rem;
+            border-left: 4px solid var(--success);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .two-cols {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.2rem 0;
+            align-items: stretch;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 260px;
+            background: var(--bg-card);
+            padding: 1.2rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .col h3 {
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        pre {
+            background: #0b1120;
+            color: #e2e8f0;
+            padding: 1.2rem 1rem 1rem 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border: 1px solid var(--border-light);
+            position: relative;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        pre code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            display: block;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.5rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--border-light);
+            color: #b9e6ff;
+            padding: 0.2rem 0.7rem;
+            border-radius: 0.3rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            opacity: 0.7;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+            opacity: 1;
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+            opacity: 1;
+        }
+
+        .quick-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+        }
+
+        .quick-nav::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .quick-nav::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 2px;
+        }
+
+        .quick-nav a {
+            background: rgba(45, 58, 94, 0.5);
+            color: var(--highlight-light);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .quick-nav a:hover,
+        .quick-nav a.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th {
+            background: rgba(59, 130, 246, 0.25);
+            color: var(--highlight-blue);
+            font-weight: 700;
+            padding: 0.7rem 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: #e2e8f0;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .keyword {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--highlight-blue);
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.2rem;
+            font-weight: 600;
+        }
+
+        .exam-tip {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1rem 1rem 1.8rem;
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .quote-block {
+            background: rgba(30, 40, 60, 0.6);
+            border-left: 4px solid #a78bfa;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+            font-style: italic;
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+
+        .quote-block strong {
+            font-style: normal;
+            color: #e2e8f0;
+        }
+
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin: 0.8rem 0;
+            font-size: 0.85rem;
+        }
+
+        .mini-table th {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--highlight-blue);
+            font-weight: 700;
+            padding: 0.5rem 0.8rem;
+            text-align: left;
+        }
+
+        .mini-table td {
+            padding: 0.5rem 0.8rem;
+            border-bottom: 1px solid var(--border-light);
+            color: #e2e8f0;
+        }
+
+        .mini-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .svg-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            text-align: center;
+            margin: 1.2rem 0;
+            overflow-x: auto;
+        }
+
+        .svg-text {
+            paint-order: stroke fill;
+            stroke: rgba(0, 0, 0, 0.8);
+            stroke-width: 2px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            fill: #fff;
+        }
+
+        .svg-text-light {
+            paint-order: stroke fill;
+            stroke: rgba(0, 0, 0, 0.5);
+            stroke-width: 1.5px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            fill: #fff;
+        }
+
+        code {
+            background: rgba(59, 130, 246, 0.15);
+            color: #7dd3fc;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        ul,
+        ol {
+            line-height: 1.7;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+        }
+
+        .dijkstra-highlight {
+            background: rgba(16, 185, 129, 0.12);
+            border-left: 3px solid var(--success);
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.2rem;
+        }
+
+        @media print {
+
+            .quick-nav,
+            .home-button,
+            #back-to-top,
+            #progress-bar,
+            .copy-btn {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .lecture-container-special {
+                background: white;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                color: black;
+            }
+
+            .lecture-container-special h1,
+            .lecture-container-special h2,
+            .lecture-container-special h3 {
+                color: #000;
+                border-color: #999;
+            }
+
+            pre {
+                background: #f4f4f4;
+                color: #000;
+                border-color: #ccc;
+            }
+
+            pre code {
+                color: #000;
+            }
+
+            .comparison-table,
+            .mini-table {
+                background: #f9f9f9;
+            }
+
+            .comparison-table th,
+            .mini-table th {
+                background: #e0e0e0;
+                color: #000;
+            }
+
+            .comparison-table td,
+            .mini-table td {
+                border-color: #ccc;
+                color: #000;
+            }
+
+            .info-note,
+            .exam-tip,
+            .quote-block {
+                background: #f0f0f0 !important;
+                border-left-color: #666 !important;
+                color: #000;
+            }
+
+            .svg-container {
+                background: #f0f0f0;
+                border-color: #ccc;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .lecture-container-special {
+                padding: 1rem;
+            }
+
+            .col {
+                padding: 1rem;
+                min-width: 100%;
+            }
+
+            #back-to-top {
+                bottom: 1rem;
+                right: 1rem;
+                width: 38px;
+                height: 38px;
+            }
+
+            .comparison-table {
+                font-size: 0.75rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.4rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="progress-bar" aria-hidden="true"></div>
+    <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div class="bg-grid"></div>
+    <div class="lecture-container-special">
+        <a href="index.html" class="home-button"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
+
+        <nav class="quick-nav" aria-label="Quick navigation">
+            <a href="#objectives">Objectives</a>
+            <a href="#intro">Introduction</a>
+            <a href="#ls">Link-State</a>
+            <a href="#dv">Distance-Vector</a>
+            <a href="#ospf">OSPF</a>
+            <a href="#bgp">BGP</a>
+            <a href="#sdn">SDN</a>
+            <a href="#icmp">ICMP</a>
+            <a href="#lab">Practical Lab</a>
+            <a href="#homework">Homework</a>
+        </nav>
+
+        <h1>Chapter 5: The Network Layer – Control Plane</h1>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Kurose & Ross, <em>Computer Networking: A Top-Down
+                Approach</em>, 9th edition (2025) – Full lecture coverage</p>
+
+        <div class="info-note" style="border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.08);">
+            <strong><i class="fas fa-book-open"></i> Attribution:</strong> This lecture content is adapted from the
+            official slides by <strong>Jim Kurose</strong> and <strong>Keith Ross</strong> for the 9th edition. <em>All
+                material copyright © 1996-2025 J.F. Kurose and K.W. Ross, All Rights Reserved.</em> Slides are made
+            freely available for educational use provided the source is acknowledged.
+        </div>
+
+        <div class="two-cols" id="objectives">
+            <div class="col" style="border-left: 4px solid var(--primary);">
+                <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+                <ul>
+                    <li>Understand the distinction between <strong>forwarding</strong> (data plane) and
+                        <strong>routing</strong> (control plane).
+                    </li>
+                    <li>Compare <strong>per-router control</strong> vs. <strong>logically centralized (SDN)</strong>
+                        control architectures.</li>
+                    <li>Execute and trace <strong>Dijkstra's Link-State</strong> and <strong>Bellman-Ford
+                            Distance-Vector</strong> algorithms.</li>
+                    <li>Explain intra-AS routing with <strong>OSPF</strong> and its hierarchical area design.</li>
+                    <li>Analyze inter-AS routing with <strong>BGP</strong>: path attributes, policies, and route
+                        selection.</li>
+                    <li>Describe <strong>SDN</strong> components: data-plane switches, controllers, and OpenFlow.</li>
+                    <li>Use <strong>ICMP</strong> and <strong>traceroute</strong> for network diagnostics.</li>
+                </ul>
+            </div>
+            <div class="col" style="border-left: 4px solid var(--success);">
+                <h3><i class="fas fa-list-check"></i> Chapter Roadmap</h3>
+                <ul>
+                    <li><strong>5.1</strong> Introduction: control plane functions and architectures</li>
+                    <li><strong>5.2</strong> Routing algorithms: Link-State (Dijkstra) & Distance-Vector (Bellman-Ford)
+                    </li>
+                    <li><strong>5.3</strong> Intra-AS routing: OSPF</li>
+                    <li><strong>5.4</strong> Inter-AS routing: BGP</li>
+                    <li><strong>5.5</strong> SDN control plane</li>
+                    <li><strong>5.6</strong> ICMP</li>
+                </ul>
+                <div class="info-note"
+                    style="margin-top: 1rem; border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.05);">
+                    <strong><i class="fas fa-book-open"></i> Prerequisites:</strong> Solid understanding of the Network
+                    Layer Data Plane (Chapter 4): forwarding tables, IPv4 addressing, and router architecture.
+                </div>
+            </div>
+        </div>
+
+        <h2 id="intro"><i class="fas fa-layer-group"></i> 1. Introduction: Network Control Plane</h2>
+        <p>Recall from Chapter 4: the network layer has two core functions. <strong>Forwarding</strong> is the local,
+            per-router data-plane action of moving a packet from an input link to the appropriate output link.
+            <strong>Routing</strong> is the network-wide control-plane process of determining the end-to-end path that
+            packets follow from source to destination.
+        </p>
+
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-cogs"></i> Per-Router Control (Traditional)</h3>
+                <p>Individual routing algorithm components run in <em>each and every router</em>. Routers exchange
+                    messages with one another in the control plane to compute forwarding tables. Examples: OSPF, BGP
+                    running distributedly on each router.</p>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-cloud"></i> SDN Control (Logically Centralized)</h3>
+                <p>A <strong>remote controller</strong> computes and installs forwarding tables in routers. The data
+                    plane (switching hardware) is decoupled from the control plane (software controller). Communication
+                    occurs via protocols like OpenFlow.</p>
+            </div>
+        </div>
+
+        <div class="info-note">
+            <strong><i class="fas fa-lightbulb"></i> Key Insight:</strong> The control plane is the "brain" that
+            populates the forwarding tables; the data plane is the "muscle" that executes the forwarding decisions at
+            line speed.
+        </div>
+
+        <h3>Graph Abstraction & Link Costs</h3>
+        <p>Routing protocols operate on a graph abstraction of the network: \(G = (N, E)\), where \(N\) is the set of
+            routers (nodes) and \(E\) is the set of links (edges). Each link \((x, y)\) has an associated cost
+            \(c_{x,y}\). The goal is to find the least-cost path between sources and destinations.</p>
+        <ul>
+            <li>Cost may always be 1 (hop count), inversely related to bandwidth, or inversely related to congestion.
+            </li>
+            <li>If \(x\) and \(y\) are not directly connected, \(c_{x,y} = \infty\).</li>
+        </ul>
+
+        <h3>Routing Algorithm Classification</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Dimension</th>
+                    <th>Category A</th>
+                    <th>Category B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Information source</td>
+                    <td><strong>Global (Link-State):</strong> all routers know complete topology and link costs</td>
+                    <td><strong>Decentralized (Distance-Vector):</strong> routers know only neighbors' costs and local
+                        estimates</td>
+                </tr>
+                <tr>
+                    <td>Dynamics</td>
+                    <td><strong>Static:</strong> routes change slowly over time (manual updates)</td>
+                    <td><strong>Dynamic:</strong> routes change automatically in response to traffic/topology changes
+                    </td>
+                </tr>
+                <tr>
+                    <td>Load sensitivity</td>
+                    <td><strong>Load-sensitive:</strong> link costs vary with current congestion</td>
+                    <td><strong>Load-insensitive:</strong> link costs do not reflect current congestion (most common
+                        today)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="ls"><i class="fas fa-project-diagram"></i> 2. Link-State Routing: Dijkstra's Algorithm</h2>
+        <p><strong>Link-State (LS)</strong> algorithms use global knowledge: each router stores the complete network
+            topology and all link costs, typically obtained via <strong>link-state broadcast</strong>. Dijkstra's
+            algorithm computes the least-cost path from a source node to all other nodes.</p>
+
+        <h3>Algorithm Overview</h3>
+        <p>Each node maintains:</p>
+        <ul>
+            <li>\(D(v)\): current estimate of least-cost path from source to destination \(v\)</li>
+            <li>\(p(v)\): predecessor node along the current least-cost path to \(v\)</li>
+            <li>\(N'\): set of nodes whose least-cost path is definitively known</li>
+        </ul>
+
+        <div class="info-note">
+            <strong>Dijkstra's Algorithm (pseudocode):</strong>
+            <pre><button class="copy-btn" aria-label="Copy code"><i class="fas fa-copy"></i> Copy</button><code>Initialization:
+          N' = {u}
+          for all nodes v:
+            if v adjacent to u: D(v) = c(u,v)
+            else: D(v) = ∞
+
+        Loop:
+          find w not in N' such that D(w) is minimum
+          add w to N'
+          update D(v) for all v adjacent to w and not in N':
+            D(v) = min( D(v), D(w) + c(w,v) )
+        until all nodes in N'</code></pre>
+        </div>
+
+        <h3>Network Graph for the Example</h3>
+        <!-- SVG Graph with CORRECTED topology and costs matching the Dijkstra trace table -->
+        <div class="svg-container">
+            <svg width="100%" height="auto" viewBox="0 0 700 450" xmlns="http://www.w3.org/2000/svg" role="img"
+                aria-label="Network graph with nodes u, v, w, x, y, z" style="max-width:750px;">
+                <defs>
+                    <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#3b82f6" />
+                        <stop offset="100%" stop-color="#1e3a5f" />
+                    </radialGradient>
+                    <radialGradient id="sourceGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#f59e0b" />
+                        <stop offset="100%" stop-color="#b45309" />
+                    </radialGradient>
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Background -->
+                <rect width="700" height="450" fill="rgba(10,15,30,0.4)" rx="12" />
+
+                <!-- Edges with CORRECTED topology -->
+                <g stroke-linecap="round" filter="url(#glow)">
+                    <!-- u - v (cost 2) -->
+                    <line x1="100" y1="220" x2="240" y2="100" stroke="#64748b" stroke-width="3" />
+                    <!-- u - w (cost 5) -->
+                    <line x1="100" y1="220" x2="240" y2="340" stroke="#64748b" stroke-width="3" />
+                    <!-- u - x (cost 1, highlighted) -->
+                    <line x1="100" y1="220" x2="400" y2="220" stroke="#7dd3fc" stroke-width="4" />
+                    <!-- v - x (cost 2) -->
+                    <line x1="240" y1="100" x2="400" y2="220" stroke="#64748b" stroke-width="3" />
+                    <!-- w - y (cost 1) -->
+                    <line x1="240" y1="340" x2="400" y2="340" stroke="#64748b" stroke-width="3" />
+                    <!-- v - w (cost 3) - diagonal connection -->
+                    <line x1="240" y1="120" x2="240" y2="320" stroke="#64748b" stroke-width="3" />
+                    <!-- x - y (cost 1) - CORRECTED vertical line -->
+                    <line x1="400" y1="220" x2="400" y2="340" stroke="#64748b" stroke-width="3" />
+                    <!-- x - z (cost 4) -->
+                    <line x1="400" y1="220" x2="600" y2="220" stroke="#64748b" stroke-width="3" />
+                    <!-- y - z (cost 2) - CORRECTED diagonal line -->
+                    <line x1="400" y1="340" x2="600" y2="220" stroke="#64748b" stroke-width="3" />
+                </g>
+
+                <!-- Edge Labels (Costs) with precise placement -->
+                <g font-family="Inter, sans-serif" font-weight="700" font-size="16" text-anchor="middle"
+                    dominant-baseline="central">
+                    <!-- u-v: midpoint -->
+                    <rect x="155" y="145" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="170" y="158" fill="#bae6fd">2</text>
+
+                    <!-- u-w: midpoint -->
+                    <rect x="155" y="265" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="170" y="278" fill="#bae6fd">5</text>
+
+                    <!-- u-x: midpoint (highlighted) -->
+                    <rect x="235" y="207" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="250" y="220" fill="#fde68a" font-size="17">1</text>
+
+                    <!-- v-x: midpoint -->
+                    <rect x="305" y="145" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="320" y="158" fill="#bae6fd">2</text>
+
+                    <!-- w-y: midpoint -->
+                    <rect x="305" y="327" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="320" y="340" fill="#bae6fd">1</text>
+
+                    <!-- x-y: midpoint (vertical, CORRECTED) -->
+                    <rect x="385" y="265" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="400" y="278" fill="#fde68a" font-size="17">1</text>
+
+                    <!-- x-z: midpoint -->
+                    <rect x="485" y="207" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="500" y="220" fill="#bae6fd">4</text>
+
+                    <!-- y-z: midpoint (CORRECTED) -->
+                    <rect x="485" y="265" width="30" height="24" rx="4" fill="rgba(10,15,30,0.7)" />
+                    <text x="500" y="278" fill="#bae6fd">2</text>
+                </g>
+
+                <!-- Nodes -->
+                <g>
+                    <circle cx="100" cy="220" r="30" fill="url(#sourceGrad)" stroke="#fbbf24" stroke-width="3"
+                        filter="url(#glow)" />
+                    <text class="svg-text" x="100" y="220" font-size="20" text-anchor="middle"
+                        dominant-baseline="central">u</text>
+
+                    <circle cx="240" cy="100" r="28" fill="url(#nodeGrad)" stroke="#7dd3fc" stroke-width="2.5"
+                        filter="url(#glow)" />
+                    <text class="svg-text" x="240" y="100" font-size="18" text-anchor="middle"
+                        dominant-baseline="central">v</text>
+
+                    <circle cx="240" cy="340" r="28" fill="url(#nodeGrad)" stroke="#7dd3fc" stroke-width="2.5"
+                        filter="url(#glow)" />
+                    <text class="svg-text" x="240" y="340" font-size="18" text-anchor="middle"
+                        dominant-baseline="central">w</text>
+
+                    <circle cx="400" cy="220" r="28" fill="url(#nodeGrad)" stroke="#7dd3fc" stroke-width="2.5"
+                        filter="url(#glow)" />
+                    <text class="svg-text" x="400" y="220" font-size="18" text-anchor="middle"
+                        dominant-baseline="central">x</text>
+
+                    <circle cx="400" cy="340" r="28" fill="url(#nodeGrad)" stroke="#7dd3fc" stroke-width="2.5"
+                        filter="url(#glow)" />
+                    <text class="svg-text" x="400" y="340" font-size="18" text-anchor="middle"
+                        dominant-baseline="central">y</text>
+
+                    <circle cx="600" cy="220" r="28" fill="url(#nodeGrad)" stroke="#7dd3fc" stroke-width="2.5"
+                        filter="url(#glow)" />
+                    <text class="svg-text" x="600" y="220" font-size="18" text-anchor="middle"
+                        dominant-baseline="central">z</text>
+                </g>
+
+                <!-- Legend -->
+                <g transform="translate(20, 410)">
+                    <circle cx="10" cy="0" r="8" fill="url(#sourceGrad)" stroke="#fbbf24" stroke-width="1.5" />
+                    <text class="svg-text-light" x="26" y="0" font-size="12" dominant-baseline="central"
+                        fill="#94a3b8">Source node</text>
+                    <circle cx="120" cy="0" r="8" fill="url(#nodeGrad)" stroke="#7dd3fc" stroke-width="1.5" />
+                    <text class="svg-text-light" x="136" y="0" font-size="12" dominant-baseline="central"
+                        fill="#94a3b8">Router node</text>
+                    <line x1="230" y1="0" x2="260" y2="0" stroke="#7dd3fc" stroke-width="3" />
+                    <text class="svg-text-light" x="268" y="0" font-size="12" dominant-baseline="central"
+                        fill="#94a3b8">Direct link from source</text>
+                </g>
+            </svg>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:0; margin-top:0.5rem;">
+                Graph for Dijkstra's example: compute least-cost paths from source <strong>u</strong> to all other
+                nodes.
+                Edge costs are <strong>corrected</strong> to match the trace table (x-y = 1, y-z = 2).
+            </p>
+        </div>
+
+        <!-- Least-Cost Tree -->
+        <div class="svg-container">
+            <svg width="100%" height="auto" viewBox="0 0 550 280" xmlns="http://www.w3.org/2000/svg"
+                style="max-width:600px;">
+                <rect width="550" height="280" fill="rgba(10,15,30,0.4)" rx="10" />
+                <!-- Tree edges -->
+                <g stroke="#10b981" stroke-width="4" stroke-linecap="round" filter="url(#glow)">
+                    <line x1="60" y1="130" x2="180" y2="50" />
+                    <line x1="60" y1="130" x2="240" y2="130" />
+                    <line x1="240" y1="130" x2="370" y2="50" />
+                    <line x1="370" y1="50" x2="490" y2="130" />
+                    <line x1="370" y1="50" x2="490" y2="200" />
+                </g>
+                <!-- Nodes -->
+                <circle cx="60" cy="130" r="24" fill="#f59e0b" stroke="#fbbf24" stroke-width="2" filter="url(#glow)" />
+                <text class="svg-text" x="55" y="137" font-size="17">u</text>
+                <circle cx="180" cy="50" r="22" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#glow)" />
+                <text class="svg-text" x="175" y="57" font-size="15">v</text>
+                <circle cx="240" cy="130" r="22" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#glow)" />
+                <text class="svg-text" x="235" y="137" font-size="15">x</text>
+                <circle cx="370" cy="50" r="22" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#glow)" />
+                <text class="svg-text" x="365" y="57" font-size="15">y</text>
+                <circle cx="490" cy="130" r="22" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#glow)" />
+                <text class="svg-text" x="485" y="137" font-size="15">w</text>
+                <circle cx="490" cy="200" r="22" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#glow)" />
+                <text class="svg-text" x="485" y="207" font-size="15">z</text>
+                <text x="275" y="265" font-family="Inter" font-size="13" fill="#94a3b8" text-anchor="middle">
+                    Least‑cost path tree from u (green edges)
+                </text>
+            </svg>
+        </div>
+
+        <h3>Step-by-Step Trace Table (Corrected)</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted);">The table below shows the correct Dijkstra trace for the
+            graph above, with all values populated at every step. The ordering of node additions follows the standard
+            algorithm: at each step, the node with the smallest tentative distance is selected.</p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Step</th>
+                    <th>\(N'\)</th>
+                    <th>\(D(v), p(v)\)</th>
+                    <th>\(D(w), p(w)\)</th>
+                    <th>\(D(x), p(x)\)</th>
+                    <th>\(D(y), p(y)\)</th>
+                    <th>\(D(z), p(z)\)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>0</strong></td>
+                    <td><span class="dijkstra-highlight">u</span></td>
+                    <td>2, u</td>
+                    <td>5, u</td>
+                    <td>1, u</td>
+                    <td>\(\infty\)</td>
+                    <td>\(\infty\)</td>
+                </tr>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td><span class="dijkstra-highlight">ux</span></td>
+                    <td>2, u</td>
+                    <td>5, u</td>
+                    <td>1, u</td>
+                    <td>2, x</td>
+                    <td>5, x</td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td><span class="dijkstra-highlight">uxy</span></td>
+                    <td>2, u</td>
+                    <td>3, y</td>
+                    <td>1, u</td>
+                    <td>2, x</td>
+                    <td>4, y</td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td><span class="dijkstra-highlight">uxyv</span></td>
+                    <td>2, u</td>
+                    <td>3, y</td>
+                    <td>1, u</td>
+                    <td>2, x</td>
+                    <td>4, y</td>
+                </tr>
+                <tr>
+                    <td><strong>4</strong></td>
+                    <td><span class="dijkstra-highlight">uxyvw</span></td>
+                    <td>2, u</td>
+                    <td>3, y</td>
+                    <td>1, u</td>
+                    <td>2, x</td>
+                    <td>4, y</td>
+                </tr>
+                <tr>
+                    <td><strong>5</strong></td>
+                    <td><span class="dijkstra-highlight">uxyvwz</span></td>
+                    <td>2, u</td>
+                    <td>3, y</td>
+                    <td>1, u</td>
+                    <td>2, x</td>
+                    <td>4, y</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-note">
+            <strong><i class="fas fa-check-circle" style="color: var(--success);"></i> Key Corrections Applied:</strong>
+            <ul>
+                <li><strong>Step 1:</strong> \(D(z)\) corrected from \(\infty\) to \(5, x\) (path u → x → z, cost 1 + 4
+                    = 5).</li>
+                <li><strong>Step 2:</strong> \(D(w)\) updated to \(3, y\) (u → x → y → w, cost 1 + 1 + 1 = 3) and
+                    \(D(z)\)
+                    updated to \(4, y\) (u → x → y → z, cost 1 + 1 + 2 = 4).</li>
+                <li><strong>Steps 3–5:</strong> All columns are now fully populated with the correct values.</li>
+                <li><strong>Node ordering:</strong> v (D=2) is added before w (D=3) at step 3, following standard
+                    Dijkstra's rule of selecting the smallest tentative distance first. The table now correctly shows
+                    <strong>uxyv</strong> at step 3 and <strong>uxyvw</strong> at step 4.
+                </li>
+            </ul>
+        </div>
+
+        <div class="info-note" style="border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.06);">
+            <strong><i class="fas fa-sitemap"></i> Resulting Forwarding Table in u:</strong>
+            <ul>
+                <li>Destination <strong>v</strong> → outgoing link \((u,v)\) (direct, cost 2)</li>
+                <li>Destination <strong>x</strong> → outgoing link \((u,x)\) (direct, cost 1)</li>
+                <li>Destination <strong>y</strong> → outgoing link \((u,x)\) (via x, cost 1 + 1 = 2)</li>
+                <li>Destination <strong>w</strong> → outgoing link \((u,x)\) (via x → y, cost 1 + 1 + 1 = 3)</li>
+                <li>Destination <strong>z</strong> → outgoing link \((u,x)\) (via x → y, cost 1 + 1 + 2 = 4)</li>
+            </ul>
+            <em style="color: #94a3b8; font-size:0.9rem;">Notice how \(D(w)\) was updated from 5 (direct) to 3 via x and
+                y.</em>
+        </div>
+
+        <h3>Complexity & Oscillations</h3>
+        <ul>
+            <li><strong>Time complexity:</strong> \(O(n^2)\) for the basic implementation; \(O(n \log n)\) with
+                efficient priority queues.</li>
+            <li><strong>Message complexity:</strong> Each router broadcasts its link state to all \(n\) routers,
+                requiring \(O(n^2)\) total link crossings.</li>
+            <li><strong>Oscillations:</strong> When link costs depend on traffic volume, routers may continuously shift
+                traffic to the "least congested" path, causing oscillations where no stable routing is ever reached.
+            </li>
+        </ul>
+
+        <h2 id="dv"><i class="fas fa-code-branch"></i> 3. Distance-Vector Routing: Bellman-Ford</h2>
+        <p><strong>Distance-Vector (DV)</strong> algorithms are decentralized and iterative. Each router knows only the
+            costs to its directly attached neighbors and maintains a vector of estimates to all destinations. The
+            algorithm is based on the <strong>Bellman-Ford equation</strong>:</p>
+
+        <div class="quote-block" style="text-align:center; font-style:normal;">
+            $$D_x(y) = \min_{v} \left\{ c_{x,v} + D_v(y) \right\}$$
+        </div>
+
+        <p>where the \(\min\) is taken over all neighbors \(v\) of \(x\). The node achieving the minimum is the next hop
+            on the estimated least-cost path to destination \(y\).</p>
+
+        <h3>Key Properties</h3>
+        <ul>
+            <li><strong>Iterative:</strong> Each node recomputes its distance vector whenever it receives an update from
+                a neighbor.</li>
+            <li><strong>Asynchronous:</strong> Nodes do not operate in lockstep; updates trigger local computations.
+            </li>
+            <li><strong>Self-stopping:</strong> If no updates arrive and no local DV changes, a node remains silent (no
+                unnecessary messages).</li>
+            <li><strong>Distributed:</strong> No node has global knowledge; information diffuses hop-by-hop.</li>
+        </ul>
+
+        <h3>Simple Example: Three Nodes</h3>
+        <p>Consider nodes \(x\), \(y\), \(z\) with link costs \(c(x,y)=2\), \(c(x,z)=7\), \(c(y,z)=1\). Suppose \(y\)
+            and \(z\) know their costs to \(z\): \(D_y(z)=1\) and \(D_z(z)=0\).</p>
+        <p>Applying the Bellman-Ford equation at \(x\):</p>
+        <div class="quote-block" style="font-style:normal;">
+            $$D_x(z) = \min\left\{ c_{x,y} + D_y(z),\; c_{x,z} + D_z(z) \right\} = \min\left\{ 2+1,\; 7+0 \right\} = 3$$
+        </div>
+        <p>The path via \(y\) (cost 3) is preferred over the direct link (cost 7). Similarly, \(D_x(y) = \min\{2+0,
+            7+1\} = 2\).</p>
+
+        <h3>Link Cost Changes: Count-to-Infinity</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h4><i class="fas fa-arrow-up"></i> Good News Travels Fast</h4>
+                <p>When a link cost <em>decreases</em>, the affected node updates its DV and notifies neighbors. The
+                    correct information propagates quickly (within a few iterations).</p>
+            </div>
+            <div class="col">
+                <h4><i class="fas fa-arrow-down"></i> Bad News Travels Slow</h4>
+                <p>When a link cost <em>increases</em> significantly (or fails), the <strong>count-to-infinity</strong>
+                    problem occurs. A node may believe it can still reach the destination via a neighbor, not realizing
+                    that neighbor's path depends on itself. Costs increment slowly toward infinity.</p>
+            </div>
+        </div>
+
+        <div class="exam-tip">
+            <strong>Count-to-Infinity Example:</strong> Suppose \(y\) detects its direct link to \(x\) now costs 60, but
+            \(z\) advertises \(D_z(x)=5\). \(y\) computes \(D_y(x) = \min\{60, 1+5\} = 6\) via \(z\). Then \(z\) sees
+            \(y\) advertising 6, so \(z\) computes \(D_z(x) = \min\{50, 1+6\} = 7\) via \(y\). This ping-pong continues:
+            6, 7, 8, 9 … until infinity. <strong>Solutions:</strong> Poison Reverse (advertise \(\infty\) back to the
+            neighbor you use) and defining a maximum hop count.
+        </div>
+
+        <h3>Comparison: LS vs. DV</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Characteristic</th>
+                    <th>Link-State (Dijkstra)</th>
+                    <th>Distance-Vector (Bellman-Ford)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Message complexity</td>
+                    <td>\(O(n^2)\) messages (broadcast to all)</td>
+                    <td>Exchanges only between neighbors; convergence varies</td>
+                </tr>
+                <tr>
+                    <td>Speed of convergence</td>
+                    <td>\(O(n^2)\) computations; may oscillate</td>
+                    <td>Varies; may suffer routing loops & count-to-infinity</td>
+                </tr>
+                <tr>
+                    <td>Robustness</td>
+                    <td>A router can advertise incorrect <em>link</em> costs only</td>
+                    <td>A router can advertise incorrect <em>path</em> costs, causing black-holing; errors propagate
+                    </td>
+                </tr>
+                <tr>
+                    <td>Scalability</td>
+                    <td>Requires more memory (full topology)</td>
+                    <td>Requires less memory (only neighbor vectors)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="ospf"><i class="fas fa-globe"></i> 4. Intra-AS Routing: OSPF</h2>
+        <p>An <strong>Autonomous System (AS)</strong> is a collection of routers under a single administrative domain.
+            <strong>Intra-AS routing protocols</strong> determine how packets are routed <em>within</em> one AS. The
+            most widely deployed is <strong>OSPF (Open Shortest Path First)</strong> (RFC 2328).
+        </p>
+
+        <div class="two-cols">
+            <div class="col">
+                <h3>OSPF Characteristics</h3>
+                <ul>
+                    <li><strong>Open:</strong> Publicly available standard.</li>
+                    <li><strong>Link-State:</strong> Each router floods OSPF link-state advertisements (LSAs) to all
+                        other routers in the AS.</li>
+                    <li><strong>Transport:</strong> LSAs are sent directly over IP (protocol 89), not over TCP or UDP.
+                    </li>
+                    <li><strong>Multiple metrics:</strong> Link costs can reflect bandwidth, delay, or a composite
+                        metric.</li>
+                    <li><strong>Security:</strong> All OSPF messages are authenticated to prevent malicious intrusion.
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>Hierarchical OSPF</h3>
+                <p>To improve scale, OSPF uses a <strong>two-level hierarchy</strong>:</p>
+                <ul>
+                    <li><strong>Local area:</strong> Routers flood LSAs only within their area, reducing overhead.</li>
+                    <li><strong>Backbone (Area 0):</strong> Connects all areas.</li>
+                    <li><strong>Area Border Routers (ABRs):</strong> Summarize distances to destinations in their own
+                        area and advertise summaries into the backbone.</li>
+                    <li><strong>Backbone routers:</strong> Run OSPF limited to the backbone.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SVG: OSPF Hierarchical Architecture -->
+        <div class="svg-container">
+            <svg width="100%" height="auto" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"
+                style="max-width:750px;">
+                <rect width="700" height="380" fill="rgba(10,15,30,0.4)" rx="12" />
+                <rect x="20" y="20" width="660" height="100" rx="10" fill="rgba(59,130,246,0.1)" stroke="#3b82f6"
+                    stroke-width="2" stroke-dasharray="6,4" />
+                <text x="40" y="45" font-family="Inter" font-size="15" font-weight="700" fill="#7dd3fc">Backbone Area
+                    (Area 0)</text>
+                <rect x="20" y="150" width="270" height="190" rx="10" fill="rgba(16,185,129,0.08)" stroke="#10b981"
+                    stroke-width="2" stroke-dasharray="6,4" />
+                <text x="40" y="175" font-family="Inter" font-size="14" font-weight="700" fill="#34d399">Area 1</text>
+                <rect x="410" y="150" width="270" height="190" rx="10" fill="rgba(245,158,11,0.08)" stroke="#f59e0b"
+                    stroke-width="2" stroke-dasharray="6,4" />
+                <text x="430" y="175" font-family="Inter" font-size="14" font-weight="700" fill="#fbbf24">Area 2</text>
+
+                <circle cx="80" cy="250" r="18" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+                <text class="svg-text-light" x="80" y="256" font-size="12" fill="#fff">R1</text>
+                <circle cx="170" cy="250" r="18" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+                <text class="svg-text-light" x="170" y="256" font-size="12" fill="#fff">R2</text>
+                <circle cx="125" cy="310" r="18" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+                <text class="svg-text-light" x="125" y="316" font-size="12" fill="#fff">R3</text>
+                <circle cx="230" cy="250" r="22" fill="#3b82f6" stroke="#60a5fa" stroke-width="2" />
+                <text class="svg-text-light" x="230" y="256" font-size="11" font-weight="700" fill="#fff">ABR1</text>
+
+                <circle cx="470" cy="250" r="18" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                <text class="svg-text-light" x="470" y="256" font-size="12" fill="#fff">R4</text>
+                <circle cx="570" cy="250" r="18" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                <text class="svg-text-light" x="570" y="256" font-size="12" fill="#fff">R5</text>
+                <circle cx="520" cy="310" r="18" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                <text class="svg-text-light" x="520" y="316" font-size="12" fill="#fff">R6</text>
+                <circle cx="430" cy="250" r="22" fill="#3b82f6" stroke="#60a5fa" stroke-width="2" />
+                <text class="svg-text-light" x="430" y="256" font-size="11" font-weight="700" fill="#fff">ABR2</text>
+
+                <circle cx="140" cy="80" r="18" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+                <text class="svg-text-light" x="140" y="86" font-size="12" fill="#fff">B1</text>
+                <circle cx="350" cy="80" r="18" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+                <text class="svg-text-light" x="350" y="86" font-size="12" fill="#fff">B2</text>
+                <circle cx="550" cy="80" r="18" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+                <text class="svg-text-light" x="550" y="86" font-size="12" fill="#fff">B3</text>
+
+                <g stroke="#475569" stroke-width="2">
+                    <line x1="230" y1="228" x2="230" y2="80" />
+                    <line x1="430" y1="228" x2="430" y2="80" />
+                    <line x1="230" y1="80" x2="350" y2="80" />
+                    <line x1="350" y1="80" x2="430" y2="80" />
+                    <line x1="350" y1="80" x2="550" y2="80" />
+                </g>
+                <text x="350" y="330" font-family="Inter" font-size="13" fill="#94a3b8" text-anchor="middle">
+                    Hierarchical OSPF: Areas, Backbone, and ABRs
+                </text>
+            </svg>
+        </div>
+
+        <div class="info-note">
+            <strong>Why hierarchy?</strong> In a flat network with \(n\) routers, \(O(n^2)\) LSAs may be flooded. With
+            hierarchical OSPF, flooding is confined to areas, dramatically reducing routing update traffic and CPU load.
+            <em>Reference: RFC 2328.</em>
+        </div>
+
+        <h2 id="bgp"><i class="fas fa-exchange-alt"></i> 5. Inter-AS Routing: BGP</h2>
+        <p><strong>BGP (Border Gateway Protocol) - RFC 4271</strong> is the de facto inter-domain routing protocol—the
+            "glue that holds the Internet together." It allows ASes to advertise reachability information and apply
+            administrative policies.</p>
+
+        <h3>eBGP vs. iBGP</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Scope</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>eBGP</strong></td>
+                    <td>Between gateway routers of <em>different</em> ASes</td>
+                    <td>Obtain reachability info from neighboring ASes</td>
+                </tr>
+                <tr>
+                    <td><strong>iBGP</strong></td>
+                    <td>Among routers <em>within</em> the same AS</td>
+                    <td>Propagate external reachability info to all internal routers</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- SVG: BGP Topology -->
+        <div class="svg-container">
+            <svg width="100%" height="auto" viewBox="0 0 750 320" xmlns="http://www.w3.org/2000/svg"
+                style="max-width:800px;">
+                <rect width="750" height="320" fill="rgba(10,15,30,0.4)" rx="10" />
+                <rect x="20" y="30" width="210" height="250" rx="10" fill="rgba(59,130,246,0.08)" stroke="#3b82f6"
+                    stroke-width="2" />
+                <text x="125" y="55" font-family="Inter" font-size="16" font-weight="700" fill="#60a5fa"
+                    text-anchor="middle">AS 1</text>
+                <rect x="260" y="30" width="210" height="250" rx="10" fill="rgba(16,185,129,0.08)" stroke="#10b981"
+                    stroke-width="2" />
+                <text x="365" y="55" font-family="Inter" font-size="16" font-weight="700" fill="#34d399"
+                    text-anchor="middle">AS 2</text>
+                <rect x="510" y="30" width="210" height="250" rx="10" fill="rgba(245,158,11,0.08)" stroke="#f59e0b"
+                    stroke-width="2" />
+                <text x="615" y="55" font-family="Inter" font-size="16" font-weight="700" fill="#fbbf24"
+                    text-anchor="middle">AS 3</text>
+
+                <circle cx="80" cy="125" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+                <text class="svg-text-light" x="80" y="131" font-size="12" fill="#fff">1a</text>
+                <circle cx="170" cy="185" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+                <text class="svg-text-light" x="170" y="191" font-size="12" fill="#fff">1b</text>
+                <circle cx="125" cy="245" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+                <text class="svg-text-light" x="125" y="251" font-size="12" fill="#fff">1c</text>
+
+                <circle cx="320" cy="125" r="20" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+                <text class="svg-text-light" x="320" y="131" font-size="12" fill="#fff">2a</text>
+                <circle cx="410" cy="185" r="20" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+                <text class="svg-text-light" x="410" y="191" font-size="12" fill="#fff">2b</text>
+                <circle cx="365" cy="245" r="20" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+                <text class="svg-text-light" x="365" y="251" font-size="12" fill="#fff">2c</text>
+
+                <circle cx="570" cy="125" r="20" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                <text class="svg-text-light" x="570" y="131" font-size="12" fill="#fff">3a</text>
+                <circle cx="660" cy="185" r="20" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                <text class="svg-text-light" x="660" y="191" font-size="12" fill="#fff">3b</text>
+
+                <g stroke="#f472b6" stroke-width="3" stroke-dasharray="6,4">
+                    <line x1="230" y1="125" x2="300" y2="125" />
+                    <line x1="430" y1="185" x2="550" y2="185" />
+                </g>
+                <text x="260" y="115" font-family="Inter" font-size="11" fill="#f472b6" text-anchor="middle">eBGP</text>
+                <text x="490" y="175" font-family="Inter" font-size="11" fill="#f472b6" text-anchor="middle">eBGP</text>
+
+                <g stroke="#818cf8" stroke-width="2" stroke-dasharray="4,4">
+                    <line x1="80" y1="145" x2="170" y2="165" />
+                    <line x1="170" y1="205" x2="125" y2="225" />
+                    <line x1="80" y1="145" x2="125" y2="225" />
+                    <line x1="320" y1="145" x2="410" y2="165" />
+                    <line x1="410" y1="205" x2="365" y2="225" />
+                    <line x1="320" y1="145" x2="365" y2="225" />
+                    <line x1="570" y1="145" x2="660" y2="165" />
+                </g>
+                <text x="95" y="140" font-family="Inter" font-size="11" fill="#818cf8">iBGP</text>
+                <text x="20" y="305" font-family="Inter" font-size="12" fill="#94a3b8">BGP Topology: eBGP between ASes,
+                    iBGP within AS</text>
+            </svg>
+        </div>
+
+        <h3>BGP Messages & Path Attributes</h3>
+        <p>BGP peers exchange messages over a semi-permanent <strong>TCP</strong> connection (port 179). Key message
+            types:</p>
+        <ul>
+            <li><strong>OPEN:</strong> Opens TCP connection and authenticates the peer.</li>
+            <li><strong>UPDATE:</strong> Advertises a new path or withdraws an old one.</li>
+            <li><strong>KEEPALIVE:</strong> Keeps the connection alive in the absence of UPDATES.</li>
+            <li><strong>NOTIFICATION:</strong> Reports errors or closes the connection.</li>
+        </ul>
+        <p>A BGP route is a prefix plus <strong>path attributes</strong>:</p>
+        <ul>
+            <li><strong>AS-PATH:</strong> List of ASes the advertisement has traversed (loop detection & policy).</li>
+            <li><strong>NEXT-HOP:</strong> The specific internal router leading to the next-hop AS.</li>
+        </ul>
+
+        <h3>BGP Route Selection & Policies</h3>
+        <p>When multiple routes exist, a BGP router selects the best path using this <strong>decision process</strong>:
+        </p>
+        <ol>
+            <li><strong>Local Preference:</strong> Policy-based value set by the AS admin.</li>
+            <li><strong>Shortest AS-PATH:</strong> Fewer AS hops preferred.</li>
+            <li><strong>Closest NEXT-HOP (Hot Potato):</strong> Prefer the exit point with the lowest intra-domain cost.
+            </li>
+            <li>Additional tie-breakers (e.g., router ID).</li>
+        </ol>
+
+        <div class="two-cols">
+            <div class="col">
+                <h4><i class="fas fa-fire"></i> Hot Potato Routing Example</h4>
+                <p>Consider router <strong>2d</strong> in AS2 learning paths to X via <strong>2a</strong> (cost 10
+                    internal OSPF) and <strong>2c</strong> (cost 50 internal OSPF). Even if 2a has a longer AS-PATH,
+                    2d will choose <strong>2a</strong> because it gets the packet out of AS2 faster.</p>
+            </div>
+            <div class="col">
+                <h4><i class="fas fa-shield-alt"></i> Policy-Based Routing</h4>
+                <p>An ISP may refuse to carry transit traffic between other ISPs. Using <strong>import</strong> and
+                    <strong>export</strong> policies, an AS can decline certain paths or choose not to advertise them,
+                    shaping global traffic flow based on business relationships.
+                </p>
+            </div>
+        </div>
+
+        <div class="info-note" style="border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.08);">
+            <strong><i class="fas fa-rocket"></i> Real-World Application: BGP Anycast (DNS Root Servers)</strong><br>
+            Google Public DNS (8.8.8.8) uses <strong>BGP Anycast</strong>. The same IP prefix is advertised from
+            multiple locations worldwide. BGP's shortest AS-PATH and hot potato routing naturally direct each user to
+            the <strong>topologically nearest</strong> server, dramatically reducing latency and providing
+            fault-tolerance. When one site fails, BGP converges and routes traffic to the next closest site.
+        </div>
+
+        <h2 id="sdn"><i class="fas fa-cloud-upload-alt"></i> 6. SDN Control Plane</h2>
+        <p><strong>Software-Defined Networking (SDN)</strong> separates the network's control logic from the underlying
+            routers and switches that forward traffic. This enables centralized, programmable network management.</p>
+
+        <h3>SDN Architecture: Four Planes</h3>
+        <ol>
+            <li><strong>Data-plane switches:</strong> Fast, simple, commodity hardware implementing generalized
+                forwarding (e.g., OpenFlow match+action). Flow tables are computed and installed by the controller.</li>
+            <li><strong>SDN Controller (Network OS):</strong> Maintains network-wide state (topology, link status),
+                provides abstractions to apps above via the <strong>northbound API</strong> (e.g., REST, Intent), and
+                controls switches below via the <strong>southbound API</strong> (e.g., OpenFlow, NETCONF).</li>
+            <li><strong>Network-Control Applications:</strong> The "brains" implementing routing, access control, load
+                balancing, etc. These are unbundled and can be provided by third parties.</li>
+            <li><strong>Programmable Control:</strong> Operators specify <em>what</em> they want (intent), and the
+                controller determines <em>how</em> to configure the switches.</li>
+        </ol>
+
+        <h3>OpenFlow Protocol</h3>
+        <p>OpenFlow operates between the controller and switches over TCP. Three message classes:</p>
+        <table class="mini-table">
+            <thead>
+                <tr>
+                    <th>Direction</th>
+                    <th>Message</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Controller → Switch</td>
+                    <td><code>Features</code>, <code>Configure</code>, <code>Modify-State</code>,
+                        <code>Packet-Out</code>
+                    </td>
+                    <td>Query features, set config, add/delete flow entries, send packets out a port</td>
+                </tr>
+                <tr>
+                    <td>Switch → Controller</td>
+                    <td><code>Packet-In</code>, <code>Flow-Removed</code>, <code>Port-Status</code></td>
+                    <td>Transfer unknown packet to controller, notify deleted flow, report port changes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-note" style="border-left-color: #10b981; background: rgba(16, 185, 129, 0.08);">
+            <strong><i class="fas fa-cloud"></i> Real-World Application: Google B4 &amp; ORION SDN</strong><br>
+            Google's <strong>B4</strong> WAN connects its datacenters worldwide. Using the <strong>ORION</strong> SDN
+            control plane, Google centrally manages traffic engineering, achieving ~95% link utilization. The controller
+            uses OpenFlow to install flow tables based on application priorities, dynamically rerouting traffic around
+            congestion in milliseconds rather than seconds.
+        </div>
+
+        <h2 id="icmp"><i class="fas fa-terminal"></i> 7. Internet Control Message Protocol (ICMP)</h2>
+        <p>ICMP is used by hosts and routers to communicate network-level information. It sits logically "above" IP:
+            ICMP messages are carried inside IP datagrams.</p>
+
+        <h3>Common ICMP Message Types</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Echo Reply (ping)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>Destination Network Unreachable</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>Destination Host Unreachable</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>Destination Port Unreachable</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>0</td>
+                    <td>Echo Request (ping)</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>0</td>
+                    <td>TTL Expired (traceroute)</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>0</td>
+                    <td>Bad IP Header</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Traceroute & ICMP</h3>
+        <p><strong>Traceroute</strong> uses ICMP to discover the route to a destination:</p>
+        <ol>
+            <li>The source sends UDP segments with TTL = 1, then TTL = 2, then TTL = 3, and so on.</li>
+            <li>When the \(n\)-th router receives the datagram, it decrements TTL to 0, <strong>discards</strong> the
+                packet, and sends an ICMP <strong>Type 11, Code 0</strong> (TTL expired) message back to the source.
+            </li>
+            <li>The source records the router's IP address and the RTT.</li>
+            <li>When the UDP segment finally reaches the destination, the host returns ICMP <strong>Type 3, Code
+                    3</strong> (Port Unreachable), signaling the source to stop.</li>
+        </ol>
+
+        <!-- ===== PRACTICAL LAB (UPDATED) ===== -->
+        <h2 id="lab"><i class="fas fa-laptop-code"></i> Practical Lab: Traceroute & ICMP Analysis with Wireshark</h2>
+        <div class="lab-box">
+            <h3><i class="fas fa-flask"></i> Lab Exercise: Combined Traceroute and Wireshark Capture</h3>
+            <p>In this exercise, you will use <strong>traceroute</strong> to discover the path to a remote host while
+                simultaneously capturing ICMP traffic with <strong>Wireshark</strong> to see the protocol in action.</p>
+
+            <h4>Step-by-Step Instructions</h4>
+            <ol>
+                <li><strong>Start Wireshark Capture:</strong> Open Wireshark and begin capturing on your active network
+                    interface. Set the display filter to <code>icmp</code> to focus only on ICMP messages.</li>
+                <li><strong>Run Traceroute:</strong> Open a terminal (Command Prompt on Windows) and run:
+                    <br><code>traceroute 8.8.8.8</code> (Linux/Mac) or <code>tracert 8.8.8.8</code> (Windows).
+                </li>
+                <li><strong>Observe the Capture:</strong> As traceroute runs, watch the packets appear in Wireshark. You
+                    should see:
+                    <ul>
+                        <li>ICMP <strong>Type 11, Code 0</strong> (TTL expired) messages from intermediate routers.</li>
+                        <li>Finally, an ICMP <strong>Type 3, Code 3</strong> (Port Unreachable) from the destination
+                            host.</li>
+                    </ul>
+                </li>
+                <li><strong>Analyze the Data:</strong>
+                    <ul>
+                        <li>For each hop, note the <strong>source IP address</strong> (the router that sent the ICMP
+                            error) and the <strong>RTT</strong> (time between the request and the response).</li>
+                        <li>Expand the IP header of one of the TTL-expired packets. What is the TTL value when it
+                            arrives? Why?</li>
+                        <li>Examine the ICMP payload: it contains the original IP header and the first 8 bytes of the
+                            UDP segment that caused the error.</li>
+                    </ul>
+                </li>
+                <li><strong>Discussion Questions:</strong>
+                    <ul>
+                        <li>Why do some routers not respond with an ICMP TTL expired message (shown as
+                            <code>* * *</code>
+                            in traceroute)?
+                        </li>
+                        <li>How does traceroute measure the RTT for each hop? (Hint: Look at the timestamps in the
+                            capture.)</li>
+                        <li>What is the significance of the final Port Unreachable message?</li>
+                    </ul>
+                </li>
+            </ol>
+            <p><em>This exercise combines both the diagnostic use of traceroute and the detailed packet-level analysis
+                    provided by Wireshark, giving you a complete view of how ICMP operates in practice.</em></p>
+        </div>
+
+        <h2 id="homework"><i class="fas fa-tasks"></i> Homework Assignment (Theoretical, Graded)</h2>
+        <div class="homework-box">
+            <p><strong>Instructions:</strong> Answer all questions in a separate document (PDF or Word). Submit via the
+                learning platform. This assignment counts towards your final grade (5%).</p>
+
+            <h3>Part I: Short Essays (40 points)</h3>
+            <ol>
+                <li>Explain the difference between <strong>forwarding</strong> and <strong>routing</strong>. Which
+                    function belongs to the data plane and which to the control plane?</li>
+                <li>Trace Dijkstra's algorithm step-by-step for the graph in Section 2 of this lecture, starting from
+                    node <strong>u</strong>. Show the contents of \(N'\) and all \(D(v)\) values at each iteration.</li>
+                <li>State the <strong>Bellman-Ford equation</strong> and explain how it enables distributed routing.
+                    What is the <strong>count-to-infinity</strong> problem, and how does <strong>poison reverse</strong>
+                    mitigate it?</li>
+                <li>Compare <strong>eBGP</strong> and <strong>iBGP</strong>. Why does BGP need both?</li>
+                <li>Describe the three main components of an <strong>SDN architecture</strong> and the role of the
+                    OpenFlow protocol.</li>
+            </ol>
+
+            <h3>Part II: True/False + Correction (30 points)</h3>
+            <ol>
+                <li>In link-state routing, each router knows only the distance vectors of its immediate neighbors. (True
+                    / False)</li>
+                <li>OSPF floods link-state advertisements only within a local area, not the entire AS. (True / False)
+                </li>
+                <li>BGP is a distance-vector protocol that uses hop count as its primary metric. (True / False)</li>
+                <li>In hot potato routing, an AS chooses the exit point with the lowest inter-domain cost. (True /
+                    False)</li>
+                <li>ICMP messages are carried directly inside IP datagrams. (True / False)</li>
+            </ol>
+            <p><em>For each false statement, write the correct version.</em></p>
+
+            <h3>Part III: Calculations & Analysis (30 points)</h3>
+            <ol>
+                <li>Given the 3-node network (\(x, y, z\)) with costs \(c(x,y)=2\), \(c(x,z)=7\), \(c(y,z)=1\), compute
+                    the distance vectors \(D_x\), \(D_y\), and \(D_z\) using the Bellman-Ford equation. Show that
+                    \(D_x(z) = 3\).</li>
+                <li>Suppose an AS learns two routes to prefix \(P\):
+                    <br>• Route A: AS-PATH = [2, 3, 4], Local Pref = 100, NEXT-HOP cost = 5
+                    <br>• Route B: AS-PATH = [5, 4], Local Pref = 100, NEXT-HOP cost = 8
+                    <br>Which route will BGP select and why? Explain each step of the decision process.
+                </li>
+                <li>A router receives an ICMP message with <strong>Type = 3, Code = 3</strong> while running traceroute.
+                    What does this mean, and what action should the source host take?</li>
+            </ol>
+            <p><strong>Deadline:</strong> Two weeks from the lecture date.</p>
+        </div>
+
+        <h2 id="summary"><i class="fas fa-check-double"></i> Chapter 5 Summary</h2>
+        <ul>
+            <li><strong>Control Plane:</strong> Computes forwarding/routing tables. Two architectures: per-router
+                (traditional, distributed) and SDN (logically centralized).</li>
+            <li><strong>Link-State (Dijkstra):</strong> Global topology knowledge, \(O(n^2)\) complexity, uses
+                shortest-path tree. Risk of oscillations with load-sensitive costs.</li>
+            <li><strong>Distance-Vector (Bellman-Ford):</strong> Decentralized, iterative, asynchronous. Uses neighbor
+                vectors only. Suffers from count-to-infinity; mitigated by poison reverse.</li>
+            <li><strong>OSPF:</strong> Intra-AS link-state protocol with hierarchical areas, ABRs, and backbone to
+                improve scale.</li>
+            <li><strong>BGP:</strong> Inter-AS path-vector protocol. eBGP between ASes; iBGP within an AS. Uses AS-PATH,
+                NEXT-HOP, local preference, and hot-potato routing.</li>
+            <li><strong>SDN:</strong> Separates data and control planes. Controller manages switches via southbound APIs
+                (OpenFlow); applications use northbound APIs (REST/Intent).</li>
+            <li><strong>ICMP:</strong> Network-layer diagnostic protocol. Types include echo request/reply (ping) and
+                TTL expired (traceroute).</li>
+        </ul>
+
+        <div class="info-note">
+            <strong><i class="fas fa-graduation-cap"></i> Self-Review Questions (Exam Preparation):</strong><br>
+            • Why does OSPF use areas, and what is the role of an ABR?<br>
+            • Walk through the BGP route selection process for a scenario with two competing paths.<br>
+            • How does traceroute use TTL and ICMP to map a network path?<br>
+            • Compare the robustness of LS and DV algorithms when a router advertises false information.<br>
+            • What are the advantages of a logically centralized SDN controller over per-router control?
+        </div>
+
+        <div class="info-note" style="border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.06);">
+            <strong><i class="fas fa-arrow-right"></i> Looking Ahead to Chapter 6:</strong><br>
+            <strong>Question:</strong> How do devices on the <em>same</em> local network communicate directly without
+            involving the network layer?<br>
+            <strong>Answer:</strong> The <strong>Link Layer</strong> handles node-to-node delivery over a single link,
+            using MAC addressing, error detection (CRC), and multiple access protocols. We will study Ethernet,
+            switches, VLANs, and the ARP protocol in detail.
+        </div>
+
+        <footer
+            style="margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+            <p>© <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved</p>
+            <p>Based on Kurose & Ross, <em>Computer Networking: A Top-Down Approach</em>, 9th edition, Chapter 5 slides
+                and textbook.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('lecture-year').textContent = new Date().getFullYear();
+
+        // Reading Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            const btn = document.getElementById('back-to-top');
+            if (scrollTop > 400) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        });
+
+        // Copy Buttons
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = pre.querySelector('.copy-btn');
+            if (!btn) return;
+            btn.addEventListener('click', () => {
+                const codeElement = pre.querySelector('code');
+                const text = codeElement ? codeElement.innerText : pre.innerText.replace('Copy', '').trim();
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+        });
+
+        // Scroll Spy
+        (function () {
+            const navLinks = document.querySelectorAll('.quick-nav a');
+            const sections = [];
+            navLinks.forEach(link => {
+                const id = link.getAttribute('href');
+                if (id && id.startsWith('#')) {
+                    const section = document.querySelector(id);
+                    if (section) sections.push({ link, section });
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                let currentId = null;
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        currentId = '#' + entry.target.id;
+                        break;
+                    }
+                }
+                if (!currentId) {
+                    let maxVisible = 0;
+                    for (const item of sections) {
+                        const rect = item.section.getBoundingClientRect();
+                        const visible = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+                        if (visible > maxVisible) {
+                            maxVisible = visible;
+                            currentId = '#' + item.section.id;
+                        }
+                    }
+                }
+
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentId) link.classList.add('active');
+                    else link.classList.remove('active');
+                });
+            }, { threshold: [0.2, 0.5] });
+
+            sections.forEach(item => observer.observe(item.section));
+
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const firstSection = sections[0];
+                    if (firstSection) {
+                        navLinks.forEach(link => {
+                            const href = link.getAttribute('href');
+                            if (href === '#' + firstSection.section.id) link.classList.add('active');
+                            else link.classList.remove('active');
+                        });
+                    }
+                }, 100);
+            });
+        })();
+    </script>
+    <script src="scripts.js" defer></script>
+</body>
+
+</html>
