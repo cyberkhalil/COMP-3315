@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lecture 6 — Link Layer و LANs</title>
+  <style>
+    body{font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;line-height:1.6;margin:0;padding:0;background:#f7f9fb;color:#0b1320}
+    .container{max-width:900px;margin:30px auto;background:#fff;padding:28px;border-radius:8px;box-shadow:0 6px 18px rgba(11,19,32,0.06)}
+    header h1{margin:0 0 8px 0;font-size:1.6rem}
+    header p{margin:0;color:#475569}
+    nav{margin:18px 0;padding:12px;background:#f1f5f9;border-radius:6px}
+    nav a{display:inline-block;margin:6px 12px;color:#0369a1;text-decoration:none}
+    section{margin-top:20px}
+    h2{color:#0f172a;border-bottom:1px solid #e6eef6;padding-bottom:6px}
+    .note{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px;margin:12px 0;border-radius:4px}
+    .img{max-width:100%;height:auto;border-radius:6px;margin:12px 0}
+    pre{background:#0b1220;color:#e6f0ff;padding:12px;border-radius:6px;overflow:auto}
+    footer{margin-top:28px;color:#64748b;font-size:0.9rem}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Lecture 6 — طبقة الوصلة و شبكات LAN</h1>
+      <p>ملخص مُلهم بمواد Chapter_6.md — مبادئ خدمات طبقة الوصلة، بروتوكولات الوصول المشترك، وابتكارات الشبكات المحلية.</p>
+    </header>
+
+    <nav>
+      المحتويات:
+      <a href="#intro">مقدمة</a>
+      <a href="#errors">كشف وتصحيح الأخطاء</a>
+      <a href="#mac">بروتوكولات الوصول المتعدد (MAC)</a>
+      <a href="#lan">LANs و Ethernet</a>
+      <a href="#switches">المفاتيح (Switches)</a>
+      <a href="#vlan">VLANs</a>
+      <a href="#mpls">MPLS</a>
+      <a href="#dc">شبكات الداتا سنتر</a>
+      <a href="#day">يوم في حياة طلب ويب</a>
+    </nav>
+
+    <section id="intro">
+      <h2>مقدمة: ما هي طبقة الوصلة (Link Layer)؟</h2>
+      <p>طبقة الوصلة مسؤولة عن نقل إطار (frame) واحد بين عقدتين متجاورتين على الرابط الفيزيائي. تقدم خدمات مثل التغليف (framing)، التحكم في التدفق، كشف وتصحيح الأخطاء، وعناوين MAC المحلية للوصل بين الواجهات داخل نفس الشبكة المحلية.</p>
+      <img class="img" src="https://cdn-mineru.openxlab.org.cn/result/2026-07-17/0e41fcd5-84d8-4baa-b258-e191116b467d/4fe5a5340e728cd8d8fd99c21c854cbbd8805a9c1cea287eca72b7ba19a3c986.jpg" alt="Link layer illustration">
+    </section>
+
+    <section id="errors">
+      <h2>كشف وتصحيح الأخطاء</h2>
+      <p>أمثلة شائعة لتقنيات الكشف والتصحيح:</p>
+      <ul>
+        <li>Parity (بت واحد): يكتشف أخطاء البت المفردة.</li>
+        <li>Two-dimensional parity: يمكن أن يكشف و��صحح بعض الأخطاء الموضعية بمصفوفة من البتات.</li>
+        <li>Internet checksum (one's complement sum): مستخدم في بروتوكولات مثل UDP للتحقق البسيط.</li>
+        <li>Cyclic Redundancy Check (CRC): مُستخدم عملياً في Ethernet و802.11، يكشف عن معظم أخطاء الـburst قصيرة الطول.</li>
+      </ul>
+      <div class="note">ملاحظة: لا توجد طريقة كشف أخطاء كاملة 100%؛ لكن زيادة طول حقول الـEDC تقلل احتمالية الفشل.</div>
+
+      <h3>مثال سريع: فكرة CRC</h3>
+      <p>المرسل يحسب r بت بحيث تكون <em>D·2^r XOR R</em> قابلة للقسمة على المولد G. المستلم يقسم ويقارن الباقي؛ إن لم يكن صفرًا فحدث خطأ.</p>
+      <pre>R = remainder( (D << r) / G )  <!-- تعبير توضيحي رياضي بسيط --></pre>
+    </section>
+
+    <section id="mac">
+      <h2>بروتوكولات الوصول المتعدد (Multiple Access)</h2>
+      <p>عند مشاركة وسطٍ واحد بين عقد متعددة، نحتاج بروتوكول يحدد متى يمكن لكل عقدة الإرسال. التصنيفات الرئيسية:</p>
+      <ul>
+        <li>Channel partitioning: تقسيم الزمن أو التردد (TDMA, FDMA).</li>
+        <li>Random access: السماح للتصادم ثم التعافي (ALOHA, Slotted ALOHA, CSMA, CSMA/CD, CSMA/CA).</li>
+        <li>Taking turns: تمرير رمز token أو polling (Token Ring, Bluetooth polling).</li>
+      </ul>
+
+      <h3>ملاحظة عن Slotted ALOHA</h3>
+      <p>أقصى كفاءة نظرية عند تحميلٍ عالٍ ≈ 1/e ≈ 0.37، أي أن القناة تكون مفيدة ~37٪ من الوقت في أفضل حالة.</p>
+
+      <h3>CSMA / CSMA-CD</h3>
+      <p>CSMA يستمع قبل الإرسال، وCSMA/CD (في الشبكات السلكية) يكشف التصادمات ليقصر وقت الهدر. هذا هو أساس Ethernet التقليدي.</p>
+    </section>
+
+    <section id="lan">
+      <h2>شبكات LAN و Ethernet</h2>
+      <p>Ethernet هي ��لتكنولوجيا السائدة للشبكات السلكية المحلية. نقاط رئيسية:</p>
+      <ul>
+        <li>إطار Ethernet يحتوي مقدمة، عنوان MAC للوجهة والمرسل، نوع البروتوكول، والـCRC.</li>
+        <li>عناوين MAC عادة 48-بت وتُدار من قِبل IEEE، فهي مُعرفات محلية لواجهات الشبكة.</li>
+        <li>Ethernet نفسها لا تؤمّن وصولًا موثوقًا (لا ACKs على مستوى MAC)، لذا تتحمل الطبقات العليا مسؤولية إعادة الإرسال عند الحاجة (مثل TCP).</li>
+      </ul>
+
+      <h3>ARP — بروتوكول حل العناوين</h3>
+      <p>عندما تعرف عنوان IP لوجهة محلية لكن لا تعرف MAC المقابل، يُبث استعلام ARP على الشبكة. الجهاز الذي يملك عنوان الـIP يرد بعنوان MAC، ويُخزَّن الزوج في جدول ARP مع TTL مُحدد.</p>
+    </section>
+
+    <section id="switches">
+      <h2>المفاتيح (Switches)</h2>
+      <p>المفتاح هو جهاز طبقة-2 يقوم بالتعلّم (self-learning) والتوجيه ضمن الشبكة المحلية بناءً على عناوين MAC. ميزات:</p>
+      <ul>
+        <li>يسجل المفتاح أزواج (MAC &rarr; منفذ) عندما يستقبل إطارًا.</li>
+        <li>إذا عُرِف الوجهة: يُرسل الإطار على المنفذ المناسب؛ وإن لم يُعرف: يُبعثر (flood) على باقي المنافذ.</li>
+        <li>كل رابط إلى المفتاح يمثل نطاق اصطدام مستقل؛ بالتالي يمكن نقل اتصالات متعددة متزامنة (full-duplex).</li>
+      </ul>
+    </section>
+
+    <section id="vlan">
+      <h2>VLANs (الشبكات المحلية الافتراضية)</h2>
+      <p>VLANs تُمكّن من تقسيم البنية الفعلية إلى عدة نطاقات بث منطقية لعزل البث، تحسين الأمن، وتبسيط الإدارة. تُستخدم علامات 802.1Q على trunk links لحمل معرف VLAN بين المفاتيح.</p>
+    </section>
+
+    <section id="mpls">
+      <h2>MPLS — افتراضيات الربط والـLabel Switching</h2>
+      <p>MPLS يستخدم تسميات ثابتة (labels) لتسريع التوجيه داخل الشبكات مزودة بـMPLS، ويسمح بتطبيق سياسات توجيه متقدمة (traffic engineering) وتبديل سريع عند فشل الروابط.</p>
+    </section>
+
+    <section id="dc">
+      <h2>شبكات الداتا سنتر (Datacenter Networks)</h2>
+      <p>تصاميم الداتا سنتر تتطلب مقاييس عالية جدًا من حيث عدد المضيفين، تعدد المسارات، والتحكم في الحمل. تقنيات مثل SDN وECN وRoCE تُستخدم بكثرة لتحسين الأداء والتحكم.</p>
+      <img class="img" src="https://cdn-mineru.openxlab.org.cn/result/2026-07-17/0e41fcd5-84d8-4baa-b258-e191116b467d/79ab2ceb4f68ef30af93df11ae2f9100cabfae040745f1f259485c02cdf7c668.jpg" alt="Datacenter topology">
+    </section>
+
+    <section id="day">
+      <h2>تجميع: يوم في حياة طلب ويب</h2>
+      <ol>
+        <li>المضيف يتصل بالشبكة و يحصل على إعدادات الشبكة عبر DHCP (IP، gateway، DNS).</li>
+        <li>قبل إرسال طلب DNS/HTTP، يحتاج المضيف لعنوان MAC للـgateway المحلي — يُستخدم ARP.</li>
+        <li>إرسال طلب DNS مُغلف في UDP ثم IP ثم إطار Ethernet إلى الراوتر المحلي، ثم يُوجَّه عبر الإنترنت.</li>
+        <li>إنشاء اتصال TCP ثلاثي الاتجاه (SYN, SYN-ACK, ACK) ثم إرسال طلب HTTP واستلام الصفحة.</li>
+      </ol>
+      <p>هذا المشهد يُبيّن كيف تعمل الطبقات معًا — Link, Network, Transport, Application — لتقديم تجربة مستخدم واحدة بسيطة.</p>
+    </section>
+
+    <footer>
+      <p>مُقتبس/مستوحى من: Chapter_6.md (مادّة مرجعية: Kurose &amp; Ross - Computer Networking: A Top-Down Approach). هذا الملخص مُعاد صياغته ليتناسب مع صفحة HTML تعليمية.</p>
+    </footer>
+  </div>
+</body>
+</html>
