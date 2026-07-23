@@ -1,135 +1,1810 @@
-<!doctype html>
-<html lang="ar">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Lecture 6 — Link Layer و LANs</title>
-  <style>
-    body{font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;line-height:1.6;margin:0;padding:0;background:#f7f9fb;color:#0b1320}
-    .container{max-width:900px;margin:30px auto;background:#fff;padding:28px;border-radius:8px;box-shadow:0 6px 18px rgba(11,19,32,0.06)}
-    header h1{margin:0 0 8px 0;font-size:1.6rem}
-    header p{margin:0;color:#475569}
-    nav{margin:18px 0;padding:12px;background:#f1f5f9;border-radius:6px}
-    nav a{display:inline-block;margin:6px 12px;color:#0369a1;text-decoration:none}
-    section{margin-top:20px}
-    h2{color:#0f172a;border-bottom:1px solid #e6eef6;padding-bottom:6px}
-    .note{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px;margin:12px 0;border-radius:4px}
-    .img{max-width:100%;height:auto;border-radius:6px;margin:12px 0}
-    pre{background:#0b1220;color:#e6f0ff;padding:12px;border-radius:6px;overflow:auto}
-    footer{margin-top:28px;color:#64748b;font-size:0.9rem}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>COMP-3315 | Chapter 6: The Link Layer and LANs – Full Lecture</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-light: #2d3a5e;
+            --text-muted: #94a3b8;
+            --bg-dark: rgba(18, 25, 45, 0.92);
+            --bg-card: rgba(0, 0, 0, 0.3);
+            --highlight-blue: #7dd3fc;
+            --highlight-light: #b9e6ff;
+        }
+
+        /* Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight-blue));
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9998;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        .lecture-container-special {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-dark);
+            backdrop-filter: blur(2px);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .lecture-container-special p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .lecture-container-special h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 0.3rem;
+        }
+
+        .lecture-container-special h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1rem 0;
+            color: var(--highlight-blue);
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 0.5rem;
+            padding-top: 1rem;
+            scroll-margin-top: 80px;
+        }
+
+        .lecture-container-special h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.8rem 0;
+            color: var(--highlight-light);
+            scroll-margin-top: 80px;
+        }
+
+        .lecture-container-special h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin: 0.8rem 0 0.4rem 0;
+        }
+
+        /* Learning Objectives & Roadmap */
+        .learning-objectives {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05));
+            border: 1px solid var(--primary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .learning-objectives h3 {
+            color: var(--highlight-blue);
+            margin-top: 0;
+        }
+
+        .learning-objectives ul {
+            margin-bottom: 0;
+        }
+
+        .chapter-roadmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .roadmap-item {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--highlight-light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* Exam Tip */
+        .exam-tip {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1rem 1rem 1.8rem;
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .exam-tip::before {
+            content: "📝 EXAM TIP";
+            display: block;
+            font-weight: 700;
+            color: #fbbf24;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .info-note {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1rem 1rem 1.8rem;
+            border-left: 4px solid var(--primary);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .lab-box {
+            background: rgba(16, 185, 129, 0.08);
+            padding: 1.2rem 1.2rem 1.2rem 1.8rem;
+            border-left: 4px solid var(--success);
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .homework-box {
+            background: rgba(15, 25, 45, 0.7);
+            padding: 1rem 1rem 1rem 1.8rem;
+            border-left: 4px solid var(--success);
+            margin: 1.2rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .looking-ahead {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.05));
+            border: 1px solid var(--success);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .looking-ahead h3 {
+            color: #34d399;
+            margin-top: 0;
+        }
+
+        .two-cols {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.2rem 0;
+            align-items: stretch;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 260px;
+            background: var(--bg-card);
+            padding: 1.2rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .col h3 {
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        /* Code blocks with copy button */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1.2rem 0;
+        }
+
+        pre {
+            background: #0b1120;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 0;
+            border: 1px solid var(--border-light);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--highlight-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.3rem 0.7rem;
+            border-radius: 0.3rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        /* Quick Nav */
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-nav a {
+            background: rgba(45, 58, 94, 0.5);
+            color: var(--highlight-light);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .quick-nav a:hover,
+        .quick-nav a.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th {
+            background: rgba(59, 130, 246, 0.25);
+            color: var(--highlight-blue);
+            font-weight: 700;
+            padding: 0.7rem 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: #e2e8f0;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .keyword {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--highlight-blue);
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.2rem;
+            font-weight: 600;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.2rem 0;
+        }
+
+        @media (max-width: 900px) {
+            .access-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .access-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .access-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--primary);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .access-card:hover {
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateY(-2px);
+        }
+
+        code {
+            background: rgba(59, 130, 246, 0.15);
+            color: #7dd3fc;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        ul,
+        ol {
+            line-height: 1.7;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* SVG Diagrams */
+        .svg-diagram {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-light);
+            overflow-x: auto;
+        }
+
+        .svg-diagram svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .svg-title {
+            text-align: center;
+            color: var(--highlight-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        /* Timeline styles */
+        .timeline-container {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .timeline-step .step-num {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Footer tools */
+        .footer-tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-tools a {
+            color: var(--highlight-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-tools a:hover {
+            color: white;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .lecture-container-special {
+                background: white !important;
+                color: black !important;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+
+            #progress-bar,
+            #back-to-top,
+            .copy-btn,
+            .home-button,
+            .quick-nav {
+                display: none !important;
+            }
+
+            .lecture-container-special h2,
+            .lecture-container-special h3,
+            .lecture-container-special h4 {
+                color: #1a1a1a !important;
+            }
+
+            .info-note,
+            .exam-tip,
+            .lab-box,
+            .homework-box,
+
+            .learning-objectives,
+            .looking-ahead {
+                background: #f5f5f5 !important;
+                border-color: #999 !important;
+                color: black !important;
+            }
+
+            .col,
+            .access-card {
+                background: #f9f9f9 !important;
+                border-color: #ccc !important;
+            }
+
+            pre {
+                background: #f5f5f5 !important;
+                color: #333 !important;
+                border-color: #ccc !important;
+            }
+
+            .comparison-table th {
+                background: #e0e0e0 !important;
+                color: #333 !important;
+            }
+
+            .comparison-table td {
+                color: #333 !important;
+                border-color: #ccc !important;
+            }
+
+            .svg-diagram {
+                background: #f9f9f9 !important;
+                border-color: #ccc !important;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .lecture-container-special {
+                padding: 1rem;
+            }
+
+            .col {
+                padding: 1rem;
+                min-width: 100%;
+            }
+
+            .comparison-table {
+                font-size: 0.75rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.4rem 0.5rem;
+            }
+
+            #back-to-top {
+                bottom: 1rem;
+                right: 1rem;
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+    <base target="_blank">
+    <base target="_blank">
 </head>
+
 <body>
-  <div class="container">
-    <header>
-      <h1>Lecture 6 — طبقة الوصلة و شبكات LAN</h1>
-      <p>ملخص مُلهم بمواد Chapter_6.md — مبادئ خدمات طبقة الوصلة، بروتوكولات الوصول المشترك، وابتكارات الشبكات المحلية.</p>
-    </header>
+    <div id="progress-bar"></div>
+    <button id="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
-    <nav>
-      المحتويات:
-      <a href="#intro">مقدمة</a>
-      <a href="#errors">كشف وتصحيح الأخطاء</a>
-      <a href="#mac">بروتوكولات الوصول المتعدد (MAC)</a>
-      <a href="#lan">LANs و Ethernet</a>
-      <a href="#switches">المفاتيح (Switches)</a>
-      <a href="#vlan">VLANs</a>
-      <a href="#mpls">MPLS</a>
-      <a href="#dc">شبكات الداتا سنتر</a>
-      <a href="#day">يوم في حياة طلب ويب</a>
-    </nav>
+    <div class="bg-grid"></div>
+    <div class="lecture-container-special">
+        <a href="index.html" class="home-button"><i class="fas fa-arrow-left"></i> Back to Course Home</a>
 
-    <section id="intro">
-      <h2>مقدمة: ما هي طبقة الوصلة (Link Layer)؟</h2>
-      <p>طبقة الوصلة مسؤولة عن نقل إطار (frame) واحد بين عقدتين متجاورتين على الرابط الفيزيائي. تقدم خدمات مثل التغليف (framing)، التحكم في التدفق، كشف وتصحيح الأخطاء، وعناوين MAC المحلية للوصل بين الواجهات داخل نفس الشبكة المحلية.</p>
-      <img class="img" src="https://cdn-mineru.openxlab.org.cn/result/2026-07-17/0e41fcd5-84d8-4baa-b258-e191116b467d/4fe5a5340e728cd8d8fd99c21c854cbbd8805a9c1cea287eca72b7ba19a3c986.jpg" alt="Link layer illustration">
-    </section>
+        <div class="quick-nav">
+            <a href="#intro">Introduction</a>
+            <a href="#services">Services</a>
+            <a href="#error">Error Detection</a>
+            <a href="#mac">MAC Protocols</a>
+            <a href="#addressing">Addressing & ARP</a>
+            <a href="#ethernet">Ethernet</a>
+            <a href="#switches">Switches</a>
+            <a href="#vlans">VLANs</a>
+            <a href="#mpls">MPLS</a>
+            <a href="#datacenter">Data Center</a>
+            <a href="#synthesis">Synthesis</a>
+            <a href="#homework">Homework</a>
+        </div>
 
-    <section id="errors">
-      <h2>كشف وتصحيح الأخطاء</h2>
-      <p>أمثلة شائعة لتقنيات الكشف والتصحيح:</p>
-      <ul>
-        <li>Parity (بت واحد): يكتشف أخطاء البت المفردة.</li>
-        <li>Two-dimensional parity: يمكن أن يكشف و��صحح بعض الأخطاء الموضعية بمصفوفة من البتات.</li>
-        <li>Internet checksum (one's complement sum): مستخدم في بروتوكولات مثل UDP للتحقق البسيط.</li>
-        <li>Cyclic Redundancy Check (CRC): مُستخدم عملياً في Ethernet و802.11، يكشف عن معظم أخطاء الـburst قصيرة الطول.</li>
-      </ul>
-      <div class="note">ملاحظة: لا توجد طريقة كشف أخطاء كاملة 100%؛ لكن زيادة طول حقول الـEDC تقلل احتمالية الفشل.</div>
+        <h1>Chapter 6: The Link Layer and LANs</h1>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Kurose & Ross, <em>Computer Networking: A Top-Down
+                Approach</em>, 9th edition (2025) – Full lecture coverage</p>
 
-      <h3>مثال سريع: فكرة CRC</h3>
-      <p>المرسل يحسب r بت بحيث تكون <em>D·2^r XOR R</em> قابلة للقسمة على المولد G. المستلم يقسم ويقارن الباقي؛ إن لم يكن صفرًا فحدث خطأ.</p>
-      <pre>R = remainder( (D << r) / G )  <!-- تعبير توضيحي رياضي بسيط --></pre>
-    </section>
+        <!-- Learning Objectives & Roadmap -->
+        <div class="learning-objectives">
+            <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+            <p>By the end of this chapter, you will be able to:</p>
+            <ul>
+                <li>Understand the role of the link layer and its services (framing, error detection, MAC)</li>
+                <li>Compare multiple access protocols: TDMA, FDMA, ALOHA, CSMA/CD</li>
+                <li>Explain how ARP resolves IP addresses to MAC addresses</li>
+                <li>Describe Ethernet frame structure and CSMA/CD operation</li>
+                <li>Understand how switches learn and forward frames (self-learning)</li>
+                <li>Explain VLANs, trunking, and 802.1Q tagging</li>
+                <li>Trace a complete web request through all protocol layers (DHCP → ARP → DNS → TCP → HTTP)</li>
+            </ul>
+            <div class="chapter-roadmap">
+                <span class="roadmap-item"><i class="fas fa-link"></i> Link Layer Basics</span>
+                <span class="roadmap-item"><i class="fas fa-shield-alt"></i> Error Detection</span>
+                <span class="roadmap-item"><i class="fas fa-code-branch"></i> MAC Protocols</span>
+                <span class="roadmap-item"><i class="fas fa-address-card"></i> ARP & Addressing</span>
+                <span class="roadmap-item"><i class="fas fa-network-wired"></i> Ethernet</span>
+                <span class="roadmap-item"><i class="fas fa-random"></i> Switches</span>
+                <span class="roadmap-item"><i class="fas fa-project-diagram"></i> VLANs</span>
+                <span class="roadmap-item"><i class="fas fa-globe"></i> Synthesis</span>
+            </div>
+        </div>
 
-    <section id="mac">
-      <h2>بروتوكولات الوصول المتعدد (Multiple Access)</h2>
-      <p>عند مشاركة وسطٍ واحد بين عقد متعددة، نحتاج بروتوكول يحدد متى يمكن لكل عقدة الإرسال. التصنيفات الرئيسية:</p>
-      <ul>
-        <li>Channel partitioning: تقسيم الزمن أو التردد (TDMA, FDMA).</li>
-        <li>Random access: السماح للتصادم ثم التعافي (ALOHA, Slotted ALOHA, CSMA, CSMA/CD, CSMA/CA).</li>
-        <li>Taking turns: تمرير رمز token أو polling (Token Ring, Bluetooth polling).</li>
-      </ul>
+        <!-- Prerequisites -->
 
-      <h3>ملاحظة عن Slotted ALOHA</h3>
-      <p>أقصى كفاءة نظرية عند تحميلٍ عالٍ ≈ 1/e ≈ 0.37، أي أن القناة تكون مفيدة ~37٪ من الوقت في أفضل حالة.</p>
+        <!-- ================= 1. INTRODUCTION ================= -->
+        <h2 id="intro"><i class="fas fa-link"></i> 1. Link Layer: Introduction</h2>
+        <p>The <strong>link layer</strong> has the responsibility of transferring a datagram from one node to a
+            <strong>physically adjacent node</strong> over a single link. It is the lowest layer in the protocol stack
+            that we study in detail.
+        </p>
 
-      <h3>CSMA / CSMA-CD</h3>
-      <p>CSMA يستمع قبل الإرسال، وCSMA/CD (في الشبكات السلكية) يكشف التصادمات ليقصر وقت الهدر. هذا هو أساس Ethernet التقليدي.</p>
-    </section>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-broadcast-tower"></i> Key Terminology</h3>
+                <ul>
+                    <li><strong>Nodes:</strong> hosts and routers — any device that runs a link-layer protocol.</li>
+                    <li><strong>Links:</strong> communication channels that connect adjacent nodes along a communication
+                        path (wired, wireless, LANs).</li>
+                    <li><strong>Frame:</strong> the layer-2 packet that encapsulates the datagram (network-layer
+                        packet).</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-car"></i> Transportation Analogy</h3>
+                <ul>
+                    <li><strong>Tourist</strong> = datagram</li>
+                    <li><strong>Transport segment</strong> = communication link</li>
+                    <li><strong>Transportation mode</strong> = link-layer protocol</li>
+                    <li><strong>Travel agent</strong> = routing algorithm</li>
+                    <li>A trip from Princeton to Lausanne may involve limo, plane, and train — each with different
+                        protocols.</li>
+                </ul>
+            </div>
+        </div>
 
-    <section id="lan">
-      <h2>شبكات LAN و Ethernet</h2>
-      <p>Ethernet هي ��لتكنولوجيا السائدة للشبكات السلكية المحلية. نقاط رئيسية:</p>
-      <ul>
-        <li>إطار Ethernet يحتوي مقدمة، عنوان MAC للوجهة والمرسل، نوع البروتوكول، والـCRC.</li>
-        <li>عناوين MAC عادة 48-بت وتُدار من قِبل IEEE، فهي مُعرفات محلية لواجهات الشبكة.</li>
-        <li>Ethernet نفسها لا تؤمّن وصولًا موثوقًا (لا ACKs على مستوى MAC)، لذا تتحمل الطبقات العليا مسؤولية إعادة الإرسال عند الحاجة (مثل TCP).</li>
-      </ul>
+        <div class="info-note">
+            <strong>Link Layer Context:</strong> A datagram may be transferred by <strong>different link
+                protocols</strong>
+            over different links. For example, WiFi on the first link and Ethernet on the next. Each link protocol may
+            provide <strong>different services</strong> — some may offer reliable delivery, others may not.
+        </div>
 
-      <h3>ARP — بروتوكول حل العناوين</h3>
-      <p>عندما تعرف عنوان IP لوجهة محلية لكن لا تعرف MAC المقابل، يُبث استعلام ARP على الشبكة. الجهاز الذي يملك عنوان الـIP يرد بعنوان MAC، ويُخزَّن الزوج في جدول ARP مع TTL مُحدد.</p>
-    </section>
+        <!-- ================= 2. LINK LAYER SERVICES ================= -->
+        <h2 id="services"><i class="fas fa-cogs"></i> 2. Link Layer Services</h2>
+        <div class="access-grid">
+            <div class="access-card">
+                <strong><i class="fas fa-box"></i> Framing, Link Access</strong><br>
+                Encapsulate datagram into frame, add header/trailer. Channel access if shared medium. MAC addresses in
+                frame headers identify source and destination.
+            </div>
+            <div class="access-card">
+                <strong><i class="fas fa-check-circle"></i> Reliable Delivery</strong><br>
+                Between adjacent nodes. Seldom used on low bit-error links (fiber, twisted pair). Used on high-error
+                wireless links. End-to-end reliability (TCP) is already present.
+            </div>
+            <div class="access-card">
+                <strong><i class="fas fa-water"></i> Flow Control</strong><br>
+                Pacing between adjacent sending and receiving nodes to prevent overwhelming the receiver.
+            </div>
+            <div class="access-card">
+                <strong><i class="fas fa-search"></i> Error Detection</strong><br>
+                Errors caused by signal attenuation, noise. Receiver detects errors and signals retransmission or drops
+                frame.
+            </div>
+            <div class="access-card">
+                <strong><i class="fas fa-wrench"></i> Error Correction</strong><br>
+                Receiver identifies and corrects bit error(s) without retransmission (e.g., 2D parity).
+            </div>
+            <div class="access-card">
+                <strong><i class="fas fa-exchange-alt"></i> Half/Full Duplex</strong><br>
+                Half-duplex: nodes can transmit but not at the same time. Full-duplex: simultaneous transmission
+                possible.
+            </div>
+        </div>
 
-    <section id="switches">
-      <h2>المفاتيح (Switches)</h2>
-      <p>المفتاح هو جهاز طبقة-2 يقوم بالتعلّم (self-learning) والتوجيه ضمن الشبكة المحلية بناءً على عناوين MAC. ميزات:</p>
-      <ul>
-        <li>يسجل المفتاح أزواج (MAC &rarr; منفذ) عندما يستقبل إطارًا.</li>
-        <li>إذا عُرِف الوجهة: يُرسل الإطار على المنفذ المناسب؛ وإن لم يُعرف: يُبعثر (flood) على باقي المنافذ.</li>
-        <li>كل رابط إلى المفتاح يمثل نطاق اصطدام مستقل؛ بالتالي يمكن نقل اتصالات متعددة متزامنة (full-duplex).</li>
-      </ul>
-    </section>
+        <div class="info-note">
+            <strong><i class="fas fa-microchip"></i> Host Link-Layer Implementation:</strong> The link layer is
+            implemented in every host, typically on-chip or in the <strong>Network Interface Card (NIC)</strong>. It
+            attaches to the host's system buses and is a combination of hardware, software, and firmware. The sending
+            side encapsulates datagrams in frames; the receiving side extracts datagrams and passes them up.
+        </div>
 
-    <section id="vlan">
-      <h2>VLANs (الشبكات المحلية الافتراضية)</h2>
-      <p>VLANs تُمكّن من تقسيم البنية الفعلية إلى عدة نطاقات بث منطقية لعزل البث، تحسين الأمن، وتبسيط الإدارة. تُستخدم علامات 802.1Q على trunk links لحمل معرف VLAN بين المفاتيح.</p>
-    </section>
+        <!-- ================= 3. ERROR DETECTION & CORRECTION ================= -->
+        <h2 id="error"><i class="fas fa-shield-alt"></i> 3. Error Detection and Correction</h2>
+        <p><strong>EDC (Error Detection and Correction)</strong> bits are added to data bits (D) to protect against
+            errors. Error detection is <strong>not 100% reliable</strong> — protocols may miss some errors, but rarely.
+            Larger EDC fields yield better detection and correction.</p>
 
-    <section id="mpls">
-      <h2>MPLS — افتراضيات الربط والـLabel Switching</h2>
-      <p>MPLS يستخدم تسميات ثابتة (labels) لتسريع التوجيه داخل الشبكات مزودة بـMPLS، ويسمح بتطبيق سياسات توجيه متقدمة (traffic engineering) وتبديل سريع عند فشل الروابط.</p>
-    </section>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-adjust"></i> Parity Checking</h3>
+                <ul>
+                    <li><strong>Single-bit parity:</strong> detect single bit errors by adding one parity bit so the
+                        total number of 1s is even (or odd).</li>
+                    <li><strong>Two-dimensional parity:</strong> detect <em>and correct</em> single bit errors using row
+                        and column parity bits. The intersection of the error row and column identifies the flipped bit.
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-calculator"></i> Internet Checksum</h3>
+                <ul>
+                    <li>Treat contents as sequence of 16-bit integers.</li>
+                    <li>Checksum = one's complement sum of segment content.</li>
+                    <li>Sender puts checksum value into checksum field.</li>
+                    <li>Receiver computes checksum and compares.</li>
+                    <li>Not equal → error detected. Equal → maybe errors still exist (can't catch all).</li>
+                </ul>
+            </div>
+        </div>
 
-    <section id="dc">
-      <h2>شبكات الداتا سنتر (Datacenter Networks)</h2>
-      <p>تصاميم الداتا سنتر تتطلب مقاييس عالية جدًا من حيث عدد المضيفين، تعدد المسارات، والتحكم في الحمل. تقنيات مثل SDN وECN وRoCE تُستخدم بكثرة لتحسين الأداء والتحكم.</p>
-      <img class="img" src="https://cdn-mineru.openxlab.org.cn/result/2026-07-17/0e41fcd5-84d8-4baa-b258-e191116b467d/79ab2ceb4f68ef30af93df11ae2f9100cabfae040745f1f259485c02cdf7c668.jpg" alt="Datacenter topology">
-    </section>
+        <h3><i class="fas fa-sync-alt"></i> Cyclic Redundancy Check (CRC)</h3>
+        <p><strong>CRC</strong> is the most powerful and widely used error-detection method in practice (Ethernet,
+            802.11 WiFi). It uses a <strong>generator polynomial</strong> to compute a remainder that is appended to the
+            data. The receiver divides the received frame by the same polynomial — a non-zero remainder means an error
+            was detected.</p>
 
-    <section id="day">
-      <h2>تجميع: يوم في حياة طلب ويب</h2>
-      <ol>
-        <li>المضيف يتصل بالشبكة و يحصل على إعدادات الشبكة عبر DHCP (IP، gateway، DNS).</li>
-        <li>قبل إرسال طلب DNS/HTTP، يحتاج المضيف لعنوان MAC للـgateway المحلي — يُستخدم ARP.</li>
-        <li>إرسال طلب DNS مُغلف في UDP ثم IP ثم إطار Ethernet إلى الراوتر المحلي، ثم يُوجَّه عبر الإنترنت.</li>
-        <li>إنشاء اتصال TCP ثلاثي الاتجاه (SYN, SYN-ACK, ACK) ثم إرسال طلب HTTP واستلام الصفحة.</li>
-      </ol>
-      <p>هذا المشهد يُبيّن كيف تعمل الطبقات معًا — Link, Network, Transport, Application — لتقديم تجربة مستخدم واحدة بسيطة.</p>
-    </section>
+        <div class="info-note">
+            <strong>Key insight:</strong> CRC is computed in hardware by the NIC, making it fast enough for
+            multi-gigabit
+            links. The generator polynomial is standardized (e.g., CRC-32 for Ethernet).
+        </div>
 
-    <footer>
-      <p>مُقتبس/مستوحى من: Chapter_6.md (مادّة مرجعية: Kurose &amp; Ross - Computer Networking: A Top-Down Approach). هذا الملخص مُعاد صياغته ليتناسب مع صفحة HTML تعليمية.</p>
-    </footer>
-  </div>
+        <!-- ================= 4. MULTIPLE ACCESS PROTOCOLS ================= -->
+        <h2 id="mac"><i class="fas fa-code-branch"></i> 4. Multiple Access Protocols</h2>
+        <p>Two types of links: <strong>point-to-point</strong> (Ethernet switch to host, PPP dial-up) and
+            <strong>broadcast</strong> (shared wire or medium: old Ethernet, WiFi, 4G/5G, satellite, HFC upstream).
+        </p>
+
+        <div class="info-note">
+            <strong><i class="fas fa-exclamation-triangle"></i> Collision:</strong> When two or more nodes transmit
+            simultaneously on a shared channel, their signals interfere — this is a collision. A multiple access
+            protocol
+            is a <strong>distributed algorithm</strong> that determines how nodes share the channel. Critically,
+            coordination must use the channel itself — there is no out-of-band channel.
+        </div>
+
+        <h3>Ideal Multiple Access Protocol</h3>
+        <ol>
+            <li>When one node wants to transmit, it can send at rate R.</li>
+            <li>When M nodes want to transmit, each can send at average rate R/M.</li>
+            <li>Fully decentralized: no special node to coordinate, no clock synchronization.</li>
+            <li>Simple to implement.</li>
+        </ol>
+
+        <h3>MAC Protocols: Taxonomy</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Mechanism</th>
+                    <th>Examples</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Channel Partitioning</strong></td>
+                    <td>Divide channel into smaller pieces (time, frequency, code); allocate piece to node for exclusive
+                        use</td>
+                    <td>TDMA, FDMA, CDMA</td>
+                </tr>
+                <tr>
+                    <td><strong>Random Access</strong></td>
+                    <td>Channel not divided; allow collisions and recover from them</td>
+                    <td>ALOHA, Slotted ALOHA, CSMA, CSMA/CD, CSMA/CA</td>
+                </tr>
+                <tr>
+                    <td><strong>Taking Turns</strong></td>
+                    <td>Nodes take turns; nodes with more to send can take longer turns</td>
+                    <td>Polling, Token Passing</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Channel Partitioning: TDMA & FDMA</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-clock"></i> TDMA</h3>
+                <ul>
+                    <li>Time Division Multiple Access.</li>
+                    <li>Access to channel in "rounds."</li>
+                    <li>Each station gets fixed-length slot in each round.</li>
+                    <li>Unused slots go idle — inefficient at low load.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-wave-square"></i> FDMA</h3>
+                <ul>
+                    <li>Frequency Division Multiple Access.</li>
+                    <li>Channel spectrum divided into frequency bands.</li>
+                    <li>Each station assigned fixed frequency band.</li>
+                    <li>Unused transmission time goes idle.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Random Access Protocols</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-random"></i> Slotted ALOHA</h3>
+                <ul>
+                    <li>All frames same size; time divided into equal slots.</li>
+                    <li>Nodes transmit only at slot beginnings.</li>
+                    <li>If collision: retransmit in each subsequent slot with probability p.</li>
+                    <li><strong>Pros:</strong> single active node can transmit at full rate; highly decentralized;
+                        simple.</li>
+                    <li><strong>Cons:</strong> collisions waste slots; idle slots; clock synchronization required.</li>
+                    <li><strong>Max efficiency:</strong> 1/e ≈ <strong>37%</strong></li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-random"></i> Pure ALOHA</h3>
+                <ul>
+                    <li>No slots; transmit immediately when frame is ready.</li>
+                    <li>Even simpler than slotted ALOHA.</li>
+                    <li><strong>Max efficiency:</strong> 1/(2e) ≈ <strong>18%</strong></li>
+                    <li>Worse than slotted ALOHA due to unbounded collision window.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>CSMA and CSMA/CD</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-headphones"></i> CSMA</h3>
+                <ul>
+                    <li><strong>Carrier Sense Multiple Access:</strong> listen before transmit.</li>
+                    <li>If channel idle → transmit entire frame.</li>
+                    <li>If channel busy → defer transmission.</li>
+                    <li>Collisions can still occur due to propagation delay (nodes may not hear each other's
+                        transmission).</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-bolt"></i> CSMA/CD</h3>
+                <ul>
+                    <li><strong>CSMA with Collision Detection:</strong> used in Ethernet.</li>
+                    <li>Collisions detected within short time; transmissions aborted, reducing channel wastage.</li>
+                    <li>Collision detection easy in wired networks, difficult in wireless.</li>
+                    <li>Uses <strong>binary exponential backoff</strong> after collisions.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="info-note">
+            <strong><i class="fas fa-ethernet"></i> Ethernet CSMA/CD Algorithm:</strong><br>
+            1. Receive datagram from network layer, create frame.<br>
+            2. If channel idle → transmit. If busy → wait until idle, then transmit.<br>
+            3. If entire frame transmitted without collision → done!<br>
+            4. If collision detected → abort, send jam signal.<br>
+            5. Enter binary exponential backoff: after mth collision, choose K at random from {0, 1, 2, ..., 2^m - 1},
+            wait K·512 bit times, then return to step 2.
+        </div>
+
+        <h3>"Taking Turns" Protocols</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-list-ol"></i> Polling</h3>
+                <ul>
+                    <li>Centralized controller "invites" other nodes to transmit in turn.</li>
+                    <li>Used with "dumb" devices (e.g., Bluetooth).</li>
+                    <li>Concerns: polling overhead, latency, single point of failure.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-ticket-alt"></i> Token Passing</h3>
+                <ul>
+                    <li>Control token message passed from one node to next sequentially.</li>
+                    <li>Node transmits only while holding token.</li>
+                    <li>Concerns: token overhead, latency, single point of failure (lost token).</li>
+                    <li>Used in FDDI, token ring.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-note">
+            <strong><i class="fas fa-satellite-dish"></i> Cable Access Network (DOCSIS):</strong> DOCSIS (Data Over
+            Cable Service Interface Specification) is the protocol used by cable ISPs (like your home cable internet).
+            It cleverly <strong>combines FDM, TDM, and random access</strong>:
+            <ul>
+                <li><strong>Downstream:</strong> Multiple FDM channels (up to 1.6 Gbps each), broadcast to all homes.
+                </li>
+                <li><strong>Upstream:</strong> Multiple channels (up to 1 Gbps), shared via TDM and random access.</li>
+                <li>The CMTS (Cable Modem Termination System) sends a <strong>MAP frame</strong> telling modems which
+                    upstream minislots are reserved and which are open for contention.</li>
+                <li>Contention slots use random access with binary backoff — similar to Ethernet!</li>
+            </ul>
+        </div>
+
+        <!-- ================= 5. LAN ADDRESSING & ARP ================= -->
+        <h2 id="addressing"><i class="fas fa-address-card"></i> 5. LAN Addressing and ARP</h2>
+
+        <h3>MAC Addresses</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-globe"></i> 32-bit IP Address</h3>
+                <ul>
+                    <li>Network-layer address for interface.</li>
+                    <li>Used for layer 3 forwarding.</li>
+                    <li>Example: 128.119.40.136</li>
+                    <li><strong>Not portable</strong> — depends on IP subnet.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-fingerprint"></i> 48-bit MAC Address</h3>
+                <ul>
+                    <li>Used "locally" to get frame from one interface to another physically-connected interface.</li>
+                    <li>Burned into NIC ROM, sometimes software-settable.</li>
+                    <li>Example: 1A-2F-BB-76-09-AD</li>
+                    <li><strong>Flat and portable</strong> — can move interface from one LAN to another.</li>
+                    <li>Analogy: MAC = Social Security Number; IP = postal address.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-note">
+            <strong><i class="fas fa-info-circle"></i> MAC Address Allocation:</strong> Administered by IEEE.
+            Manufacturers buy portions of MAC address space to assure uniqueness. The broadcast MAC address is
+            <strong>FF-FF-FF-FF-FF-FF</strong>.
+        </div>
+
+        <h3>ARP: Address Resolution Protocol</h3>
+        <p><strong>Question:</strong> How to determine an interface's MAC address, knowing its IP address?</p>
+        <ul>
+            <li>Each IP node (host, router) on a LAN has an <strong>ARP table</strong> containing IP/MAC address
+                mappings.</li>
+            <li>ARP table entry: &lt;IP address; MAC address; TTL&gt; (TTL typically 20 minutes).</li>
+            <li>If destination MAC not in ARP table: sender <strong>broadcasts</strong> ARP query (dest MAC =
+                FF-FF-FF-FF-FF-FF).</li>
+            <li>Target node replies with ARP response containing its MAC address.</li>
+            <li>Sender caches the mapping in its ARP table.</li>
+        </ul>
+
+        <!-- ARP Diagram SVG -->
+        <div class="svg-diagram">
+            <div class="svg-title"><i class="fas fa-exchange-alt"></i> ARP Operation: Broadcast Query → Unicast Reply
+            </div>
+            <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+                <!-- Host A -->
+                <rect x="50" y="80" width="120" height="80" rx="8" fill="rgba(59,130,246,0.2)" stroke="#3b82f6"
+                    stroke-width="2" />
+                <text x="110" y="115" fill="#7dd3fc" font-size="14" text-anchor="middle" font-weight="600">Host A</text>
+                <text x="110" y="135" fill="#94a3b8" font-size="11" text-anchor="middle">IP: 192.168.1.10</text>
+                <text x="110" y="150" fill="#94a3b8" font-size="11" text-anchor="middle">MAC: AA-AA-AA-..</text>
+
+                <!-- Router -->
+                <rect x="340" y="80" width="120" height="80" rx="8" fill="rgba(16,185,129,0.2)" stroke="#10b981"
+                    stroke-width="2" />
+                <text x="400" y="115" fill="#6ee7b7" font-size="14" text-anchor="middle" font-weight="600">Router
+                    R</text>
+                <text x="400" y="135" fill="#94a3b8" font-size="11" text-anchor="middle">IP: 192.168.1.1</text>
+                <text x="400" y="150" fill="#94a3b8" font-size="11" text-anchor="middle">MAC: RR-RR-RR-..</text>
+
+                <!-- Host B -->
+                <rect x="630" y="80" width="120" height="80" rx="8" fill="rgba(245,158,11,0.2)" stroke="#f59e0b"
+                    stroke-width="2" />
+                <text x="690" y="115" fill="#fcd34d" font-size="14" text-anchor="middle" font-weight="600">Host B</text>
+                <text x="690" y="135" fill="#94a3b8" font-size="11" text-anchor="middle">IP: 192.168.1.20</text>
+                <text x="690" y="150" fill="#94a3b8" font-size="11" text-anchor="middle">MAC: BB-BB-BB-..</text>
+
+                <!-- LAN cloud -->
+                <ellipse cx="400" cy="220" rx="350" ry="50" fill="none" stroke="#4a5568" stroke-width="2"
+                    stroke-dasharray="8,4" />
+                <text x="400" y="225" fill="#64748b" font-size="12" text-anchor="middle">LAN (Broadcast Domain)</text>
+
+                <!-- ARP Query Arrow (Broadcast) -->
+                <line x1="170" y1="120" x2="340" y2="120" stroke="#ef4444" stroke-width="3"
+                    marker-end="url(#arrowRed)" />
+                <line x1="170" y1="120" x2="630" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,3"
+                    opacity="0.5" />
+                <rect x="220" y="95" width="100" height="22" rx="4" fill="rgba(239,68,68,0.2)" stroke="#ef4444" />
+                <text x="270" y="111" fill="#fca5a5" font-size="10" text-anchor="middle" font-weight="600">ARP Query
+                    (Broadcast)</text>
+
+                <!-- ARP Reply Arrow (Unicast) -->
+                <line x1="630" y1="160" x2="170" y2="160" stroke="#10b981" stroke-width="3"
+                    marker-end="url(#arrowGreen)" />
+                <rect x="320" y="170" width="110" height="22" rx="4" fill="rgba(16,185,129,0.2)" stroke="#10b981" />
+                <text x="375" y="186" fill="#6ee7b7" font-size="10" text-anchor="middle" font-weight="600">ARP Reply
+                    (Unicast)</text>
+
+                <!-- Labels -->
+                <text x="110" y="280" fill="#94a3b8" font-size="11" text-anchor="middle">"Who has 192.168.1.20?"</text>
+                <text x="690" y="280" fill="#94a3b8" font-size="11" text-anchor="middle">"I have it! My MAC is
+                    BB-BB.."</text>
+
+                <!-- Arrow markers -->
+                <defs>
+                    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"
+                        markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L9,3 z" fill="#ef4444" />
+                    </marker>
+                    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"
+                        markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L9,3 z" fill="#10b981" />
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+
+        <h3>Routing to Another Subnet</h3>
+        <p>When sending a datagram from A to B via router R:</p>
+        <ol>
+            <li>A creates IP datagram with source A, destination B.</li>
+            <li>A creates link-layer frame with <strong>router R's MAC address</strong> as destination (not B's!).</li>
+            <li>Frame sent from A to R; R extracts datagram, passes to IP layer.</li>
+            <li>R creates new frame with <strong>B's MAC address</strong> as destination, forwards to B.</li>
+        </ol>
+        <div class="info-note">
+            <strong><i class="fas fa-lightbulb"></i> Key Point:</strong> MAC addresses are used hop-by-hop, while IP
+            addresses remain end-to-end. Each link along the path has its own source/destination MAC addresses, but the
+            IP source and destination stay constant.
+        </div>
+
+        <!-- ================= 6. ETHERNET ================= -->
+        <h2 id="ethernet"><i class="fas fa-network-wired"></i> 6. Ethernet</h2>
+        <p>Ethernet is the <strong>dominant wired LAN technology</strong>. First widely used LAN; simple and cheap. Kept
+            up with speed race: 10 Mbps → 400 Gbps. Single chip supports multiple speeds.</p>
+
+        <div class="info-note">
+            <strong><i class="fas fa-history"></i> A Bit of History:</strong> Ethernet was invented by <strong>Bob
+                Metcalfe</strong>
+            at Xerox PARC in the 1970s. He sketched the original concept on a napkin! Metcalfe later founded 3Com and
+            was awarded the <strong>Turing Award in 2022</strong> for his pioneering work on Ethernet. The name comes
+            from
+            the hypothetical "luminiferous ether" — the medium once thought to carry light waves.
+        </div>
+
+        <h3>Ethernet Physical Topology</h3>
+        <div class="two-cols">
+            <div class="col">
+                <h3><i class="fas fa-bus"></i> Bus (Old)</h3>
+                <ul>
+                    <li>Popular through mid-90s.</li>
+                    <li>All nodes in same collision domain.</li>
+                    <li>Coaxial cable.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3><i class="fas fa-star"></i> Switched (Today)</h3>
+                <ul>
+                    <li>Active link-layer switch in center.</li>
+                    <li>Each "spoke" runs separate Ethernet protocol.</li>
+                    <li>Nodes do not collide with each other.</li>
+                    <li>Full duplex operation possible.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Ethernet Frame Structure</h3>
+
+        <!-- Ethernet Frame SVG -->
+        <div class="svg-diagram">
+            <div class="svg-title"><i class="fas fa-layer-group"></i> Ethernet Frame Format (802.3)</div>
+            <svg viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Frame background -->
+                <rect x="20" y="50" width="860" height="70" rx="4" fill="rgba(0,0,0,0.3)" stroke="#4a5568"
+                    stroke-width="1" />
+
+                <!-- Preamble -->
+                <rect x="20" y="50" width="100" height="70" fill="rgba(59,130,246,0.25)" stroke="#3b82f6"
+                    stroke-width="1" />
+                <text x="70" y="80" fill="#7dd3fc" font-size="11" text-anchor="middle" font-weight="600">Preamble</text>
+                <text x="70" y="95" fill="#94a3b8" font-size="9" text-anchor="middle">8 bytes</text>
+                <text x="70" y="110" fill="#64748b" font-size="8" text-anchor="middle">Sync clocks</text>
+
+                <!-- Dest MAC -->
+                <rect x="120" y="50" width="100" height="70" fill="rgba(239,68,68,0.2)" stroke="#ef4444"
+                    stroke-width="1" />
+                <text x="170" y="80" fill="#fca5a5" font-size="11" text-anchor="middle" font-weight="600">Dest
+                    MAC</text>
+                <text x="170" y="95" fill="#94a3b8" font-size="9" text-anchor="middle">6 bytes</text>
+                <text x="170" y="110" fill="#64748b" font-size="8" text-anchor="middle">Receiver</text>
+
+                <!-- Src MAC -->
+                <rect x="220" y="50" width="100" height="70" fill="rgba(16,185,129,0.2)" stroke="#10b981"
+                    stroke-width="1" />
+                <text x="270" y="80" fill="#6ee7b7" font-size="11" text-anchor="middle" font-weight="600">Src MAC</text>
+                <text x="270" y="95" fill="#94a3b8" font-size="9" text-anchor="middle">6 bytes</text>
+                <text x="270" y="110" fill="#64748b" font-size="8" text-anchor="middle">Sender</text>
+
+                <!-- Type -->
+                <rect x="320" y="50" width="80" height="70" fill="rgba(245,158,11,0.2)" stroke="#f59e0b"
+                    stroke-width="1" />
+                <text x="360" y="80" fill="#fcd34d" font-size="11" text-anchor="middle" font-weight="600">Type</text>
+                <text x="360" y="95" fill="#94a3b8" font-size="9" text-anchor="middle">2 bytes</text>
+                <text x="360" y="110" fill="#64748b" font-size="8" text-anchor="middle">IP/ARP/etc</text>
+
+                <!-- Data -->
+                <rect x="400" y="50" width="300" height="70" fill="rgba(139,92,246,0.2)" stroke="#8b5cf6"
+                    stroke-width="1" />
+                <text x="550" y="80" fill="#c4b5fd" font-size="11" text-anchor="middle" font-weight="600">Data
+                    (Payload)</text>
+                <text x="550" y="95" fill="#94a3b8" font-size="9" text-anchor="middle">46-1500 bytes</text>
+                <text x="550" y="110" fill="#64748b" font-size="8" text-anchor="middle">IP datagram</text>
+
+                <!-- CRC -->
+                <rect x="700" y="50" width="80" height="70" fill="rgba(236,72,153,0.2)" stroke="#ec4899"
+                    stroke-width="1" />
+                <text x="740" y="80" fill="#f9a8d4" font-size="11" text-anchor="middle" font-weight="600">CRC</text>
+                <text x="740" y="95" fill="#94a3b8" font-size="9" text-anchor="middle">4 bytes</text>
+                <text x="740" y="110" fill="#64748b" font-size="8" text-anchor="middle">Error check</text>
+
+                <!-- Inter-frame gap -->
+                <rect x="780" y="50" width="100" height="70" fill="rgba(100,116,139,0.15)" stroke="#64748b"
+                    stroke-width="1" stroke-dasharray="4" />
+                <text x="830" y="85" fill="#94a3b8" font-size="10" text-anchor="middle">Inter-frame</text>
+                <text x="830" y="100" fill="#94a3b8" font-size="10" text-anchor="middle">Gap</text>
+
+                <!-- Size arrows -->
+                <line x1="20" y1="40" x2="880" y2="40" stroke="#64748b" stroke-width="1" />
+                <line x1="20" y1="35" x2="20" y2="45" stroke="#64748b" stroke-width="1" />
+                <line x1="880" y1="35" x2="880" y2="45" stroke="#64748b" stroke-width="1" />
+                <text x="450" y="32" fill="#94a3b8" font-size="10" text-anchor="middle">64 - 1518 bytes total</text>
+
+                <!-- Legend -->
+                <text x="450" y="155" fill="#94a3b8" font-size="10" text-anchor="middle">Preamble = 7 bytes of 10101010
+                    + 1 byte of 10101011 (start of frame delimiter)</text>
+            </svg>
+        </div>
+
+        <div class="code-block-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code"><i class="fas fa-copy"></i>
+                Copy</button>
+            <pre>
+Preamble (8 bytes) | Dest MAC (6) | Source MAC (6) | Type (2) | Data (payload) | CRC (4)
+
+• Preamble: 7 bytes of 10101010 + 1 byte of 10101011 (synchronize clocks)
+• Addresses: 6-byte source and destination MAC addresses
+• Type: indicates higher-layer protocol (mostly IP)
+• CRC: Cyclic Redundancy Check — if error detected, frame dropped
+            </pre>
+        </div>
+
+        <div class="info-note">
+            <strong><i class="fas fa-exclamation-circle"></i> Ethernet is Unreliable and Connectionless:</strong><br>
+            • <strong>Connectionless:</strong> no handshaking between sending and receiving NICs.<br>
+            • <strong>Unreliable:</strong> receiving NIC doesn't send ACKs or NAKs. Dropped frames recovered only if
+            higher-layer RDT (e.g., TCP) is used.<br>
+            • <strong>MAC protocol:</strong> unslotted CSMA/CD with binary backoff.<br>
+            • Many different Ethernet standards exist with common MAC protocol but different speeds and physical media.
+        </div>
+
+        <!-- ================= 7. SWITCHES ================= -->
+        <h2 id="switches"><i class="fas fa-random"></i> 7. Ethernet Switches</h2>
+        <p>A <strong>switch</strong> is a link-layer device that takes an active role in forwarding frames.</p>
+        <ul>
+            <li>Store and forward Ethernet frames.</li>
+            <li>Examine incoming frame's MAC address, selectively forward to one or more outgoing links.</li>
+            <li><strong>Transparent:</strong> hosts are unaware of switches.</li>
+            <li><strong>Plug-and-play, self-learning:</strong> switches do not need to be configured.</li>
+        </ul>
+
+        <h3>Multiple Simultaneous Transmissions</h3>
+        <ul>
+            <li>Hosts have dedicated, direct connection to switch.</li>
+            <li>Switches buffer packets.</li>
+            <li>No collisions; full duplex operation.</li>
+            <li>Each link is its own collision domain.</li>
+            <li>A-to-A' and B-to-B' can transmit simultaneously, without collisions.</li>
+        </ul>
+
+        <h3>Self-Learning Switch</h3>
+        <ol>
+            <li>When frame received, switch "learns" location of sender: records sender MAC / incoming interface pair in
+                <strong>switch table</strong>.
+            </li>
+            <li>Index switch table using destination MAC address.</li>
+            <li>If entry found for destination:
+                <ul>
+                    <li>If destination on same segment → drop frame (filtering).</li>
+                    <li>Else → forward frame on indicated interface.</li>
+                </ul>
+            </li>
+            <li>If no entry found → <strong>flood</strong> (forward on all interfaces except arriving interface).</li>
+        </ol>
+
+        <!-- Self-Learning Switch SVG -->
+        <div class="svg-diagram">
+            <div class="svg-title"><i class="fas fa-table"></i> Self-Learning Switch: Building the Forwarding Table
+            </div>
+            <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Switch -->
+                <rect x="300" y="150" width="200" height="120" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3b82f6"
+                    stroke-width="2" />
+                <text x="400" y="190" fill="#7dd3fc" font-size="16" text-anchor="middle" font-weight="700">Switch</text>
+                <text x="400" y="210" fill="#94a3b8" font-size="11" text-anchor="middle">Self-Learning</text>
+                <text x="400" y="225" fill="#94a3b8" font-size="11" text-anchor="middle">Forward/Filter</text>
+
+                <!-- Host A -->
+                <rect x="50" y="50" width="100" height="60" rx="6" fill="rgba(16,185,129,0.2)" stroke="#10b981"
+                    stroke-width="2" />
+                <text x="100" y="75" fill="#6ee7b7" font-size="13" text-anchor="middle" font-weight="600">Host A</text>
+                <text x="100" y="92" fill="#94a3b8" font-size="10" text-anchor="middle">MAC: A1-A1-A1</text>
+                <line x1="150" y1="80" x2="300" y2="180" stroke="#10b981" stroke-width="2" />
+                <text x="220" y="120" fill="#10b981" font-size="10" text-anchor="middle">Interface 1</text>
+
+                <!-- Host B -->
+                <rect x="50" y="300" width="100" height="60" rx="6" fill="rgba(245,158,11,0.2)" stroke="#f59e0b"
+                    stroke-width="2" />
+                <text x="100" y="325" fill="#fcd34d" font-size="13" text-anchor="middle" font-weight="600">Host B</text>
+                <text x="100" y="342" fill="#94a3b8" font-size="10" text-anchor="middle">MAC: B2-B2-B2</text>
+                <line x1="150" y1="330" x2="300" y2="240" stroke="#f59e0b" stroke-width="2" />
+                <text x="220" y="300" fill="#f59e0b" font-size="10" text-anchor="middle">Interface 2</text>
+
+                <!-- Host C -->
+                <rect x="650" y="50" width="100" height="60" rx="6" fill="rgba(239,68,68,0.2)" stroke="#ef4444"
+                    stroke-width="2" />
+                <text x="700" y="75" fill="#fca5a5" font-size="13" text-anchor="middle" font-weight="600">Host C</text>
+                <text x="700" y="92" fill="#94a3b8" font-size="10" text-anchor="middle">MAC: C3-C3-C3</text>
+                <line x1="500" y1="180" x2="650" y2="80" stroke="#ef4444" stroke-width="2" />
+                <text x="580" y="120" fill="#ef4444" font-size="10" text-anchor="middle">Interface 3</text>
+
+                <!-- Host D -->
+                <rect x="650" y="300" width="100" height="60" rx="6" fill="rgba(139,92,246,0.2)" stroke="#8b5cf6"
+                    stroke-width="2" />
+                <text x="700" y="325" fill="#c4b5fd" font-size="13" text-anchor="middle" font-weight="600">Host D</text>
+                <text x="700" y="342" fill="#94a3b8" font-size="10" text-anchor="middle">MAC: D4-D4-D4</text>
+                <line x1="500" y1="240" x2="650" y2="330" stroke="#8b5cf6" stroke-width="2" />
+                <text x="580" y="300" fill="#8b5cf6" font-size="10" text-anchor="middle">Interface 4</text>
+
+                <!-- Switch Table -->
+                <rect x="320" y="280" width="160" height="100" rx="6" fill="rgba(0,0,0,0.3)" stroke="#4a5568"
+                    stroke-width="1" />
+                <text x="400" y="300" fill="#94a3b8" font-size="11" text-anchor="middle" font-weight="600">Switch
+                    Table</text>
+                <line x1="330" y1="308" x2="470" y2="308" stroke="#4a5568" stroke-width="1" />
+                <text x="360" y="322" fill="#7dd3fc" font-size="9" text-anchor="middle">MAC</text>
+                <text x="440" y="322" fill="#7dd3fc" font-size="9" text-anchor="middle">Intf</text>
+                <line x1="330" y1="328" x2="470" y2="328" stroke="#4a5568" stroke-width="0.5" />
+                <text x="360" y="342" fill="#6ee7b7" font-size="9" text-anchor="middle">A1-A1</text>
+                <text x="440" y="342" fill="#6ee7b7" font-size="9" text-anchor="middle">1</text>
+                <text x="360" y="355" fill="#fcd34d" font-size="9" text-anchor="middle">B2-B2</text>
+                <text x="440" y="355" fill="#fcd34d" font-size="9" text-anchor="middle">2</text>
+                <text x="360" y="368" fill="#fca5a5" font-size="9" text-anchor="middle">C3-C3</text>
+                <text x="440" y="368" fill="#fca5a5" font-size="9" text-anchor="middle">3</text>
+
+                <!-- Learning arrow -->
+                <path d="M 280 200 Q 260 250 320 280" fill="none" stroke="#3b82f6" stroke-width="2"
+                    stroke-dasharray="4,2" marker-end="url(#arrowBlue)" />
+                <text x="260" y="250" fill="#3b82f6" font-size="9" text-anchor="middle">Learn</text>
+
+                <defs>
+                    <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                        <path d="M0,0 L0,8 L8,4 z" fill="#3b82f6" />
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+
+        <div class="info-note">
+            <strong><i class="fas fa-table"></i> Switch Table Entry:</strong> (MAC address of host, interface to reach
+            host, timestamp). Entries expire after a timeout (similar to ARP TTL). Switches can be interconnected;
+            self-learning works the same way across multiple switches.
+        </div>
+
+        <h3>Switches vs. Routers</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Switches (Link Layer)</th>
+                    <th>Routers (Network Layer)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Layer</td>
+                    <td>Link layer (Layer 2)</td>
+                    <td>Network layer (Layer 3)</td>
+                </tr>
+                <tr>
+                    <td>Headers examined</td>
+                    <td>MAC addresses</td>
+                    <td>IP addresses</td>
+                </tr>
+                <tr>
+                    <td>Forwarding table</td>
+                    <td>Learned via flooding/self-learning</td>
+                    <td>Computed using routing algorithms (OSPF, BGP)</td>
+                </tr>
+                <tr>
+                    <td>Addresses used</td>
+                    <td>MAC addresses</td>
+                    <td>IP addresses</td>
+                </tr>
+                <tr>
+                    <td>Broadcast handling</td>
+                    <td>Floods broadcasts</td>
+                    <td>Does not forward broadcasts across networks</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ================= 8. VLANS ================= -->
+        <h2 id="vlans"><i class="fas fa-project-diagram"></i> 8. Virtual LANs (VLANs)</h2>
+        <p>As LANs scale, a <strong>single broadcast domain</strong> causes problems: all layer-2 broadcast traffic
+            (ARP, DHCP, unknown MAC) must cross the entire LAN, leading to efficiency, security, and privacy issues.</p>
+
+        <h3>Motivation</h3>
+        <ul>
+            <li><strong>Scaling:</strong> broadcast traffic consumes bandwidth across entire LAN.</li>
+            <li><strong>Administrative:</strong> users may move physically but want to remain logically attached to
+                their original department (e.g., CS user moves to EE building).</li>
+            <li><strong>Security/Privacy:</strong> separate traffic between departments.</li>
+        </ul>
+
+        <h3>Port-Based VLANs</h3>
+        <ul>
+            <li>Switch ports grouped by management software so a single physical switch operates as multiple virtual
+                switches.</li>
+            <li><strong>Traffic isolation:</strong> frames to/from ports 1-8 can only reach ports 1-8.</li>
+            <li><strong>Dynamic membership:</strong> ports can be dynamically assigned among VLANs.</li>
+            <li><strong>Forwarding between VLANs:</strong> done via routing (vendors sell combined switches + routers).
+            </li>
+        </ul>
+
+        <!-- VLAN Trunking SVG -->
+        <div class="svg-diagram">
+            <div class="svg-title"><i class="fas fa-network-wired"></i> VLAN Trunking: Extending VLANs Across Switches
+            </div>
+            <svg viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg">
+                <!-- Switch 1 -->
+                <rect x="80" y="80" width="180" height="200" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6"
+                    stroke-width="2" />
+                <text x="170" y="105" fill="#7dd3fc" font-size="14" text-anchor="middle" font-weight="700">Switch
+                    1</text>
+
+                <!-- VLAN 10 ports Switch 1 -->
+                <rect x="95" y="120" width="60" height="35" rx="4" fill="rgba(16,185,129,0.3)" stroke="#10b981"
+                    stroke-width="1" />
+                <text x="125" y="142" fill="#6ee7b7" font-size="10" text-anchor="middle">VLAN 10</text>
+
+                <rect x="95" y="165" width="60" height="35" rx="4" fill="rgba(16,185,129,0.3)" stroke="#10b981"
+                    stroke-width="1" />
+                <text x="125" y="187" fill="#6ee7b7" font-size="10" text-anchor="middle">VLAN 10</text>
+
+                <!-- VLAN 20 ports Switch 1 -->
+                <rect x="170" y="120" width="60" height="35" rx="4" fill="rgba(245,158,11,0.3)" stroke="#f59e0b"
+                    stroke-width="1" />
+                <text x="200" y="142" fill="#fcd34d" font-size="10" text-anchor="middle">VLAN 20</text>
+
+                <rect x="170" y="165" width="60" height="35" rx="4" fill="rgba(245,158,11,0.3)" stroke="#f59e0b"
+                    stroke-width="1" />
+                <text x="200" y="187" fill="#fcd34d" font-size="10" text-anchor="middle">VLAN 20</text>
+
+                <!-- Trunk port Switch 1 -->
+                <rect x="125" y="220" width="80" height="35" rx="4" fill="rgba(139,92,246,0.3)" stroke="#8b5cf6"
+                    stroke-width="2" />
+                <text x="165" y="242" fill="#c4b5fd" font-size="10" text-anchor="middle" font-weight="600">Trunk
+                    Port</text>
+
+                <!-- Switch 2 -->
+                <rect x="540" y="80" width="180" height="200" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6"
+                    stroke-width="2" />
+                <text x="630" y="105" fill="#7dd3fc" font-size="14" text-anchor="middle" font-weight="700">Switch
+                    2</text>
+
+                <!-- VLAN 10 ports Switch 2 -->
+                <rect x="555" y="120" width="60" height="35" rx="4" fill="rgba(16,185,129,0.3)" stroke="#10b981"
+                    stroke-width="1" />
+                <text x="585" y="142" fill="#6ee7b7" font-size="10" text-anchor="middle">VLAN 10</text>
+
+                <rect x="555" y="165" width="60" height="35" rx="4" fill="rgba(16,185,129,0.3)" stroke="#10b981"
+                    stroke-width="1" />
+                <text x="585" y="187" fill="#6ee7b7" font-size="10" text-anchor="middle">VLAN 10</text>
+
+                <!-- VLAN 20 ports Switch 2 -->
+                <rect x="630" y="120" width="60" height="35" rx="4" fill="rgba(245,158,11,0.3)" stroke="#f59e0b"
+                    stroke-width="1" />
+                <text x="660" y="142" fill="#fcd34d" font-size="10" text-anchor="middle">VLAN 20</text>
+
+                <rect x="630" y="165" width="60" height="35" rx="4" fill="rgba(245,158,11,0.3)" stroke="#f59e0b"
+                    stroke-width="1" />
+                <text x="660" y="187" fill="#fcd34d" font-size="10" text-anchor="middle">VLAN 20</text>
+
+                <!-- Trunk port Switch 2 -->
+                <rect x="585" y="220" width="80" height="35" rx="4" fill="rgba(139,92,246,0.3)" stroke="#8b5cf6"
+                    stroke-width="2" />
+                <text x="625" y="242" fill="#c4b5fd" font-size="10" text-anchor="middle" font-weight="600">Trunk
+                    Port</text>
+
+                <!-- Trunk link -->
+                <line x1="260" y1="237" x2="540" y2="237" stroke="#8b5cf6" stroke-width="4" stroke-dasharray="8,4" />
+                <text x="400" y="230" fill="#c4b5fd" font-size="12" text-anchor="middle" font-weight="600">Trunk Link
+                    (802.1Q)</text>
+                <text x="400" y="255" fill="#94a3b8" font-size="10" text-anchor="middle">Carries VLAN 10 + VLAN 20
+                    traffic</text>
+
+                <!-- 802.1Q tag illustration -->
+                <rect x="320" y="270" width="160" height="50" rx="4" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6"
+                    stroke-width="1" />
+                <text x="400" y="290" fill="#c4b5fd" font-size="10" text-anchor="middle" font-weight="600">802.1Q Tag (4
+                    bytes)</text>
+                <text x="400" y="308" fill="#94a3b8" font-size="9" text-anchor="middle">TPID (2B) | Priority | CFI |
+                    VLAN ID (12 bits)</text>
+
+                <!-- Legend -->
+                <rect x="80" y="10" width="15" height="15" rx="3" fill="rgba(16,185,129,0.3)" stroke="#10b981" />
+                <text x="105" y="22" fill="#94a3b8" font-size="11">VLAN 10 (e.g., Engineering)</text>
+
+                <rect x="280" y="10" width="15" height="15" rx="3" fill="rgba(245,158,11,0.3)" stroke="#f59e0b" />
+                <text x="305" y="22" fill="#94a3b8" font-size="11">VLAN 20 (e.g., Marketing)</text>
+            </svg>
+        </div>
+
+        <h3>VLANs Spanning Multiple Switches</h3>
+        <ul>
+            <li><strong>Trunk port:</strong> carries frames between VLANs defined over multiple physical switches.</li>
+            <li>Frames forwarded within VLAN between switches can't be vanilla 802.1 frames — must carry VLAN ID info.
+            </li>
+            <li><strong>802.1Q protocol:</strong> adds additional header fields for frames forwarded between trunk
+                ports, including a 12-bit VLAN ID field.</li>
+        </ul>
+
+        <div class="info-note">
+            <strong><i class="fas fa-cloud"></i> EVPN / VXLAN:</strong> Ethernet VPNs (or VXLANs) allow Layer-2 Ethernet
+            switches to be logically connected using IP as an underlay. Ethernet frames are carried within IP datagrams
+            between sites, "stretching" a Layer 2 network over Layer 3 infrastructure (RFC 7348). This is widely used
+            in modern data centers and cloud networks.
+        </div>
+
+        <!-- ================= 9. MPLS ================= -->
+        <h2 id="mpls"><i class="fas fa-tag"></i> 9. Link Virtualization: MPLS</h2>
+        <p><strong>Multiprotocol Label Switching (MPLS)</strong> is a link-layer virtualization technology that provides
+            high-speed IP forwarding using fixed-length labels instead of longest-prefix matching.</p>
+        <ul>
+            <li><strong>Goal:</strong> faster lookup using fixed-length identifiers, borrowing ideas from Virtual
+                Circuit approach.</li>
+            <li>IP datagram still keeps IP address!</li>
+            <li><strong>MPLS header:</strong> 20-bit label, 3-bit Exp, 1-bit S, 8-bit TTL — inserted between Ethernet
+                header and IP header.</li>
+        </ul>
+
+        <h3>MPLS Capable Routers</h3>
+        <ul>
+            <li>Also called <strong>label-switched routers</strong>.</li>
+            <li>Forward packets based only on label value (don't inspect IP address).</li>
+            <li>MPLS forwarding table is distinct from IP forwarding tables.</li>
+            <li><strong>Traffic engineering:</strong> can use source and destination addresses to route flows
+                differently.</li>
+            <li><strong>Fast reroute:</strong> pre-computed backup paths for quick recovery from link failures.</li>
+        </ul>
+
+        <h3>MPLS Signaling</h3>
+        <ul>
+            <li>Modified OSPF/IS-IS link-state flooding carries info used by MPLS routing (link bandwidth, reserved
+                bandwidth).</li>
+            <li>Entry MPLS router uses <strong>RSVP-TE</strong> signaling protocol to set up MPLS forwarding at
+                downstream routers.</li>
+        </ul>
+
+        <!-- ================= 10. DATA CENTER NETWORKS ================= -->
+        <h2 id="datacenter"><i class="fas fa-server"></i> 10. Data Center Networking</h2>
+        <p>Data centers host 10's to 100's of thousands of hosts in close proximity: e-business (Amazon), content
+            servers (YouTube, Akamai), search engines (Google).</p>
+
+        <h3>Challenges</h3>
+        <ul>
+            <li>Multiple applications serving massive numbers of clients.</li>
+            <li>High reliability requirements.</li>
+            <li>Managing/balancing load; avoiding processing, networking, and data bottlenecks.</li>
+        </ul>
+
+        <h3>Network Elements</h3>
+        <div class="access-grid">
+            <div class="access-card"><strong><i class="fas fa-server"></i> Server Racks</strong><br>20-40 server
+                blades (hosts) per rack.</div>
+            <div class="access-card"><strong><i class="fas fa-plug"></i> Top of Rack (TOR) Switches</strong><br>One
+                per rack; 100G-400G Ethernet to blades.</div>
+            <div class="access-card"><strong><i class="fas fa-layer-group"></i> Tier-2 (Aggregation)
+                    Switches</strong><br>Connecting to ~16 TORs below.</div>
+            <div class="access-card"><strong><i class="fas fa-star"></i> Tier-1 (Core) Switches</strong><br>Connecting
+                to ~16 Tier-2 switches below.</div>
+            <div class="access-card"><strong><i class="fas fa-globe"></i> Border Routers</strong><br>Connections
+                outside the data center.</div>
+        </div>
+
+        <h3>Modern Topologies</h3>
+        <ul>
+            <li><strong>Leaf-Spine:</strong> Two-layer interconnection network. Leaf switches connect to TORs; spine
+                switches connect leaves. Provides rich interconnection among racks.</li>
+            <li><strong>Facebook F16:</strong> Each TOR connects to 16 fabric switches; each fabric connects to 16 spine
+                switches.</li>
+            <li><strong>Multipath:</strong> Multiple routing paths possible between racks → increased throughput and
+                reliability via redundancy.</li>
+        </ul>
+
+        <h3>Protocol Innovations</h3>
+        <ul>
+            <li><strong>Link layer:</strong> RoCE (Remote DMA over Converged Ethernet).</li>
+            <li><strong>Transport layer:</strong> ECN used in DCTCP, DCQCN congestion control; experimentation with
+                hop-by-hop backpressure.</li>
+            <li><strong>Routing/Management:</strong> SDN widely used; place related services close together to minimize
+                tier communication.</li>
+            <li><strong>Load balancer:</strong> Application-layer routing that receives external requests, directs
+                workload within data center, and returns results (hiding internals).</li>
+        </ul>
+
+        <!-- ================= 11. SYNTHESIS ================= -->
+        <h2 id="synthesis"><i class="fas fa-globe"></i> 11. Synthesis: A Day in the Life of a Web Request</h2>
+        <p>Our journey down the protocol stack is now complete! Let's review the protocols involved in a seemingly
+            simple scenario: a student attaches a laptop to campus network and requests <strong>www.google.com</strong>.
+        </p>
+
+        <h3>Phase 1: Connecting to the Internet (DHCP)</h3>
+        <ul>
+            <li>Laptop needs IP address, first-hop router address, DNS server address → uses <strong>DHCP</strong>.</li>
+            <li>DHCP request encapsulated in UDP → IP → 802.3 Ethernet.</li>
+            <li>Ethernet frame <strong>broadcast</strong> (dest: FF-FF-FF-FF-FF-FF) on LAN, received at router running
+                DHCP server.</li>
+            <li>DHCP server formulates DHCP ACK with client's IP, router IP, DNS server name/IP.</li>
+            <li>Client now has IP address, knows DNS server, and first-hop router.</li>
+        </ul>
+
+        <h3>Phase 2: ARP (Before DNS, Before HTTP)</h3>
+        <ul>
+            <li>Before sending HTTP request, need IP address of www.google.com → <strong>DNS</strong>.</li>
+            <li>To send DNS query to router, need router's MAC address → <strong>ARP</strong>.</li>
+            <li>ARP query broadcast; router replies with ARP reply giving its MAC address.</li>
+            <li>Client caches MAC address and sends frame containing DNS query.</li>
+        </ul>
+
+        <h3>Phase 3: Using DNS</h3>
+        <ul>
+            <li>IP datagram containing DNS query forwarded via LAN switch to first-hop router.</li>
+            <li>IP datagram forwarded from campus network into ISP network, routed (using RIP, OSPF, IS-IS, BGP) to DNS
+                server.</li>
+            <li>DNS replies with IP address of www.google.com.</li>
+        </ul>
+
+        <h3>Phase 4: TCP Connection & HTTP</h3>
+        <ul>
+            <li>Client opens <strong>TCP socket</strong> to web server (3-way handshake: SYN → SYNACK → ACK).</li>
+            <li>TCP SYN segment inter-domain routed to web server.</li>
+            <li><strong>HTTP request</strong> sent into TCP socket; IP datagram routed to www.google.com.</li>
+            <li>Web server responds with <strong>HTTP reply</strong> containing web page.</li>
+            <li>Web page finally displayed!</li>
+        </ul>
+
+        <div class="info-note">
+            <strong><i class="fas fa-layer-group"></i> Protocols Used (All Layers):</strong><br>
+            • Application: DHCP, DNS, HTTP<br>
+            • Transport: UDP (DHCP, DNS), TCP (HTTP)<br>
+            • Network: IP, ARP, OSPF/BGP (routing)<br>
+            • Link: Ethernet, 802.11 (WiFi)<br>
+            • Physical: bits on the wire/air
+        </div>
+
+
+
+        <!-- ================= HOMEWORK ================= -->
+        <h2 id="homework"><i class="fas fa-tasks"></i> Homework Assignment (Theoretical, Graded)</h2>
+        <div class="homework-box">
+            <p><strong>Instructions:</strong> Answer all questions in a separate document (PDF or Word). Submit via the
+                learning platform. This assignment counts towards your final grade (5%). Provide clear, well‑structured
+                answers using terminology from the lecture.</p>
+
+            <h3>Part I: Short Essays (40 points)</h3>
+            <ol>
+                <li>Describe the services provided by the link layer. Why is reliable data transfer at the link layer
+                    seldom used on wired links but often used on wireless links?</li>
+                <li>Explain the difference between single-bit parity and two-dimensional parity. Which one can correct
+                    errors, and how?</li>
+                <li>Compare and contrast TDMA, FDMA, and random access protocols. In which scenarios is each most
+                    efficient?</li>
+                <li>Describe the CSMA/CD protocol used in Ethernet. What happens when a collision is detected, and how
+                    does binary exponential backoff work?</li>
+                <li>Explain how ARP works. Why does a node broadcast an ARP query instead of sending it directly to the
+                    target?</li>
+            </ol>
+
+            <h3>Part II: True/False + Correction (30 points)</h3>
+            <ol>
+                <li>The link layer is responsible for end-to-end delivery of datagrams. <strong>(True / False)</strong>
+                </li>
+                <li>CRC can detect all burst errors less than r+1 bits, where r is the number of CRC bits. <strong>(True
+                        /
+                        False)</strong></li>
+                <li>Slotted ALOHA has a maximum efficiency of approximately 37%. <strong>(True / False)</strong></li>
+                <li>Ethernet switches need to be manually configured with MAC address tables. <strong>(True /
+                        False)</strong></li>
+                <li>In a VLAN, traffic between different VLANs can be forwarded directly by the switch without routing.
+                    <strong>(True / False)</strong>
+                </li>
+            </ol>
+            <p>For each false statement, write the correct version.</p>
+
+            <h3>Part III: Problem Solving (30 points)</h3>
+            <ol>
+                <li>A node uses CRC with generator G = 1001 (r = 3). The data bits are D = 101110. Compute the CRC
+                    bits R that should be transmitted. Show your work using modulo-2 division.</li>
+                <li><strong>Switch Simulation:</strong> A switch starts with an empty table. Three frames arrive in
+                    sequence:
+                    <ul>
+                        <li>Frame 1: Source MAC = A1-B2-C3, Destination MAC = D4-E5-F6, arriving on interface 1</li>
+                        <li>Frame 2: Source MAC = D4-E5-F6, Destination MAC = A1-B2-C3, arriving on interface 2</li>
+                        <li>Frame 3: Source MAC = G7-H8-I9, Destination MAC = A1-B2-C3, arriving on interface 3</li>
+                    </ul>
+                    For <strong>each frame</strong>, show:
+                    <ul>
+                        <li>What the switch learns (table update)</li>
+                        <li>What action the switch takes (forward to which interface, flood, or filter/drop)</li>
+                        <li>The state of the switch table after processing the frame</li>
+                    </ul>
+                </li>
+                <li>Consider a network where host A (IP: 192.168.1.10, MAC: AA-AA-AA-AA-AA-AA) wants to send a datagram
+                    to host B (IP: 192.168.1.20, MAC: BB-BB-BB-BB-BB-BB). However, B is on a different subnet connected
+                    via router R (IP on A's subnet: 192.168.1.1, MAC: RR-RR-RR-RR-RR-RR). Describe the MAC addresses
+                    in the frames at each hop from A to B via R.</li>
+            </ol>
+            <p><strong>Grading criteria:</strong> correctness, completeness, proper use of terminology, and clarity of
+                explanation.</p>
+            <p><strong>Deadline:</strong> Two weeks from the lecture date.</p>
+        </div>
+
+        <!-- ================= COMPREHENSIVE SUMMARY ================= -->
+        <h2><i class="fas fa-check-double"></i> Chapter 6 Summary</h2>
+        <ul>
+            <li><strong>Link Layer:</strong> transfers datagrams between physically adjacent nodes. Services: framing,
+                link access, reliable delivery, flow control, error detection/correction, half/full duplex.</li>
+            <li><strong>Error Detection/Correction:</strong> parity checking (single-bit, 2D), Internet checksum, CRC
+                (most powerful; used in Ethernet, WiFi).</li>
+            <li><strong>Multiple Access Protocols:</strong> channel partitioning (TDMA, FDMA), random access (ALOHA,
+                CSMA, CSMA/CD), taking turns (polling, token passing).</li>
+            <li><strong>LAN Addressing:</strong> 48-bit MAC addresses (flat, portable) vs. 32-bit IP addresses
+                (hierarchical). ARP resolves IP to MAC.</li>
+            <li><strong>Ethernet:</strong> dominant wired LAN. CSMA/CD with binary exponential backoff. Frame structure:
+                preamble, MAC addresses, type, data, CRC. Invented by Bob Metcalfe (Turing Award 2022).</li>
+            <li><strong>Switches:</strong> self-learning, plug-and-play. Forward/filter based on MAC address table.
+                Flood when destination unknown. Each port is its own collision domain.</li>
+            <li><strong>VLANs:</strong> partition broadcast domains logically. Port-based VLANs, trunk ports, 802.1Q
+                tagging. Require Layer-3 device for inter-VLAN routing. EVPN/VXLAN for L2 over L3.</li>
+            <li><strong>MPLS:</strong> link virtualization using fixed-length labels for fast forwarding and traffic
+                engineering.</li>
+            <li><strong>Data Center Networks:</strong> leaf-spine topologies, TOR/aggregation/core switches, multipath,
+                SDN, load balancing.</li>
+            <li><strong>Synthesis:</strong> a web request involves DHCP, ARP, DNS, TCP, HTTP across all layers of the
+                protocol stack.</li>
+        </ul>
+        <div class="info-note">
+            <strong><i class="fas fa-graduation-cap"></i> Self‑review questions (exam preparation):</strong><br>
+            • Why are MAC addresses flat while IP addresses are hierarchical?<br>
+            • How does a switch build its forwarding table without configuration?<br>
+            • What is the difference between CSMA and CSMA/CD?<br>
+            • Why do VLANs require a router (or layer-3 switch) for inter-VLAN communication?<br>
+            • List all protocols involved from the moment you open a browser to when a web page appears.<br>
+            • What is the purpose of the Ethernet preamble and why is the minimum frame size 64 bytes?
+        </div>
+
+        <footer
+            style="margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+            <p>© <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved</p>
+            <p>Based on Kurose & Ross, <em>Computer Networking: A Top-Down Approach</em>, 9th edition, Chapter 6 slides
+                and textbook.</p>
+            <div class="footer-tools">
+                <a href="https://www.wireshark.org" target="_blank"><i class="fas fa-shark"></i> Wireshark</a>
+                <a href="https://www.netacad.com/courses/packet-tracer" target="_blank"><i
+                        class="fas fa-network-wired"></i> Cisco Packet Tracer</a>
+                <a href="https://www.gns3.com" target="_blank"><i class="fas fa-project-diagram"></i> GNS3</a>
+                <a href="https://www.tcpdump.org" target="_blank"><i class="fas fa-terminal"></i> tcpdump</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Update year
+        document.getElementById('lecture-year').textContent = new Date().getFullYear();
+
+        // Progress bar
+        const progressBar = document.getElementById('progress-bar');
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+        });
+
+        // Back to top button
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Copy code buttons
+        function copyCode(btn) {
+            const pre = btn.nextElementSibling;
+            const code = pre.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Scroll spy with IntersectionObserver
+        const sections = document.querySelectorAll('h2[id]');
+        const navLinks = document.querySelectorAll('.quick-nav a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-80px 0px -60% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // Smooth scroll for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+    <script src="scripts.js" defer></script>
 </body>
+
 </html>
