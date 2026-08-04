@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Trial - امتحان نهائي تجريبي لمساق شبكات الحاسوب</title>
+  <style>
+    body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height:1.6; padding:20px; max-width:900px; margin:auto; }
+    h1,h2,h3 { color:#0b3d91 }
+    .meta { background:#f4f7fb; padding:10px; border-left:4px solid #0b3d91; }
+    .section { margin-top:20px }
+    ol { margin-left:20px }
+    .q { margin:12px 0; }
+    .parts { margin-left:18px }
+    .note { background:#fff8e1; padding:10px; border-left:4px solid #f0ad4e; }
+    .rubric { font-size:0.95em; color:#333 }
+    .small { font-size:0.95em; color:#555 }
+    .code { background:#eef; padding:8px; border-radius:4px; font-family:monospace }
+  </style>
+</head>
+<body>
+  <h1>امتحان نهائي تجريبي - مساق شبكات الحاسوب (Final Trial)</h1>
+  <div class="meta">
+    <p><strong>المدة الزمنية:</strong> 70 دقيقة &nbsp; | &nbsp; <strong>إجمالي الدرجات:</strong> 60 درجة</p>
+    <p class="small">طبيعة الأسئلة: تحليلية وتطبيقية (Problem-Solving & Analysis). استخدم المصطلحات التقنية باللغة الإنجليزية عند الحاجة (مثال: IP, TCP, ARP, MAC, OSPF, BGP).</p>
+    <p class="small">ملاحظة مهمة: لا تُكرر أسئلة أو مواضيع تم التركيز عليها صراحةً في الاختبار النصفي (Midterm). إذا رغبت بمراجعة التكرار بدقة، أرفِق ملف Midterm وسأضبط الأسئلة وفقاً له.</p>
+  </div>
+
+  <div class="section">
+    <h2>التوزيع العام</h2>
+    <ul>
+      <li>الجزء الأول - أسئلة موضوعية (Objective) — 20 درجة (مدة مقترحة: 25 دقيقة)</li>
+      <li>الجزء الثاني - أسئلة مقالية وتحليلية (Essay / Analytical) — 40 درجة (مدة مقترحة: 45 دقيقة)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>الجزء الأول: أسئلة موضوعية — 20 درجة</h2>
+    <p class="small">يتألف من 8 أسئلة اختيار من متعدد (MCQ) كل سؤال بقيمة 2 درجتين = 16 درجة، و4 أسئلة صح/خطأ True/False كل سؤال بقيمة 1 درجة = 4 درجات. (ملاحظة: أسئلة الفصل الثالث Chapter 3 تُمثّل 10% من الامتحان الكلي = 6 درجات — لذلك 3 أسئلة MCQ من Chapter 3 بقيمة 2 درجتين لكلٍ).</p>
+
+    <ol>
+      <!-- Chapter 3 MCQs (3 questions, 2 marks each = 6 marks) -->
+      <li class="q">
+        <strong>م1 (2 درجتان) — Chapter 3 (Transport Layer)</strong>
+        <p>في بروتوكول التحكم بالنقل مثل TCP، أيّ العبارات التالية صحيح بخصوص آلية Selective Repeat مقارنة بـ Go-Back-N؟</p>
+        <ol class="parts" type="A">
+          <li>Selective Repeat يعيد إرسال كافة الحزم من أول خطأ حتى الآن بينما Go-Back-N يعيد إرسال الحزمة الخاطئة فقط.</li>
+          <li>Selective Repeat يسمح بمؤشرات نافذة مستقلة على المرسل والمستقبل (sender/receiver window) ويعيد إرسال الحزم المتأثرة فقط، بينما Go-Back-N يعيد إرسال نافذة كاملة بعد فقد حزمة.</li>
+          <li>كلاهما لا يستخدم ACKs تراكمية (Cumulative ACKs).</li>
+          <li>Go-Back-N يتطلب ذاكرة أكبر في المستقبل مقارنة بـ Selective Repeat لمعالجة الحزم خارج الترتيب.</li>
+        </ol>
+        <p class="small"><strong>اختر الإجابة الصحيحة:</strong> A / B / C / D</p>
+      </li>
+
+      <li class="q">
+        <strong>م2 (2 درجتان) — Chapter 3 (Transport Layer)</strong>
+        <p>أيّ وصف أدناه يميّز ACKs تراكمية (Cumulative ACKs) عن ACKs لكل حزمة (Per-packet ACK)?</p>
+        <ol class="parts" type="A">
+          <li>Cumulative ACK يؤكّد استلام آخر بايت متتابع دون الحاجة لتقرير عن كل حزمة منفصلة، بينما Per-packet ACK يؤكّد كل حزمة فرديًّا.</li>
+          <li>Per-packet ACK يتضمن عادة رقم نافذة (window) بينما Cumulative ACK لا يفعل ذلك.</li>
+          <li>Cumulative ACK لا يمكنه أن يغطي إعادة الإرسال Selective Repeat.</li>
+          <li>لا يوجد فرق عملي بينهما على مستوى TCP.</li>
+        </ol>
+        <p class="small"><strong>اختر الإجابة الصحيحة:</strong> A / B / C / D</p>
+      </li>
+
+      <li class="q">
+        <strong>م3 (2 درجتان) — Chapter 3 (Transport Layer)</strong>
+        <p>في سياق <em>Socket Programming</em>، أيّ من العبارات التالية صحيحة عادةً بالنسبة لبنية Socket في TCP؟</p>
+        <ol class="parts" type="A">
+          <li>Socket يُعرَّف بزوج (IP address, Port) ويُستخدم لتشكيل اتصال مُوجّه وقائم على الحالة (connection-oriented).</li>
+          <li>Socket في TCP لا يحتاج إلى Port لأن الاتصال يتم بواسطة IP فقط.</li>
+          <li>Socket يمنع تقسيم البيانات إلىSegments — هذه وظيفة طبقة الشبكة فقط.</li>
+          <li>Socket و UDP هما نفس الشيء من حيث ضمان الاستلام.</li>
+        </ol>
+        <p class="small"><strong>اختر الإجابة الصحيحة:</strong> A / B / C / D</p>
+      </li>
+
+      <!-- Chapter 4-6 MCQs (5 questions, 2 marks each = 10 marks) -->
+      <li class="q">
+        <strong>م4 (2 درجتان) — Chapter 4 (Network Layer)</strong>
+        <p>لنفترض جدول توجيه قانوني يحتوي على مدخلات مع prefixes مختلفة. أي قاعدة تُطابق حزمة ذات وجهة 192.168.1.130 وفقاً لآلية Longest Prefix Match؟</p>
+        <div class="code">Routing table (prefix → next-hop):
+          <br>1) 192.168.1.0/25 → Router A
+          <br>2) 192.168.0.0/16 → Router B
+          <br>3) 192.168.1.128/26 → Router C
+        </div>
+        <p class="small">اختر الـ next-hop الصحيح:</p>
+        <ol class="parts" type="A">
+          <li>Router A</li>
+          <li>Router B</li>
+          <li>Router C</li>
+          <li>لايمكن المطابقة</li>
+        </ol>
+      </li>
+
+      <li class="q">
+        <strong>م5 (2 درجتان) — Chapter 4 (Network Layer)</strong>
+        <p>عند مقارنة IPv4 و IPv6، أيّ من التالي صحيح بخصوص عملية التجزئة (fragmentation)?</p>
+        <ol class="parts" type="A">
+          <li>IPv6 يسمح للمراسل (source) فقط بتجزئة الحزم، بينما IPv4 يمكن للمسار (intermediate routers) تجزئتها أيضاً.</li>
+          <li>IPv4 لا يدعم التجزئة على الإطلاق.</li>
+          <li>IPv6 يعتمد على حقل Flags في header لتنفيذ fragmentation بالطريقة نفسها في IPv4.</li>
+          <li>كلا البروتوكولين يسمحان للتوجيهات (routers) بتجزيء الحزم دائمًا.</li>
+        </ol>
+      </li>
+
+      <li class="q">
+        <strong>م6 (2 درجتان) — Chapter 5 (Control Plane / ICMP)</strong>
+        <p>أداة traceroute غالباً ما تستخدم رسائل ICMP أو UDP مع TTL متزايد. أيّ وصف أدناه يشرح لماذا traceroute يتلقى رسائل "Time Exceeded" من الموجّه (router)؟</p>
+        <ol class="parts" type="A">
+          <li>لأن الموجّه تجاوز حجم الـ MTU ويعيد التجزئة باستخدام ICMP Message.</li>
+          <li>لأن الـ TTL (Time To Live) للباكيت وصل إلى صفر عند الموجّه، والموجّه يرسل رسالة ICMP Type 11 (Time Exceeded).</li>
+          <li>لأن اتصال الـ TCP أغلق فجأة ويولّد الموجّه رسالة Time Exceeded.</li>
+          <li>لأن عنوان الوجهة خاطئ، والموجّه يرسل دائمًا Time Exceeded بدلًا من Destination Unreachable.</li>
+        </ol>
+      </li>
+
+      <li class="q">
+        <strong>م7 (2 درجتان) — Chapter 6 (Data Link)</strong>
+        <p>في بروتوكول ARP، عندما يريد مضيف معرفة MAC لـ IP داخل نفس الشبكة المحلية، ما الذي يحدث عادة؟</p>
+        <ol class="parts" type="A">
+          <li>يُرسل المضيف ARP Request كبث (broadcast) على عنوان MAC العام (FF:FF:FF:FF:FF:FF) و ينتظر ARP Reply من صاحب العنوان.</li>
+          <li>يُرسل المضيف الحزمة مباشرة إلى Switch لأن Switch يحفظ كل عناوين الـ IP إلى MAC mapping دائمًا.</li>
+          <li>يُستخدم بروتوكول DHCP للعثور على MAC مقابل IP.</li>
+          <li>يُرسل المضيف الرسالة عبر الإنترنت إلى الـ Gateway فقط (unicast).</li>
+        </ol>
+      </li>
+
+      <li class="q">
+        <strong>م8 (2 درجتان) — Chapter 6 (Data Link / Ethernet)</strong>
+        <p>ما هي الوظيفة الأساسية لعملية Flooding في عمل الـ Switch؟</p>
+        <ol class="parts" type="A">
+          <li>إرسال الإطارات إلى ��ل المنافذ عندما لا يعرف الـ Switch عنوان MAC الوجهة، لإيجاد المجرى الصحيح.</li>
+          <li>إعادة إرسال كل الإطارات من المنفذ المدخل إلى نفس المنفذ فقط.</li>
+          <li>حذف الإطارات التي عنوان MAC المصدر الخاص بها غير معروف.</li>
+          <li>تبديل عنوان الـ MAC في كل مرة تمر الإطارات عبر الـ Switch.</li>
+        </ol>
+      </li>
+    </ol>
+
+    <h3>صح / خطأ — 4 أسئلة (كل سؤال 1 درجة)</h3>
+    <ol>
+      <li class="q">ص/خ: عنوان الـ Broadcast في Ethernet هو FF:FF:FF:FF:FF:FF. (صحيح / خطأ)</li>
+      <li class="q">ص/خ: NAT يغيّر header طبقة النقل (TCP/UDP ports) دائمًا عند ترجمة عنوان IP. (صحيح / خطأ)</li>
+      <li class="q">ص/خ: في Longest Prefix Match، الإدخال ذو أقصر طول prefix له الأولوية. (صحيح / خطأ)</li>
+      <li class="q">ص/خ: CRC يُستخدم للكشف عن الأخطاء في إطار Data Link ويكشف كل حالات الخطأ المحتملة دائماً. (صحيح / خطأ)</li>
+    </ol>
+
+  </div>
+
+  <div class="section">
+    <h2>الجزء الثاني: أسئلة مقالية وتحليلية — 40 درجة</h2>
+    <p class="small">5 أسئلة مقالية مركزة. أجب عن كل سؤال بإيجاز ومباشرة مع توضيح الحُجج، الرسوم التوضيحية البسيطة، والحسابات المطلوبة. اذكر النقاط الرئيسية ودرجة كل جزء وفق مقياس التصحيح المرفق.</p>
+
+    <ol>
+      <li class="q">
+        <strong>س1 (8 درجات) — IPv4 vs IPv6 (Compare & Analyse)</strong>
+        <p>قارن بين IPv4 و IPv6 من النواحي التالية: (أ) مساحة العنوان والعناوين الاختيارية (addressing), (ب) التجزئة (fragmentation) ومن يقوم بها، (ج) وجود NAT والحاجة إليه، (د) اختلافات في header (ماذا أثر ذلك على processing في routers).</p>
+        <p class="rubric">التقييم: كل جزء فرعي (أ–د) 2 درجة: ذكر الحقائق الصحيحة (1d)، شرح أثرها العملي/تصميمي (1d).</p>
+      </li>
+
+      <li class="q">
+        <strong>س2 (8 درجات) — Longest Prefix Matching & Routing Table (Apply)</strong>
+        <p>أمامك جدول توجيه موجز. اعرض كيفية اختيار الـ next-hop لوجهاتٍ مختلفة، واشرح لماذا تُطبق قاعدة Longest Prefix Match. اشرح أيضاً كيف يؤثر وجود Default Route (0.0.0.0/0) على القرار.</p>
+        <div class="code">Routing table (example):
+          <br>- 10.0.0.0/8 → Next-hop A
+          <br>- 10.10.0.0/16 → Next-hop B
+          <br>- 10.10.5.0/24 → Next-hop C
+          <br>- 0.0.0.0/0 → Next-hop D (default)
+        </div>
+        <p>أجب: ما هو next-hop للحزم الموجهة إلى 10.10.5.129 ، 10.10.8.7 ، 10.20.1.1 ؟ شرح موجز مطلوب.</p>
+        <p class="rubric">التقييم: تفسير الاختيارات الصحيحة لكل وجهة (2x3 = 6 درجات) + شرح دور Default Route وتطبيق Longest Prefix Match (2 درجات).</p>
+      </li>
+
+      <li class="q">
+        <strong>س3 (8 درجات) — Routing Algorithms & Protocols (Analyse & Compare)</strong>
+        <p>(أ) قارن بين خوارزميات التوجيه Link State و Distance Vector من حيث: معلومات الحالة المطلوبة، سرعة التوصّل إلى تقارب (convergence), مقاومة حلقات التوجيه (routing loops). (ب) قارن بين OSPF و BGP من حيث المستوى العملي (intra-domain vs inter-domain)، ومبدأ تبادل المعلومات، وكيفية اتخاذ قرارات المسار (path selection).</p>
+        <p class="rubric">التقييم: كل قسم (أ) و (ب) 4 درجات — نقاط المقارنة الأساسية (2) + أمثلة/شرح عملي (2).</p>
+      </li>
+
+      <li class="q">
+        <strong>س4 (6 درجات) — Subnetting (Problem Solving)</strong>
+        <p>لديك شبكة 192.168.100.0/24. مطلوب تقسيمها إلى ثلاثة شبكات فرعية تستقبل على الأقل: 100 مضيف، 50 مضيف، 20 مضيف على الترتيب. اعطِ لكل شبكة: شبكة الشبكة (network address)، قناع الشبكة (subnet mask)، ونطاق عناوين المضيفين (usable host range). اذكر طريقة حسابك بإيجاز.</p>
+        <p class="rubric">التقييم: كل شبكة صحيحة = 2 درجات (الإجمالي 6 درجات). تُمنح نقاط جزئية لحساب صحيح وقناع مناسب.</p>
+      </li>
+
+      <li class="q">
+        <strong>س5 (10 درجات) — سؤال تجميعي شامل (Synthesis): تتبع مسار طلب ويب (Web Request)</strong>
+        <p>سيناريو: جهاز كمبيوتر العميل (Client) لديه عنوان IP محلي 10.0.1.10/24 وMAC = AA:AA:AA:AA:AA:01 ويريد إرسال HTTP request إلى خادم على الإنترنت عنوانه الظاهر 198.51.100.25. شبكة العميل متصلة إلى Router (NAT) الذي يمتلك IP داخلي 10.0.1.1 وIP خارجي 203.0.113.5. شبكة الإنترنت تحتوي على عدة راوترات وSwitches وصولاً إلى الخادم. تفترض أن الخادم عنوان MAC وجهته معروف عند الشبكة الطرفية للخادم.
+        </p>
+        <p>اطلب من الطالب أن يشرح خطوة بخطوة (موجز لكن محدد) دورة حياة هذا الطلب على المستويات التالية: Application → Transport → Network → Data Link → Physical، مع التركيز على طبقتي Network و Data Link: كيف تُحوّل العناوين (IP, MAC)، متى يُستخدم ARP، ماذا يحدث عند NAT (تغيير IP و/أو Port)، كيف يتعامل الراوتر مع جدول التوجيه والـ TTL، ومتى يظهر دور الـ Switch (forwarding/filtering/flooding). اذكر أيضاً أي رسائل ICMP أو أدوات (مثل traceroute) قد تظهر أثناء المسار ولماذا.
+        <p class="rubric">التقييم (10 درجات): تغطية Network layer (3), Data Link layer & ARP (3), NAT behaviour (2), Transport/Application notes (1), ذكر ICMP/traceroute وأثر TTL (1).</p>
+      </li>
+    </ol>
+
+  </div>
+
+  <div class="section note">
+    <h3>تعليمات المراقب وتصحيح الإجابات (Markers' notes)</h3>
+    <ul>
+      <li>يُقيّم الامتحان حسب الجدول السابق — امنح الطالب نقاطاً جزئية عند وجود فهم صحيح حتى لو لم يكن الإكمال كاملاً.</li>
+      <li>الأسئلة التحليلية تتطلب عرض خطوات منطقية وحسابات قصيرة حيث طُلب ذلك (مثال: Subnetting أو اختيار next-hop).</li>
+      <li>لا حاجة لكتابة تراكيب برمجية لكن ذكر المصطلحات الإنجليزية (مثل ARP request, MAC broadcast, TTL decrement, NAT translation, Longest Prefix Match) يرفع من درجة الإجابة إذا استُخدمت بالشكل الصحيح.</li>
+    </ul>
+  </div>
+
+  <footer style="margin-top:30px; font-size:0.95em; color:#666;">
+    تم إنشاء هذا الملف تلقائياً كمسودة امتحان نهائي تجريبي باسم <strong>FinalTrial.html</strong>. إذا رغبت في ملف PDF أو إضافة إجابات نموذجية (Answer Key) أو تعديل صعوبة الأسئلة/التوزيع، سأقوم بالتعديل فوراً.
+  </footer>
+</body>
+</html>
