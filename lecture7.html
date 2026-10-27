@@ -1,0 +1,2405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>
+      COMP-3315 | Chapter 7: Wireless and Mobile Networks – Full Lecture
+    </title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+      rel="stylesheet"
+      onerror="this.remove()"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      onerror="this.remove()"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      :root {
+        --primary: #3b82f6;
+        --primary-dark: #2563eb;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --border-light: #2d3a5e;
+        --text-muted: #94a3b8;
+        --bg-dark: rgba(18, 25, 45, 0.92);
+        --bg-card: rgba(0, 0, 0, 0.3);
+        --highlight-blue: #7dd3fc;
+        --highlight-light: #b9e6ff;
+      }
+      #progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary),
+          var(--highlight-blue)
+        );
+        width: 0%;
+        z-index: 9999;
+        transition: width 0.1s;
+      }
+      #back-to-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 9998;
+      }
+      #back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+      #back-to-top:hover {
+        transform: translateY(-3px);
+      }
+      .lecture-container-special {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: var(--bg-dark);
+        backdrop-filter: blur(2px);
+        border-radius: 1.2rem;
+        padding: 2rem;
+        border: 1px solid var(--border-light);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      }
+      .home-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        padding: 0.6rem 1.4rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        transition: 0.2s;
+      }
+      .home-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(59, 130, 246, 0.3);
+      }
+      .lecture-container-special p {
+        line-height: 1.8;
+        margin-bottom: 1rem;
+      }
+      .lecture-container-special h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        margin-bottom: 0.3rem;
+      }
+      .lecture-container-special h2 {
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin: 2.5rem 0 1rem 0;
+        color: var(--highlight-blue);
+        border-bottom: 2px solid var(--border-light);
+        padding-bottom: 0.5rem;
+        padding-top: 1rem;
+        scroll-margin-top: 80px;
+      }
+      .lecture-container-special h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1.2rem 0 0.8rem 0;
+        color: var(--highlight-light);
+        scroll-margin-top: 80px;
+      }
+      .lecture-container-special h4 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin: 0.8rem 0 0.4rem 0;
+      }
+      .learning-objectives {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.1),
+          rgba(16, 185, 129, 0.05)
+        );
+        border: 1px solid var(--primary);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .learning-objectives h3 {
+        color: var(--highlight-blue);
+        margin-top: 0;
+      }
+      .chapter-roadmap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .roadmap-item {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--highlight-light);
+        padding: 0.3rem 0.8rem;
+        border-radius: 1rem;
+        font-size: 0.85rem;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .info-note {
+        background: rgba(15, 25, 45, 0.7);
+        padding: 1rem 1rem 1rem 1.8rem;
+        border-left: 4px solid var(--primary);
+        margin: 1.2rem 0;
+        border-radius: 0.5rem;
+      }
+      .exam-tip {
+        background: rgba(245, 158, 11, 0.08);
+        border-left: 4px solid #f59e0b;
+        padding: 1rem 1rem 1rem 1.8rem;
+        margin: 1.2rem 0;
+        border-radius: 0.5rem;
+        position: relative;
+      }
+      .exam-tip::before {
+        content: "📝 EXAM TIP";
+        display: block;
+        font-weight: 700;
+        color: #fbbf24;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.05em;
+      }
+      .lab-box {
+        background: rgba(16, 185, 129, 0.08);
+        padding: 1.2rem 1.2rem 1.2rem 1.8rem;
+        border-left: 4px solid var(--success);
+        margin: 1.5rem 0;
+        border-radius: 0.5rem;
+      }
+      .homework-box {
+        background: rgba(15, 25, 45, 0.7);
+        padding: 1rem 1rem 1rem 1.8rem;
+        border-left: 4px solid var(--success);
+        margin: 1.2rem 0;
+        border-radius: 0.5rem;
+      }
+      .looking-ahead {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.1),
+          rgba(59, 130, 246, 0.05)
+        );
+        border: 1px solid var(--success);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin: 2rem 0;
+      }
+      .looking-ahead h3 {
+        color: #34d399;
+        margin-top: 0;
+      }
+      .two-cols {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin: 1.2rem 0;
+        align-items: stretch;
+      }
+      .col {
+        flex: 1;
+        min-width: 260px;
+        background: var(--bg-card);
+        padding: 1.2rem;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border-light);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .col h3 {
+        margin-top: 0;
+        margin-bottom: 0.8rem;
+        font-size: 1.2rem;
+      }
+      .code-block-wrapper {
+        position: relative;
+        margin: 1.2rem 0;
+      }
+      pre {
+        background: #0b1120;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-family: "Courier New", monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+        margin: 0;
+        border: 1px solid var(--border-light);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--highlight-blue);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.3rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .copy-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+      .copy-btn.copied {
+        background: var(--success);
+        color: white;
+        border-color: var(--success);
+      }
+      .quick-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 1.5rem;
+      }
+      .quick-nav a {
+        background: rgba(45, 58, 94, 0.5);
+        color: var(--highlight-light);
+        padding: 0.4rem 1rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: 0.2s;
+      }
+      .quick-nav a:hover,
+      .quick-nav a.active {
+        background: var(--primary);
+        color: #fff;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        margin: 1.2rem 0;
+        font-size: 0.9rem;
+      }
+      .comparison-table th {
+        background: rgba(59, 130, 246, 0.25);
+        color: var(--highlight-blue);
+        font-weight: 700;
+        padding: 0.7rem 1rem;
+        text-align: left;
+      }
+      .comparison-table td {
+        padding: 0.7rem 1rem;
+        border-bottom: 1px solid var(--border-light);
+        color: #e2e8f0;
+      }
+      .comparison-table tr:last-child td {
+        border-bottom: none;
+      }
+      .keyword {
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--highlight-blue);
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.2rem;
+        font-weight: 600;
+      }
+      .svg-diagram {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-light);
+        overflow-x: auto;
+      }
+      .svg-diagram svg {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+      .svg-title {
+        text-align: center;
+        color: var(--highlight-blue);
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+      code {
+        background: rgba(59, 130, 246, 0.15);
+        color: #7dd3fc;
+        padding: 0.15rem 0.4rem;
+        border-radius: 0.25rem;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+      }
+      ul,
+      ol {
+        line-height: 1.7;
+        padding-left: 1.5rem;
+      }
+      li {
+        margin-bottom: 0.3rem;
+      }
+      .svg-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        fill: #fff;
+      }
+      .svg-text-light {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        fill: #fff;
+      }
+      @media print {
+        .quick-nav,
+        .home-button,
+        #back-to-top,
+        #progress-bar,
+        .copy-btn {
+          display: none !important;
+        }
+        body {
+          background: white !important;
+          color: black !important;
+        }
+      }
+      @media (max-width: 700px) {
+        .lecture-container-special {
+          padding: 1rem;
+        }
+        .col {
+          padding: 1rem;
+          min-width: 100%;
+        }
+        .comparison-table {
+          font-size: 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress-bar"></div>
+    <button id="back-to-top" aria-label="Back to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <div class="bg-grid"></div>
+    <div class="lecture-container-special">
+      <a href="index.html" class="home-button"
+        ><i class="fas fa-arrow-left"></i> Back to Course Home</a
+      >
+
+      <nav class="quick-nav" aria-label="Quick navigation">
+        <a href="#objectives">Objectives</a>
+        <a href="#intro">Introduction</a>
+        <a href="#links">Wireless Links</a>
+        <a href="#wifi">WiFi 802.11</a>
+        <a href="#pan">PANs</a>
+        <a href="#cellular">Cellular 4G/5G</a>
+        <a href="#mobility">Mobility</a>
+        <a href="#security">Wireless Security</a>
+        <a href="#lab">Practical Lab</a>
+        <a href="#homework">Homework</a>
+      </nav>
+
+      <h1>Chapter 7: Wireless and Mobile Networks</h1>
+      <p style="font-size: 0.9rem; color: var(--text-muted)">
+        Kurose &amp; Ross, <em>Computer Networking: A Top-Down Approach</em>,
+        9th edition (2025) – Full lecture coverage
+      </p>
+
+      <div class="two-cols" id="objectives">
+        <div class="col" style="border-left: 4px solid var(--primary)">
+          <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+          <ul>
+            <li>
+              Characterize wireless links: attenuation, interference, multipath,
+              SNR vs BER.
+            </li>
+            <li>
+              Analyze the <strong>hidden terminal</strong> and
+              <strong>exposed terminal</strong> problems.
+            </li>
+            <li>
+              Explain <strong>802.11</strong> (BSS, ESS, CSMA/CA, RTS/CTS, frame
+              format, rate adaptation).
+            </li>
+            <li>
+              Recognize <strong>Personal Area Networks</strong> (Bluetooth,
+              Zigbee).
+            </li>
+            <li>
+              Describe <strong>4G LTE</strong> and
+              <strong>5G NR</strong> architectures (eNodeB, MME, SGW, PGW, gNB,
+              AMF, SMF, UPF).
+            </li>
+            <li>
+              Explain <strong>mobility management</strong>: home/foreign
+              networks, Mobile IP, indirect vs direct routing, 4G handoff.
+            </li>
+            <li>
+              Understand the <strong>impact of wireless</strong> on TCP and
+              higher-layer protocols.
+            </li>
+            <li>
+              Recognize <strong>wireless security</strong> (WEP, WPA, WPA2,
+              WPA3).
+            </li>
+          </ul>
+        </div>
+        <div class="col" style="border-left: 4px solid var(--success)">
+          <h3><i class="fas fa-list-check"></i> Chapter Roadmap</h3>
+          <div class="chapter-roadmap">
+            <span class="roadmap-item"
+              ><i class="fas fa-signal"></i> §7.1 Intro</span
+            >
+            <span class="roadmap-item"
+              ><i class="fas fa-chart-line"></i> §7.2 Link Char.</span
+            >
+            <span class="roadmap-item"
+              ><i class="fas fa-wifi"></i> §7.3 WiFi</span
+            >
+            <span class="roadmap-item"
+              ><i class="fas fa-bluetooth"></i> §7.3.4 PANs</span
+            >
+            <span class="roadmap-item"
+              ><i class="fas fa-broadcast-tower"></i> §7.4 Cellular</span
+            >
+            <span class="roadmap-item"
+              ><i class="fas fa-mobile-alt"></i> §7.5 Mobility</span
+            >
+            <span class="roadmap-item"
+              ><i class="fas fa-shield-alt"></i> §7.6 Security</span
+            >
+          </div>
+          <div
+            class="info-note"
+            style="
+              margin-top: 1rem;
+              border-left-color: #8b5cf6;
+              background: rgba(139, 92, 246, 0.05);
+            "
+          >
+            <strong><i class="fas fa-book-open"></i> Prerequisites:</strong>
+            Solid understanding of Link Layer (Chapter 6): CSMA/CD, MAC
+            addresses, Ethernet, and the Network Layer (Chapters 4-5): IP
+            addressing and routing.
+          </div>
+        </div>
+      </div>
+
+      <h2 id="intro">
+        <i class="fas fa-satellite-dish"></i> 1. Introduction: Wireless and
+        Mobility
+      </h2>
+      <p>
+        Wireless networks have become the dominant way users connect to the
+        Internet. Two distinct, yet often intertwined, challenges must be
+        addressed:
+      </p>
+      <div class="two-cols">
+        <div class="col">
+          <h3>
+            <i class="fas fa-signal"></i> Wireless (Communication over air)
+          </h3>
+          <ul>
+            <li>
+              <strong>Attenuation:</strong> signal strength drops with distance
+              (path loss).
+            </li>
+            <li>
+              <strong>Interference:</strong> other sources (microwaves,
+              Bluetooth, neighboring APs) operate on the same band.
+            </li>
+            <li>
+              <strong>Multipath:</strong> reflected signals arrive slightly
+              delayed, causing fading.
+            </li>
+            <li>
+              <strong>Bit errors</strong> are much more common than on wired
+              links.
+            </li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3><i class="fas fa-bus"></i> Mobility (Users moving)</h3>
+          <ul>
+            <li>
+              Devices change their point of attachment — from one AP to another,
+              or from WiFi to 4G.
+            </li>
+            <li>
+              Must preserve ongoing sessions (voice calls, video streams).
+            </li>
+            <li>
+              Requires <strong>handoff (handover)</strong> and
+              <strong>location management</strong>.
+            </li>
+            <li>
+              Requires a protocol layer that hides mobility from upper layers
+              (Mobile IP, GTP).
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-note">
+        <strong><i class="fas fa-lightbulb"></i> Key distinction:</strong>
+        <strong>Wireless</strong> refers to the physical layer — communicating
+        over a radio link. <strong>Mobility</strong>
+        refers to a higher-layer concern — handling the user's movement across
+        networks. A device can be wireless but
+        <em>not mobile</em> (e.g., a fixed WiFi camera), and it can be mobile
+        but <em>not wireless</em> (e.g., a laptop plugged into a different
+        Ethernet port each day).
+      </div>
+
+      <h2 id="links">
+        <i class="fas fa-signal"></i> 2. Wireless Link Characteristics
+      </h2>
+      <h3>Path Loss, Interference, Multipath Fading</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Phenomenon</th>
+            <th>Cause</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Path loss (attenuation)</strong></td>
+            <td>Signal spreads out; energy absorbed by obstacles</td>
+            <td>Signal strength decreases with distance — limits coverage</td>
+          </tr>
+          <tr>
+            <td><strong>Interference</strong></td>
+            <td>
+              Other transmitters on same frequency (Bluetooth, microwaves,
+              neighboring APs)
+            </td>
+            <td>Increases noise floor — lowers effective SNR</td>
+          </tr>
+          <tr>
+            <td><strong>Multipath fading</strong></td>
+            <td>
+              Reflections from walls, ground, objects arrive slightly delayed
+            </td>
+            <td>
+              Constructive/destructive cancellation; signal quality varies
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>SNR vs BER</h3>
+      <p>
+        <strong>SNR (Signal-to-Noise Ratio)</strong> measures the received
+        signal power relative to the noise power. It is expressed in decibels
+        (dB).
+      </p>
+      <p>
+        <strong>BER (Bit Error Rate)</strong> is the probability that a received
+        bit is in error.
+      </p>
+      <div class="exam-tip">
+        As SNR <em>increases</em>, BER <em>decreases</em> — the two are
+        inversely related, but the exact relationship depends on the modulation
+        scheme. Higher modulation (e.g., 64-QAM) packs more bits per symbol but
+        requires higher SNR to maintain the same BER. This is the basis of
+        <strong>rate adaptation</strong> in 802.11: the sender chooses a higher
+        rate when the channel is good, and a lower rate when the channel is
+        poor.
+      </div>
+
+      <h3>Hidden Terminal and Exposed Terminal Problems</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Problem</th>
+            <th>Cause</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Hidden terminal</strong></td>
+            <td>
+              A and C can each hear the AP B, but cannot hear each other. Both
+              transmit to B simultaneously.
+            </td>
+            <td>
+              Collision at the AP; neither sender detects it (they are
+              half-duplex and cannot listen while transmitting).
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Exposed terminal</strong></td>
+            <td>
+              A is transmitting to B. C wants to send to D (independent link,
+              does not interfere) but hears A and defers.
+            </td>
+            <td>Wasted capacity (unnecessary deferral).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="svg-diagram">
+        <div class="svg-title">
+          <i class="fas fa-project-diagram"></i> Hidden Terminal: A and C both
+          transmit to B, but cannot hear each other
+        </div>
+        <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="200" fill="rgba(10,15,30,0.4)" rx="10" />
+          <circle
+            cx="100"
+            cy="100"
+            r="28"
+            fill="#1e293b"
+            stroke="#ef4444"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="100"
+            y="108"
+            font-size="16"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            A
+          </text>
+          <circle
+            cx="350"
+            cy="100"
+            r="30"
+            fill="#f59e0b"
+            stroke="#fbbf24"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="350"
+            y="108"
+            font-size="16"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            B (AP)
+          </text>
+          <circle
+            cx="600"
+            cy="100"
+            r="28"
+            fill="#1e293b"
+            stroke="#ef4444"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="600"
+            y="108"
+            font-size="16"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            C
+          </text>
+          <line
+            x1="128"
+            y1="100"
+            x2="320"
+            y2="100"
+            stroke="#10b981"
+            stroke-width="3"
+            marker-end="url(#arr1)"
+          />
+          <line
+            x1="572"
+            y1="100"
+            x2="380"
+            y2="100"
+            stroke="#10b981"
+            stroke-width="3"
+            marker-end="url(#arr1)"
+          />
+          <text
+            x="220"
+            y="80"
+            fill="#94a3b8"
+            font-size="11"
+            text-anchor="middle"
+          >
+            data to B
+          </text>
+          <text
+            x="480"
+            y="80"
+            fill="#94a3b8"
+            font-size="11"
+            text-anchor="middle"
+          >
+            data to B
+          </text>
+          <text
+            x="350"
+            y="160"
+            fill="#fca5a5"
+            font-size="13"
+            text-anchor="middle"
+            font-weight="600"
+          >
+            A and C cannot hear each other → collision at B
+          </text>
+          <text
+            x="350"
+            y="180"
+            fill="#f87171"
+            font-size="11"
+            text-anchor="middle"
+          >
+            (A-C link does not exist)
+          </text>
+          <defs>
+            <marker
+              id="arr1"
+              markerWidth="10"
+              markerHeight="10"
+              refX="9"
+              refY="3"
+              orient="auto"
+            >
+              <path d="M0,0 L0,6 L9,3 z" fill="#10b981" />
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <h2 id="wifi">
+        <i class="fas fa-wifi"></i> 3. IEEE 802.11 Wireless LANs (WiFi)
+      </h2>
+      <h3>3.1 Architecture</h3>
+      <ul>
+        <li>
+          <strong>BSS (Basic Service Set):</strong> One AP + associated
+          stations. The fundamental building block.
+        </li>
+        <li>
+          <strong>ESS (Extended Service Set):</strong> Multiple BSSs connected
+          via a Distribution System (DS, usually Ethernet).
+        </li>
+        <li>
+          <strong>Infrastructure mode:</strong> All traffic passes through the
+          AP (which connects to the wired network).
+        </li>
+        <li>
+          <strong>Ad-hoc mode:</strong> No AP; stations communicate directly.
+          Rarely used in practice.
+        </li>
+      </ul>
+
+      <div class="svg-diagram">
+        <div class="svg-title">
+          <i class="fas fa-network-wired"></i> 802.11 ESS: Multiple BSSs linked
+          by a Distribution System
+        </div>
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="300" fill="rgba(10,15,30,0.4)" rx="10" />
+          <rect
+            x="60"
+            y="60"
+            width="240"
+            height="180"
+            rx="10"
+            fill="rgba(59,130,246,0.08)"
+            stroke="#3b82f6"
+            stroke-width="2"
+            stroke-dasharray="6,4"
+          />
+          <text
+            x="180"
+            y="45"
+            fill="#7dd3fc"
+            font-size="14"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            BSS 1
+          </text>
+          <circle
+            cx="180"
+            cy="150"
+            r="25"
+            fill="#f59e0b"
+            stroke="#fbbf24"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="180"
+            y="157"
+            font-size="14"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            AP1
+          </text>
+          <circle
+            cx="105"
+            cy="220"
+            r="18"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="105"
+            y="226"
+            font-size="11"
+            text-anchor="middle"
+          >
+            H1
+          </text>
+          <circle
+            cx="180"
+            cy="230"
+            r="18"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="180"
+            y="236"
+            font-size="11"
+            text-anchor="middle"
+          >
+            H2
+          </text>
+          <circle
+            cx="255"
+            cy="220"
+            r="18"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="255"
+            y="226"
+            font-size="11"
+            text-anchor="middle"
+          >
+            H3
+          </text>
+
+          <rect
+            x="500"
+            y="60"
+            width="240"
+            height="180"
+            rx="10"
+            fill="rgba(16,185,129,0.08)"
+            stroke="#10b981"
+            stroke-width="2"
+            stroke-dasharray="6,4"
+          />
+          <text
+            x="620"
+            y="45"
+            fill="#34d399"
+            font-size="14"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            BSS 2
+          </text>
+          <circle
+            cx="620"
+            cy="150"
+            r="25"
+            fill="#f59e0b"
+            stroke="#fbbf24"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="620"
+            y="157"
+            font-size="14"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            AP2
+          </text>
+          <circle
+            cx="545"
+            cy="220"
+            r="18"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="545"
+            y="226"
+            font-size="11"
+            text-anchor="middle"
+          >
+            H4
+          </text>
+          <circle
+            cx="620"
+            cy="230"
+            r="18"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="620"
+            y="236"
+            font-size="11"
+            text-anchor="middle"
+          >
+            H5
+          </text>
+          <circle
+            cx="695"
+            cy="220"
+            r="18"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="695"
+            y="226"
+            font-size="11"
+            text-anchor="middle"
+          >
+            H6
+          </text>
+
+          <line
+            x1="205"
+            y1="150"
+            x2="595"
+            y2="150"
+            stroke="#8b5cf6"
+            stroke-width="4"
+            stroke-dasharray="8,4"
+          />
+          <text
+            x="400"
+            y="140"
+            fill="#c4b5fd"
+            font-size="13"
+            text-anchor="middle"
+            font-weight="600"
+          >
+            Distribution System (DS = Ethernet)
+          </text>
+          <text
+            x="400"
+            y="175"
+            fill="#94a3b8"
+            font-size="11"
+            text-anchor="middle"
+          >
+            Connects AP1 → AP2 → Internet via a router
+          </text>
+        </svg>
+      </div>
+
+      <h3>3.2 Scanning: How a Station Finds an AP</h3>
+      <div class="two-cols">
+        <div class="col">
+          <h4>Passive Scanning</h4>
+          <ol>
+            <li>
+              AP periodically broadcasts
+              <strong>beacon frames</strong> (typically every 100 ms).
+            </li>
+            <li>
+              Station listens on each channel; when it hears a beacon, it learns
+              SSID, capabilities, and BSSID.
+            </li>
+            <li>
+              Station sends association request; AP replies with association
+              response.
+            </li>
+          </ol>
+          <p>
+            <strong>Pros:</strong> Simplest. <strong>Cons:</strong> Slow; the
+            station may miss beacons on channels it isn't listening to.
+          </p>
+        </div>
+        <div class="col">
+          <h4>Active Scanning</h4>
+          <ol>
+            <li>
+              Station broadcasts <strong>probe request frames</strong> on each
+              channel.
+            </li>
+            <li>
+              Any AP in range replies with a <strong>probe response</strong>.
+            </li>
+            <li>
+              Station picks the best AP (typically strongest signal), sends
+              association request.
+            </li>
+          </ol>
+          <p>
+            <strong>Pros:</strong> Faster, discovers all APs.
+            <strong>Cons:</strong> Generates more traffic.
+          </p>
+        </div>
+      </div>
+
+      <h3>3.3 CSMA/CA — Why Not CSMA/CD?</h3>
+      <div class="info-note">
+        Wireless cannot detect collisions during transmission because the radio
+        is <strong>half-duplex</strong> — while transmitting, the station cannot
+        listen. Also, collisions at the receiver (hidden terminal) are invisible
+        to the sender. Therefore 802.11 uses <strong>CSMA/CA</strong>: Collision
+        <em>Avoidance</em>, not Detection. Rather than detect collisions after
+        they happen, we try to prevent them in the first place.
+      </div>
+
+      <h4>CSMA/CA Algorithm (DCF — Distributed Coordination Function)</h4>
+      <ol>
+        <li>
+          Station with a frame to send <strong>senses the channel</strong>.
+        </li>
+        <li>
+          If the channel is <strong>idle for DIFS</strong> (Distributed
+          Inter-Frame Space ≈ 34 μs), transmit immediately.
+        </li>
+        <li>
+          If busy, wait for idle, then start a
+          <strong>random backoff counter</strong> (chosen from [0, CW]) that
+          counts down while the channel is idle.
+        </li>
+        <li>
+          If the channel becomes busy during backoff,
+          <strong>freeze the counter</strong>; resume when idle for DIFS again.
+        </li>
+        <li>When counter reaches 0, transmit.</li>
+        <li>
+          Receiver sends <strong>ACK</strong> after <strong>SIFS</strong> (Short
+          IFS ≈ 16 μs).
+        </li>
+        <li>
+          If sender does not receive ACK within a timeout, back off again and
+          retransmit.
+        </li>
+      </ol>
+
+      <div class="info-note">
+        <strong>Why two different IFS values?</strong> SIFS (short) is used for
+        control frames (ACK, CTS) — they get priority. DIFS (long) is used for
+        data frames — ensures ACKs always beat new data. If both used the same
+        IFS, a new frame could collide with the ACK.
+      </div>
+
+      <div class="svg-diagram">
+        <div class="svg-title">
+          <i class="fas fa-clock"></i> CSMA/CA Timing: DIFS, backoff, SIFS, ACK
+        </div>
+        <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="220" fill="rgba(10,15,30,0.4)" rx="10" />
+          <text x="20" y="100" fill="#94a3b8" font-size="13" font-weight="600">
+            Sender
+          </text>
+          <text x="20" y="160" fill="#94a3b8" font-size="13" font-weight="600">
+            Other
+          </text>
+          <rect
+            x="120"
+            y="70"
+            width="60"
+            height="40"
+            fill="rgba(239,68,68,0.3)"
+            stroke="#ef4444"
+          />
+          <text
+            x="150"
+            y="95"
+            fill="#fca5a5"
+            font-size="11"
+            text-anchor="middle"
+            font-weight="600"
+          >
+            busy
+          </text>
+          <rect
+            x="180"
+            y="70"
+            width="40"
+            height="40"
+            fill="rgba(59,130,246,0.3)"
+            stroke="#3b82f6"
+          />
+          <text
+            x="200"
+            y="95"
+            fill="#7dd3fc"
+            font-size="10"
+            text-anchor="middle"
+          >
+            DIFS
+          </text>
+          <rect
+            x="220"
+            y="70"
+            width="80"
+            height="40"
+            fill="rgba(139,92,246,0.3)"
+            stroke="#8b5cf6"
+          />
+          <text
+            x="260"
+            y="95"
+            fill="#c4b5fd"
+            font-size="10"
+            text-anchor="middle"
+          >
+            backoff
+          </text>
+          <rect
+            x="300"
+            y="70"
+            width="140"
+            height="40"
+            fill="rgba(16,185,129,0.3)"
+            stroke="#10b981"
+          />
+          <text
+            x="370"
+            y="95"
+            fill="#6ee7b7"
+            font-size="11"
+            text-anchor="middle"
+          >
+            DATA
+          </text>
+          <rect
+            x="440"
+            y="70"
+            width="40"
+            height="40"
+            fill="rgba(59,130,246,0.3)"
+            stroke="#3b82f6"
+          />
+          <text
+            x="460"
+            y="95"
+            fill="#7dd3fc"
+            font-size="10"
+            text-anchor="middle"
+          >
+            SIFS
+          </text>
+          <rect
+            x="480"
+            y="70"
+            width="60"
+            height="40"
+            fill="rgba(16,185,129,0.3)"
+            stroke="#10b981"
+          />
+          <text
+            x="510"
+            y="95"
+            fill="#6ee7b7"
+            font-size="11"
+            text-anchor="middle"
+          >
+            ACK
+          </text>
+
+          <rect
+            x="120"
+            y="140"
+            width="60"
+            height="40"
+            fill="rgba(239,68,68,0.3)"
+            stroke="#ef4444"
+          />
+          <text
+            x="150"
+            y="165"
+            fill="#fca5a5"
+            font-size="11"
+            text-anchor="middle"
+            font-weight="600"
+          >
+            busy
+          </text>
+          <rect
+            x="180"
+            y="140"
+            width="40"
+            height="40"
+            fill="rgba(59,130,246,0.15)"
+            stroke="#3b82f6"
+            stroke-dasharray="3"
+          />
+          <text
+            x="200"
+            y="165"
+            fill="#7dd3fc"
+            font-size="10"
+            text-anchor="middle"
+          >
+            DIFS
+          </text>
+          <rect
+            x="220"
+            y="140"
+            width="80"
+            height="40"
+            fill="rgba(245,158,11,0.3)"
+            stroke="#f59e0b"
+          />
+          <text
+            x="260"
+            y="165"
+            fill="#fcd34d"
+            font-size="10"
+            text-anchor="middle"
+          >
+            defer
+          </text>
+          <text x="560" y="170" fill="#94a3b8" font-size="11">
+            ← others defer until ACK received
+          </text>
+        </svg>
+      </div>
+
+      <h3>3.4 RTS/CTS — Solving the Hidden Terminal Problem</h3>
+      <p>
+        RTS/CTS is an <em>optional</em> mechanism (802.11 supports it but many
+        deployments disable it to reduce overhead). It works as follows:
+      </p>
+      <ol>
+        <li>
+          <strong>Sender → AP: RTS (Request to Send)</strong>. RTS includes a
+          duration field.
+        </li>
+        <li>
+          <strong>AP → All: CTS (Clear to Send)</strong>, broadcast. All
+          stations within range hear the CTS and read its duration field.
+        </li>
+        <li><strong>Sender → AP: DATA</strong>, transmitted.</li>
+        <li><strong>AP → Sender: ACK</strong>, closing the exchange.</li>
+      </ol>
+      <p>
+        Any station that hears the CTS (including hidden terminals) sets its
+        <strong>NAV (Network Allocation Vector)</strong>
+        to the duration value and defers all transmissions for that period.
+        Since the CTS comes from the AP and is heard by hidden terminals, they
+        are silenced for the entire exchange.
+      </p>
+
+      <div class="exam-tip">
+        <strong>RTS/CTS overhead is significant.</strong> Each RTS and CTS is a
+        full frame. For small data frames, this overhead is not worth it — so
+        most APs have a <strong>RTS threshold</strong> (e.g., 500 bytes):
+        RTS/CTS is only used for large frames or in high-collision scenarios.
+      </div>
+
+      <h3>3.5 802.11 MAC Frame Format</h3>
+      <pre>
+| Frame Control (2B) | Duration (2B) | Addr1 (6B) | Addr2 (6B) | Addr3 (6B) | Seq (2B) | [Addr4 (6B)] | Payload | FCS (4B) |</pre
+      >
+      <ul>
+        <li>
+          <strong>Frame Control:</strong> protocol version, type
+          (data/management/control), subtype (beacon, RTS, CTS, ACK, ...), flags
+          (ToDS, FromDS, more frag, retry, power mgmt, ...).
+        </li>
+        <li>
+          <strong>Duration:</strong> for NAV — how long the sender wants to
+          reserve the channel.
+        </li>
+        <li>
+          <strong>Addr1–4:</strong> up to 4 MAC addresses. Roles depend on
+          ToDS/FromDS flags:
+          <ul>
+            <li>
+              <strong>To DS = 0, From DS = 0</strong> (ad-hoc): Addr1 = Dest,
+              Addr2 = Source, Addr3 = BSSID.
+            </li>
+            <li>
+              <strong>To DS = 1, From DS = 0</strong> (station → AP): Addr1 =
+              AP, Addr2 = Source, Addr3 = Dest (for onward routing).
+            </li>
+            <li>
+              <strong>To DS = 0, From DS = 1</strong> (AP → station): Addr1 =
+              Dest, Addr2 = AP, Addr3 = Source.
+            </li>
+            <li>
+              <strong>To DS = 1, From DS = 1</strong> (mesh / WDS): Addr4 is
+              used for the second bridge.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Seq:</strong> sequence number, used to detect duplicates.
+        </li>
+        <li><strong>FCS:</strong> CRC-32 for error detection.</li>
+      </ul>
+
+      <h3>3.6 Rate Adaptation</h3>
+      <p>
+        802.11 supports multiple physical-layer data rates (e.g., in 802.11ac:
+        65, 130, 260, 390, 520, ..., 6933 Mbps). The sender chooses a rate based
+        on the current channel conditions:
+      </p>
+      <ul>
+        <li>If frames are ACKed reliably → increase rate.</li>
+        <li>If two consecutive frames are not ACKed → decrease rate.</li>
+        <li>
+          This is <strong>closed-loop</strong> rate control, driven by the
+          sender based on ACK feedback.
+        </li>
+      </ul>
+
+      <h3>3.7 Standard Evolution</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Standard</th>
+            <th>Year</th>
+            <th>Band</th>
+            <th>Max Rate</th>
+            <th>Key Feature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>802.11b</td>
+            <td>1999</td>
+            <td>2.4 GHz</td>
+            <td>11 Mbps</td>
+            <td>First mass-market WiFi</td>
+          </tr>
+          <tr>
+            <td>802.11a</td>
+            <td>1999</td>
+            <td>5 GHz</td>
+            <td>54 Mbps</td>
+            <td>Higher rate, less crowded band</td>
+          </tr>
+          <tr>
+            <td>802.11g</td>
+            <td>2003</td>
+            <td>2.4 GHz</td>
+            <td>54 Mbps</td>
+            <td>Higher rate on 2.4 GHz</td>
+          </tr>
+          <tr>
+            <td>802.11n (WiFi 4)</td>
+            <td>2009</td>
+            <td>2.4 / 5 GHz</td>
+            <td>600 Mbps</td>
+            <td>MIMO, channel bonding</td>
+          </tr>
+          <tr>
+            <td>802.11ac (WiFi 5)</td>
+            <td>2013</td>
+            <td>5 GHz</td>
+            <td>3.5 Gbps</td>
+            <td>MU-MIMO downlink, 80/160 MHz</td>
+          </tr>
+          <tr>
+            <td>802.11ax (WiFi 6/6E)</td>
+            <td>2019-21</td>
+            <td>2.4 / 5 / 6 GHz</td>
+            <td>9.6 Gbps</td>
+            <td>OFDMA, uplink MU-MIMO, TWT (target wake time)</td>
+          </tr>
+          <tr>
+            <td>802.11be (WiFi 7)</td>
+            <td>2024+</td>
+            <td>2.4 / 5 / 6 GHz</td>
+            <td>~46 Gbps</td>
+            <td>Multi-link operation (MLO), 320 MHz, 16x16 MU-MIMO</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="pan">
+        <i class="fas fa-bluetooth"></i> 4. Personal Area Networks (PANs)
+      </h2>
+      <p>
+        A PAN interconnects devices within a person's workspace (a few meters).
+        Three main standards:
+      </p>
+      <div class="two-cols">
+        <div class="col">
+          <h3><i class="fas fa-bluetooth"></i> Bluetooth (IEEE 802.15.1)</h3>
+          <ul>
+            <li>
+              <strong>Ad-hoc piconet:</strong> 1 master + up to 7 active slaves.
+            </li>
+            <li>
+              <strong>Frequency-hopping spread spectrum</strong> in 2.4 GHz band
+              (79 channels, 1600 hops/s).
+            </li>
+            <li>
+              Classic Bluetooth: ~1-3 Mbps. BLE (Bluetooth Low Energy): ~1 Mbps,
+              designed for IoT.
+            </li>
+            <li>Typical range: 10 m (Class 2) or 100 m (Class 1).</li>
+            <li>
+              <strong>Use cases:</strong> headsets, keyboards, smartwatches,
+              medical devices.
+            </li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3><i class="fas fa-microchip"></i> Zigbee (IEEE 802.15.4)</h3>
+          <ul>
+            <li><strong>Designed for low-power, low-rate IoT.</strong></li>
+            <li>Supports star, tree, and mesh topologies.</li>
+            <li>
+              Data rate: 250 kbps (2.4 GHz), 40 kbps (915 MHz), 20 kbps (868
+              MHz).
+            </li>
+            <li>
+              Typical range: 10-100 m per hop, but mesh routing extends it.
+            </li>
+            <li>
+              <strong>Use cases:</strong> smart home (Zigbee bulbs, sensors,
+              thermostats), industrial IoT.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-note">
+        <strong
+          ><i class="fas fa-info-circle"></i> NFC (Near Field
+          Communication)</strong
+        >
+        is a related standard (not covered by Kurose-Ross) for contactless
+        payments and pairing — operates at 13.56 MHz, range &lt; 10 cm. It's a
+        short-range subset of RFID.
+      </div>
+
+      <h2 id="cellular">
+        <i class="fas fa-broadcast-tower"></i> 5. Cellular Networks: 4G LTE and
+        5G NR
+      </h2>
+      <h3>5.1 Cellular Architecture: The Big Picture</h3>
+      <p>
+        A cellular network divides geography into <strong>cells</strong>, each
+        served by a <strong>base station</strong>. The same frequency band is
+        reused in non-adjacent cells to increase overall capacity.
+      </p>
+
+      <h3>5.2 4G LTE Architecture (E-UTRAN / EPC)</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Full Name</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>UE</strong></td>
+            <td>User Equipment</td>
+            <td>The mobile device (phone, dongle, tablet).</td>
+          </tr>
+          <tr>
+            <td><strong>eNodeB (eNB)</strong></td>
+            <td>Evolved Node B</td>
+            <td>
+              Base station. Manages radio resources in its cell: scheduling,
+              handover initiation, encryption.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>MME</strong></td>
+            <td>Mobility Management Entity</td>
+            <td>
+              Handles authentication, security key distribution, and bearer
+              (session) setup. Handles paging and tracking of idle UEs.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>SGW</strong></td>
+            <td>Serving Gateway</td>
+            <td>
+              Local anchor for user data. Forwards packets from UE to PGW (and
+              vice versa). Acts as mobility anchor for inter-eNodeB handover.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>PGW</strong></td>
+            <td>Packet Data Network Gateway</td>
+            <td>
+              Connects the EPC to the Internet. Assigns IP addresses to UEs.
+              Enforces QoS policy.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>HSS</strong></td>
+            <td>Home Subscriber Server</td>
+            <td>
+              Central database — subscriber profiles, authentication
+              credentials, current MME affiliation.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="svg-diagram">
+        <div class="svg-title">
+          <i class="fas fa-sitemap"></i> 4G LTE: E-UTRAN (radio) + EPC (core)
+        </div>
+        <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="320" fill="rgba(10,15,30,0.4)" rx="10" />
+          <rect
+            x="20"
+            y="20"
+            width="260"
+            height="280"
+            rx="10"
+            fill="rgba(59,130,246,0.05)"
+            stroke="#3b82f6"
+            stroke-dasharray="6,4"
+          />
+          <text
+            x="150"
+            y="45"
+            fill="#7dd3fc"
+            font-size="13"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            E-UTRAN (Radio)
+          </text>
+          <circle
+            cx="80"
+            cy="150"
+            r="22"
+            fill="#1e293b"
+            stroke="#7dd3fc"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="80"
+            y="157"
+            font-size="12"
+            text-anchor="middle"
+          >
+            UE
+          </text>
+          <circle
+            cx="200"
+            cy="150"
+            r="25"
+            fill="#f59e0b"
+            stroke="#fbbf24"
+            stroke-width="2"
+          />
+          <text
+            class="svg-text"
+            x="200"
+            y="157"
+            font-size="11"
+            text-anchor="middle"
+          >
+            eNB
+          </text>
+          <line
+            x1="102"
+            y1="150"
+            x2="175"
+            y2="150"
+            stroke="#10b981"
+            stroke-width="2"
+          />
+          <text
+            x="140"
+            y="145"
+            fill="#94a3b8"
+            font-size="9"
+            text-anchor="middle"
+          >
+            radio
+          </text>
+
+          <rect
+            x="320"
+            y="20"
+            width="460"
+            height="280"
+            rx="10"
+            fill="rgba(16,185,129,0.05)"
+            stroke="#10b981"
+            stroke-dasharray="6,4"
+          />
+          <text
+            x="550"
+            y="45"
+            fill="#34d399"
+            font-size="13"
+            font-weight="700"
+            text-anchor="middle"
+          >
+            EPC (Evolved Packet Core)
+          </text>
+          <rect
+            x="360"
+            y="120"
+            width="90"
+            height="46"
+            rx="6"
+            fill="rgba(139,92,246,0.2)"
+            stroke="#8b5cf6"
+          />
+          <text
+            class="svg-text"
+            x="405"
+            y="150"
+            font-size="12"
+            text-anchor="middle"
+          >
+            MME
+          </text>
+          <rect
+            x="510"
+            y="120"
+            width="90"
+            height="46"
+            rx="6"
+            fill="rgba(59,130,246,0.2)"
+            stroke="#3b82f6"
+          />
+          <text
+            class="svg-text"
+            x="555"
+            y="150"
+            font-size="12"
+            text-anchor="middle"
+          >
+            SGW
+          </text>
+          <rect
+            x="660"
+            y="120"
+            width="90"
+            height="46"
+            rx="6"
+            fill="rgba(245,158,11,0.2)"
+            stroke="#f59e0b"
+          />
+          <text
+            class="svg-text"
+            x="705"
+            y="150"
+            font-size="12"
+            text-anchor="middle"
+          >
+            PGW
+          </text>
+          <rect
+            x="360"
+            y="220"
+            width="90"
+            height="46"
+            rx="6"
+            fill="rgba(239,68,68,0.2)"
+            stroke="#ef4444"
+          />
+          <text
+            class="svg-text"
+            x="405"
+            y="250"
+            font-size="12"
+            text-anchor="middle"
+          >
+            HSS
+          </text>
+
+          <line
+            x1="225"
+            y1="150"
+            x2="360"
+            y2="143"
+            stroke="#94a3b8"
+            stroke-width="2"
+            stroke-dasharray="3,2"
+          />
+          <line
+            x1="225"
+            y1="160"
+            x2="510"
+            y2="143"
+            stroke="#94a3b8"
+            stroke-width="2"
+            stroke-dasharray="3,2"
+          />
+          <line
+            x1="450"
+            y1="143"
+            x2="510"
+            y2="143"
+            stroke="#94a3b8"
+            stroke-width="2"
+          />
+          <line
+            x1="600"
+            y1="143"
+            x2="660"
+            y2="143"
+            stroke="#94a3b8"
+            stroke-width="2"
+          />
+          <line
+            x1="405"
+            y1="166"
+            x2="405"
+            y2="220"
+            stroke="#94a3b8"
+            stroke-width="2"
+          />
+          <text x="770" y="143" fill="#94a3b8" font-size="11">→ Internet</text>
+          <text
+            x="380"
+            y="100"
+            fill="#94a3b8"
+            font-size="9"
+            text-anchor="middle"
+          >
+            S1-MME
+          </text>
+          <text
+            x="380"
+            y="195"
+            fill="#94a3b8"
+            font-size="9"
+            text-anchor="middle"
+          >
+            S6a
+          </text>
+        </svg>
+      </div>
+
+      <h3>5.3 5G NR (New Radio)</h3>
+      <p>
+        5G introduces a new radio interface (NR) and a redesigned, more flexible
+        core (5GC). Key features:
+      </p>
+      <ul>
+        <li>
+          <strong>Three usage scenarios:</strong>
+          <ul>
+            <li>
+              <strong>eMBB</strong> (enhanced Mobile Broadband): high throughput
+              (up to 20 Gbps).
+            </li>
+            <li>
+              <strong>URLLC</strong> (Ultra-Reliable Low-Latency Communication):
+              &lt; 1 ms latency, 99.999% reliability.
+            </li>
+            <li>
+              <strong>mMTC</strong> (massive Machine-Type Communication): up to
+              1 million devices per km².
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Spectrum:</strong> Sub-6 GHz (FR1) and mmWave (FR2, 24–100
+          GHz) — more bandwidth, shorter range.
+        </li>
+        <li>
+          <strong>Massive MIMO:</strong> up to 64-256 antennas at the base
+          station.
+        </li>
+        <li>
+          <strong>Network Slicing:</strong> one physical network partitioned
+          into multiple virtual networks, each with its own SLA.
+        </li>
+        <li>
+          <strong>Service-Based Architecture (SBA):</strong> all core functions
+          communicate via HTTP/2 APIs over REST.
+        </li>
+      </ul>
+
+      <h3>5.4 5G Core Components (SBA)</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>gNB</strong></td>
+            <td>5G base station. The 5G equivalent of eNodeB.</td>
+          </tr>
+          <tr>
+            <td><strong>AMF</strong> (Access and Mobility Function)</td>
+            <td>
+              Equivalent to 4G's MME. Handles registration, mobility,
+              authentication.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>SMF</strong> (Session Management Function)</td>
+            <td>
+              Establishes and manages sessions (PDU sessions). Assigns IP
+              addresses (via UPF).
+            </td>
+          </tr>
+          <tr>
+            <td><strong>UPF</strong> (User Plane Function)</td>
+            <td>
+              Forwards user data. Combines roles of SGW and PGW from 4G. Can be
+              deployed at the edge (MEC).
+            </td>
+          </tr>
+          <tr>
+            <td><strong>AUSF, UDM, PCF, NRF</strong></td>
+            <td>
+              Authentication, unified data management, policy control, service
+              registry.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="mobility">
+        <i class="fas fa-mobile-alt"></i> 6. Mobility Management
+      </h2>
+      <h3>6.1 Terminology</h3>
+      <ul>
+        <li>
+          <strong>Home network:</strong> the network the mobile node "belongs
+          to" (has a permanent subscription).
+        </li>
+        <li>
+          <strong>Home agent (HA):</strong> a router in the home network that
+          tracks the mobile's current location.
+        </li>
+        <li>
+          <strong>Foreign network:</strong> the network the mobile is currently
+          visiting.
+        </li>
+        <li>
+          <strong>Foreign agent (FA):</strong> a router in the foreign network
+          that helps the mobile register with its HA.
+        </li>
+        <li>
+          <strong>Care-of-address (COA):</strong> the mobile's current IP
+          address in the foreign network.
+        </li>
+        <li>
+          <strong>Correspondent:</strong> the host that wants to communicate
+          with the mobile.
+        </li>
+      </ul>
+
+      <h3>6.2 Mobile IP: Indirect Routing</h3>
+      <ol>
+        <li>
+          The mobile registers with the foreign agent (or obtains a COA via
+          DHCP).
+        </li>
+        <li>
+          The foreign agent notifies the home agent of the COA (registration).
+        </li>
+        <li>
+          The correspondent sends packets to the mobile's
+          <strong>permanent IP address</strong> (in the home network).
+        </li>
+        <li>
+          The home agent <strong>intercepts</strong> these packets and
+          <strong>tunnels</strong> them to the COA.
+        </li>
+        <li>The foreign agent decapsulates and delivers to the mobile.</li>
+      </ol>
+      <div class="info-note">
+        <strong>Problem — triangle routing:</strong> if the correspondent is
+        geographically close to the mobile's current location but the home agent
+        is far away, packets route back through the home network — wasting
+        latency and bandwidth. This is the main limitation of indirect routing.
+      </div>
+
+      <h3>6.3 Mobile IP: Direct Routing</h3>
+      <ol>
+        <li>Same registration as before (mobile → FA → HA).</li>
+        <li>
+          The correspondent learns the mobile's COA (via the HA) before sending
+          data.
+        </li>
+        <li>
+          The correspondent then sends packets <strong>directly</strong> to the
+          COA.
+        </li>
+      </ol>
+      <p>
+        <strong>Pros:</strong> No triangle routing. <strong>Cons:</strong> The
+        correspondent must understand mobility (needs to be updated). Also, when
+        the mobile moves to a new COA, the correspondent must be notified.
+      </p>
+
+      <div class="exam-tip">
+        <strong>Mobile IP numbers you should remember:</strong> The MN is
+        identified by its permanent IP and a Home Address; the FA and HA act on
+        behalf of the MN; the COA is temporary. Ports and protocols: Mobile IPv4
+        uses UDP port 434 for registration; the "Home Address" option in the IP
+        header tells the receiver the packet is from a mobile node.
+      </div>
+
+      <h3>6.4 Handoff in 4G LTE</h3>
+      <p>
+        When a UE moves from one eNB to another, sessions must survive. LTE uses
+        the <strong>X2 interface</strong> for handover between eNBs:
+      </p>
+      <ol>
+        <li>UE sends measurement reports to its serving eNB.</li>
+        <li>
+          If a neighbor eNB is better, the serving eNB sends a
+          <strong>Handover Request</strong> to the target eNB over X2.
+        </li>
+        <li>
+          Target eNB prepares resources and replies with
+          <strong>Handover Request Acknowledge</strong>.
+        </li>
+        <li>
+          Serving eNB sends a <strong>Handover Command</strong> to the UE; UE
+          synchronizes with target.
+        </li>
+        <li>
+          Data buffered at the serving eNB is forwarded to the target eNB.
+        </li>
+        <li>MME is notified; SGW updates its path.</li>
+        <li>
+          UE sends <strong>Handover Confirm</strong>; new path established.
+        </li>
+        <li>Old eNB releases resources.</li>
+      </ol>
+
+      <h2 id="security">
+        <i class="fas fa-shield-alt"></i> 7. Wireless Security Fundamentals
+      </h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Protocol</th>
+            <th>Year</th>
+            <th>Encryption</th>
+            <th>Authentication</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>WEP</strong></td>
+            <td>1997</td>
+            <td>RC4 with 40-bit or 104-bit key</td>
+            <td>Open / Shared Key</td>
+            <td><strong>Broken</strong> — trivially cracked. Do not use.</td>
+          </tr>
+          <tr>
+            <td><strong>WPA</strong></td>
+            <td>2003</td>
+            <td>TKIP (RC4-based, with per-packet key)</td>
+            <td>PSK or 802.1X</td>
+            <td>Deprecated. Vulnerable to KRACK.</td>
+          </tr>
+          <tr>
+            <td><strong>WPA2</strong></td>
+            <td>2004</td>
+            <td>AES-CCMP</td>
+            <td>PSK or 802.1X (Enterprise)</td>
+            <td>Still widely used. Vulnerable to KRACK if unpatched.</td>
+          </tr>
+          <tr>
+            <td><strong>WPA3</strong></td>
+            <td>2018</td>
+            <td>AES-GCMP (192-bit in Enterprise mode)</td>
+            <td>
+              SAE (Simultaneous Authentication of Equals) — resists offline
+              dictionary attacks
+            </td>
+            <td>Recommended for new deployments. Forward secrecy.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="lab">
+        <i class="fas fa-laptop-code"></i> 8. Practical Lab: Wi-Fi Packet
+        Capture
+      </h2>
+      <div class="lab-box">
+        <h3>
+          <i class="fas fa-flask"></i> Lab: Analyze 802.11 Frames with Wireshark
+        </h3>
+        <ol>
+          <li>
+            Install <strong>Wireshark</strong> and a supported Wi-Fi adapter
+            (for monitor mode, you may need <code>airmon-ng</code> on Linux).
+          </li>
+          <li>
+            Enable <strong>monitor mode</strong> on the adapter. This mode
+            captures ALL Wi-Fi frames (not just those addressed to your device).
+          </li>
+          <li>Start a capture with the display filter <code>wlan</code>.</li>
+          <li>
+            Filter <code>wlan.fc.type_subtype == 0x08</code> to see
+            <strong>beacon frames</strong> — one per SSID per ~100 ms.
+          </li>
+          <li>
+            Filter <code>wlan.fc.type_subtype == 0x04</code> to see
+            <strong>probe request frames</strong> — sent by STAs during active
+            scanning.
+          </li>
+          <li>
+            Filter <code>wlan.fc.type_subtype == 0x0d</code> to see
+            <strong>ACK frames</strong> — you should see a burst of ACKs after
+            each data frame.
+          </li>
+          <li>
+            Inspect one <strong>RTS</strong> frame (<code
+              >wlan.fc.type_subtype == 0x1b</code
+            >) and the following <strong>CTS</strong> (<code>0x1c</code>). Note
+            the Duration field.
+          </li>
+          <li>
+            Download the pcap file and analyze it in Wireshark. Answer the lab
+            questions in the report.
+          </li>
+        </ol>
+        <p style="margin-top: 1rem">
+          <strong>Discussion questions:</strong>
+        </p>
+        <ul>
+          <li>
+            What is the difference between an RTS and a CTS frame? Who sends
+            which?
+          </li>
+          <li>Why is the size of an ACK frame so small? What does it carry?</li>
+          <li>
+            How many addresses does an 802.11 data frame have? How does this
+            differ from Ethernet?
+          </li>
+          <li>What is the NAV? Where does it come from?</li>
+        </ul>
+      </div>
+
+      <h2 id="homework">
+        <i class="fas fa-tasks"></i> 9. Homework Assignment (Theoretical,
+        Graded)
+      </h2>
+      <div class="homework-box">
+        <p>
+          <strong>Instructions:</strong> Answer all questions in a separate
+          document (PDF or Word). Submit via the learning platform. This
+          assignment counts towards your final grade (5%).
+        </p>
+
+        <h3>Part I: Short Essays (40 points)</h3>
+        <ol>
+          <li>
+            Compare CSMA/CA (wireless) with CSMA/CD (Ethernet). Why does
+            wireless need a fundamentally different MAC protocol?
+          </li>
+          <li>
+            Explain the hidden terminal problem. Describe a scenario in detail,
+            and explain how RTS/CTS solves it.
+          </li>
+          <li>
+            Identify the key components of an LTE/4G network (eNodeB, MME, SGW,
+            PGW, HSS). What does each one do?
+          </li>
+          <li>
+            Compare indirect and direct routing in Mobile IP. What trade-offs
+            does each approach make?
+          </li>
+          <li>
+            Why is SNR critical in wireless links? How does it relate to BER,
+            and what is the role of rate adaptation?
+          </li>
+        </ol>
+
+        <h3>Part II: True/False + Correction (30 points)</h3>
+        <ol>
+          <li>802.11 uses CSMA/CD to detect collisions. (True / False)</li>
+          <li>
+            The hidden terminal problem is unique to wireless networks. (True /
+            False)
+          </li>
+          <li>
+            The MME is responsible for forwarding user data packets. (True /
+            False)
+          </li>
+          <li>
+            In Mobile IP, the home agent is responsible for updating the COA.
+            (True / False)
+          </li>
+          <li>
+            5G mmWave frequencies have longer range than 4G frequencies. (True /
+            False)
+          </li>
+        </ol>
+        <p><em>For each false statement, write the correct version.</em></p>
+
+        <h3>Part III: Problem Solving (30 points)</h3>
+        <ol>
+          <li>
+            An 802.11 frame of 1500 bytes is transmitted at 54 Mbps. How long
+            does it take to transmit? Show your work.
+          </li>
+          <li>
+            A mobile moves from one BSS to another. What triggers the handoff,
+            and which frames are exchanged? Describe the process for 4G LTE (X2
+            handover) and note the key differences from an 802.11
+            re-association.
+          </li>
+          <li>
+            In a cellular network with SNR = 20 dB and BER requirement of 10⁻⁵,
+            if doubling transmit power reduces BER by a factor of 100, is that
+            reduction sufficient? Explain, and describe how the network adjusts
+            (e.g., via rate adaptation or power control).
+          </li>
+        </ol>
+        <p>
+          <strong>Grading criteria:</strong> correctness, completeness, proper
+          use of terminology, and clarity of explanation.
+        </p>
+        <p><strong>Deadline:</strong> Two weeks from the lecture date.</p>
+      </div>
+
+      <h2 id="summary">
+        <i class="fas fa-check-double"></i> Chapter 7 Summary
+      </h2>
+      <ul>
+        <li>
+          <strong>Wireless links</strong> suffer from attenuation, interference,
+          and multipath fading. These cause bit errors and necessitate robust
+          link-layer protocols (CSMA/CA, forward error correction, ARQ).
+        </li>
+        <li>
+          <strong>SNR vs BER:</strong> Higher SNR → lower BER. Rate adaptation
+          dynamically chooses the PHY data rate based on channel conditions.
+        </li>
+        <li>
+          <strong>Hidden terminal problem:</strong> Nodes that cannot hear each
+          other can both transmit to the AP, causing collisions.
+          <strong>Exposed terminal problem:</strong> A node defers unnecessarily
+          because it hears another transmission that does not actually
+          interfere.
+        </li>
+        <li>
+          <strong>802.11 uses CSMA/CA:</strong> sense before transmit,
+          exponential backoff, SIFS/DIFS, and optional RTS/CTS to mitigate
+          hidden terminals.
+        </li>
+        <li>
+          <strong>PANs:</strong> Bluetooth (piconet, frequency hopping, low
+          power) and Zigbee (mesh, low rate, IoT).
+        </li>
+        <li>
+          <strong>4G LTE:</strong> eNodeB (radio access) + EPC (MME, SGW, PGW,
+          HSS). <strong>5G NR:</strong>
+          gNB + 5GC (AMF, SMF, UPF), network slicing, mmWave, massive MIMO,
+          three usage scenarios (eMBB, URLLC, mMTC).
+        </li>
+        <li>
+          <strong>Mobility:</strong> Home/foreign networks, COA, Mobile IP
+          (indirect vs direct). Handover in 4G via X2 interface.
+          <strong>Impact on TCP:</strong> mobility affects RTT; TCP needs to
+          adapt (CUBIC, BBR, or MPTCP for multi-path).
+        </li>
+        <li>
+          <strong>Wireless security:</strong> WEP (broken), WPA (deprecated),
+          WPA2 (widely used), WPA3 (recommended).
+        </li>
+      </ul>
+
+      <div class="info-note">
+        <strong
+          ><i class="fas fa-graduation-cap"></i> Self‑review questions (exam
+          preparation):</strong
+        ><br />
+        • Why can't wireless use CSMA/CD? What physical constraint prevents
+        it?<br />
+        • Explain the DIFS and SIFS intervals. Why are they different?<br />
+        • What is the NAV, and how does it prevent collision in RTS/CTS?<br />
+        • Describe the 4G LTE core network in one paragraph.<br />
+        • What is network slicing in 5G? Give an example of two slices with
+        conflicting requirements.<br />
+        • Compare Mobile IP indirect and direct routing. Which is more scalable?
+        Which is more efficient?<br />
+        • What is the difference between BSS and ESS in 802.11?<br />
+        • List the 802.11 MAC frame address fields for: (a) STA → AP, (b) AP →
+        STA, (c) ad-hoc.<br />
+        • Why do some routers not respond to traceroute with ICMP Type 11?<br />
+        • Explain the difference between handoff and roaming.
+      </div>
+
+      <div class="looking-ahead">
+        <h3><i class="fas fa-arrow-right"></i> Looking Ahead to Chapter 8</h3>
+        <p>
+          <strong>Question:</strong> How do we make networks <em>secure</em>?
+          How do we protect confidentiality, integrity, and availability against
+          attackers?
+        </p>
+        <p>
+          <strong>Answer:</strong> Chapter 8 (Security) covers cryptography
+          (AES, RSA, DH), authentication (certificates, TLS), email security
+          (PGP, S/MIME), network-layer security (IPsec, VPNs), wireless security
+          (WPA3, EAP), and operational security (firewalls, IDS/IPS).
+        </p>
+        <p>
+          The Final Exam will cover Chapters 1-7 (comprehensive). Practice
+          tracing packet flows (DHCP → ARP → DNS → TCP → HTTP) and explaining
+          each protocol's role clearly.
+        </p>
+      </div>
+
+      <footer
+        style="
+          margin-top: 2rem;
+          text-align: center;
+          font-size: 0.85rem;
+          color: var(--text-muted);
+          border-top: 1px solid var(--border-light);
+          padding-top: 1.5rem;
+        "
+      >
+        <p>
+          © <span id="lecture-year"></span> Cyber Khalil – All Rights Reserved
+        </p>
+        <p>
+          Based on Kurose &amp; Ross,
+          <em>Computer Networking: A Top-Down Approach</em>, 9th edition,
+          Chapter 7 slides and textbook.
+        </p>
+      </footer>
+    </div>
+    <script>
+      document.getElementById("lecture-year").textContent =
+        new Date().getFullYear();
+      // Progress bar
+      const pb = document.getElementById("progress-bar");
+      window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        pb.style.width = progress + "%";
+        const btn = document.getElementById("back-to-top");
+        if (scrollTop > 400) btn.classList.add("visible");
+        else btn.classList.remove("visible");
+      });
+      document
+        .getElementById("back-to-top")
+        .addEventListener("click", () =>
+          window.scrollTo({ top: 0, behavior: "smooth" }),
+        );
+
+      // Copy code buttons
+      document.querySelectorAll(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const pre = btn.nextElementSibling;
+          const text = pre.innerText;
+          navigator.clipboard.writeText(text).then(() => {
+            btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            btn.classList.add("copied");
+            setTimeout(() => {
+              btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+              btn.classList.remove("copied");
+            }, 2000);
+          });
+        });
+      });
+
+      // Scroll spy
+      (function () {
+        const navLinks = document.querySelectorAll(".quick-nav a");
+        const sections = [];
+        navLinks.forEach((link) => {
+          const id = link.getAttribute("href");
+          if (id && id.startsWith("#")) {
+            const s = document.querySelector(id);
+            if (s) sections.push({ link, section: s });
+          }
+        });
+        function onScroll() {
+          let currentId = null;
+          const scrollPos = window.scrollY + window.innerHeight / 3;
+          for (let i = sections.length - 1; i >= 0; i--) {
+            if (sections[i].section.offsetTop <= scrollPos) {
+              currentId = sections[i].link.getAttribute("href");
+              break;
+            }
+          }
+          navLinks.forEach((link) => {
+            link.classList.toggle(
+              "active",
+              link.getAttribute("href") === currentId,
+            );
+          });
+        }
+        window.addEventListener("scroll", onScroll);
+        window.addEventListener("resize", onScroll);
+        onScroll();
+      })();
+    </script>
+    <script src="scripts.js" defer></script>
+  </body>
+</html>
